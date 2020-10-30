@@ -1,0 +1,81 @@
+name: create-release
+# Generate a release for the TeamsCreation solution
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  generate-unmanaged-solution:
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
+
+    - name: Pack solution
+      uses: microsoft/powerplatform-actions/pack-solution@v0
+      with:
+        solution-folder: TeamsCreationAutomationWithPowerAutomate/TeamsCreation
+        solution-file: out/TeamsCreationAutomationWithPowerAutomate/TeamsCreation.zip
+        solution-type: Unmanaged
+
+    - name: Upload the ready to ship solution to GH artifact store
+      uses: actions/upload-artifact@v2
+      with:
+        name: unmanagedSolutions
+        path: out/TeamsCreationAutomationWithPowerAutomate/TeamsCreation.zip
+
+  create-release:
+    needs: [ generate-unmanaged-solution ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set current date as env variable
+        run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+
+      - name: Fetch the ready to ship solution from GH artifact store
+        uses: actions/download-artifact@v2
+        with:
+          name: unmanagedSolutions
+          path: out/release/
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: TeamsCreation_${{ env.NOW }}_${{ github.run_number }}
+          release_name: TeamsCreation Release - ${{ env.NOW }} - ${{ github.run_number }}
+          body: |
+            Changes in this Release:
+            - Initialization of the TeamsCreation solution
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset - Solution
+        id: upload-release-asset-solution
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: out/release/TeamsCreation.zip
+          asset_name: TeamsCreation.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset - README
+        id: upload-release-asset-readme
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: TeamsCreationAutomationWithPowerAutomate/README.md
+          asset_name: README.md
+          asset_content_type: application/md
