@@ -1,0 +1,20 @@
+# Pipeline template for the deletion of a Power Platform service endpoint
+
+steps:
+# Call to the pipeline template for the generation of a Power Platform Environment DomainName from the EnvironmentName variable
+- template: ./generate-powerplatform-environment-domainname-template.yml
+
+# Delete a Power Platform service endpoint based on the EnvironmentName variable
+- powershell: |
+    $org = '$(AzureDevOpsOrganizationURL)'
+    $env:AZURE_DEVOPS_EXT_PAT = '$(PatToken)'
+
+    $projectServiceEndpoints = az devops service-endpoint list --organization $org --project $(System.TeamProjectId)
+
+    $projectServiceEndpointsAsJSON = $projectServiceEndpoints | ConvertFrom-Json
+
+    $targetedprojectServiceEndpoint = $projectServiceEndpointsAsJSON | where { $_.name -eq "$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName)" }
+
+    $serviceEndpointId = $targetedprojectServiceEndpoint.id
+
+    az devops service-endpoint delete --id $serviceEndpointId --yes

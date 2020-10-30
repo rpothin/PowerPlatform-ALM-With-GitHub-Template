@@ -1,0 +1,26 @@
+# Pipeline used to create of a Power Platform service endpoint
+
+# Variables:
+#   EnvironmentName - String - Not secret - Let user override
+#   TenantId - String - Secret - Do not let user override
+#   ApplicationId - String - Secret - Do not let user override
+#   ClientSecret - String - Secret - Do not let user override
+#   PowerPlatformEnvironmentURLBase - String - Not secret - Let user override (ex: crm3.dynamics.com)
+#   AzureDevOpsOrganizationURL - String - Not secret - Do not let user override (ex: https://dev.azure.com/<organization>/)
+#   String - Not secret - Do not let user override
+#   PatToken - String - Secret - Do not let user override
+
+# Pipeline triggered manually
+trigger: none
+
+variables:
+  # Full name of the targeted branch, extracted from 'Build.SourceBranch' or 'System.PullRequest.SourceBranch' predefined variables
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/') }}:
+    BranchName: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
+    BranchName: $[ replace(variables['System.PullRequest.SourceBranch'], 'refs/heads/', '') ]
+  ServiceEndpointsFolderAbsolutePath: "$(System.DefaultWorkingDirectory)/AzureDevOpsPipelines/ServiceEndpoints"
+
+stages:
+# Call to the pipeline template for the creation of the Power Platform service endpoint
+- template: ../Templates/create-powerplatform-service-endpoint-template.yml

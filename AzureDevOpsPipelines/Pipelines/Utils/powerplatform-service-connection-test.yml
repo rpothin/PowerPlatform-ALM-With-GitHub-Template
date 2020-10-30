@@ -1,0 +1,22 @@
+# Pipeline used to test a Power Platform service connection with its name provided as variable
+
+# Variables:
+#   ServiceConnectionName - String - Not secret - Let user override
+
+# Pipeline triggered manually
+trigger: none
+
+pool:
+  vmImage: 'windows-2019'
+
+steps:
+# Install the Power Platform Build Tools extension on the agent
+- task: PowerPlatformToolInstaller@0
+  displayName: 'Power Platform Tool Installer '
+
+# Execute the "Who Am I" action to check that the Power Platform service connection provided is operational
+- task: PowerPlatformWhoAmi@0
+  displayName: 'Power Platform WhoAmI '
+  inputs:
+    authenticationType: PowerPlatformSPN
+    PowerPlatformSPN: '$(ServiceConnectionName)'

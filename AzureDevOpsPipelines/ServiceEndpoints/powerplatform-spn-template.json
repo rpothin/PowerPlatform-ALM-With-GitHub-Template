@@ -1,0 +1,34 @@
+{
+   "administratorsGroup":null,
+   "authorization":{
+      "scheme":"None",
+      "parameters":{
+         "tenantId":"<TenantId>",
+         "applicationId":"<ApplicationId>",
+         "clientSecret":"<ClientSecret>"
+      }
+   },
+   "createdBy":null,
+   "data":{
+      
+   },
+   "description":"",
+   "groupScopeId":null,
+   "name":"<ServiceEndpointName>",
+   "operationStatus":null,
+   "readersGroup":null,
+   "serviceEndpointProjectReferences":[
+      {
+         "description":"",
+         "name":"<ServiceEndpointName>",
+         "projectReference":{
+            "id":"<ProjectId>",
+            "name":"<ProjectName>"
+         }
+      }
+   ],
+   "type":"powerplatform-spn",
+   "url":"<PowerPlatformEnvironmentURL>",
+   "isShared":false,
+   "owner":"library"
+}

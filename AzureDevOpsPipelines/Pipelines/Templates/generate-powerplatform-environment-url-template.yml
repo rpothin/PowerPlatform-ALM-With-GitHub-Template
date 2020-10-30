@@ -1,0 +1,14 @@
+# Pipeline template for the generation of the URL of a Power Platform Environment using the EnvironmentName variable
+
+steps:
+# Call to the pipeline template for the generation of a Power Platform Environment DomainName from the EnvironmentName variable
+- template: ./generate-powerplatform-environment-domainname-template.yml
+
+# Generate Power Platform Environment URL from the the DomainName and PowerPlatformEnvironmentURLBase variables using PowerShell
+- powershell: |
+    $POWERPLATFORM_URL_TMP = "$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName)"
+
+    $POWERPLATFORM_URL_TMP = "https://" + $POWERPLATFORM_URL_TMP + "." + "$(PowerPlatformEnvironmentURLBase)"
+
+    echo "##vso[task.setvariable variable=PowerPlatformEnvironmentURL;isOutput=true]$POWERPLATFORM_URL_TMP"
+  name: generatePowerPlatformEnvironmentURL

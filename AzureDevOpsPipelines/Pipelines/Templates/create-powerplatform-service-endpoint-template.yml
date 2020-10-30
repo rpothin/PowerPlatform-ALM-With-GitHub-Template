@@ -1,0 +1,149 @@
+# Pipeline template for the creation of a Power Platform service endpoint
+
+stages:
+# Stage for the generation of the request body file for the creation of the Power Platform service endpoint
+- stage: 'RequestBodyFileGeneration'
+  displayName: 'Request Body File Generation'
+  jobs:
+    - job: 'RequestBodyFileGeneration'
+      displayName: 'RequestBodyFileGeneration job'
+      pool:
+        vmImage: 'windows-2019'
+
+      steps:
+      # Call to the pipeline template for the generation of the URL of the Power Platform Environment using the EnvironmentName and the PowerPlatformEnvironmentURLBase variables
+      - template: ./generate-powerplatform-environment-url-template.yml
+
+      # Make a copy of the "powerplatform-spn-template.json" file to the "ServiceEndpointCreation_RequestBodies" folder
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(ServiceEndpointsFolderAbsolutePath)'
+          Contents: 'powerplatform-spn-template.json'
+          TargetFolder: '$(ServiceEndpointsFolderAbsolutePath)/ServiceEndpointCreation_RequestBodies'
+
+      # Rename the new field copied from the "powerplatform-spn-template.json" file
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: 'rename-item –path $(ServiceEndpointsFolderAbsolutePath)/ServiceEndpointCreation_RequestBodies/powerplatform-spn-template.json –newname $(ServiceEndpointsFolderAbsolutePath)/ServiceEndpointCreation_RequestBodies/powerplatform-spn-$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName).json'
+
+      # Replace the parameters in the request body for the creation of the Power Platform service endpoint
+      - powershell: |
+          $content = Get-Content -Path '$(ServiceEndpointsFolderAbsolutePath)/ServiceEndpointCreation_RequestBodies/powerplatform-spn-$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName).json'
+
+          $contentTenantIdUpdated = $content -replace '<TenantId>', '$(TenantId)'
+          $contentApplicationIdUpdated = $contentTenantIdUpdated -replace '<ApplicationId>', '$(ApplicationId)'
+          $contentClientSecretUpdated = $contentApplicationIdUpdated -replace '<ClientSecret>', '$(ClientSecret)'
+          $contentServiceEndpointNameUpdated = $contentClientSecretUpdated -replace '<ServiceEndpointName>', '$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName)'
+          $contentProjectIdUpdated = $contentServiceEndpointNameUpdated -replace '<ProjectId>', '$(System.TeamProjectId)'
+          $contentProjectNameUpdated = $contentProjectIdUpdated -replace '<ProjectName>', '$(System.TeamProject)'
+          $contentEnvironmentURLUpdated = $contentProjectNameUpdated -replace '<PowerPlatformEnvironmentURL>', '$(generatePowerPlatformEnvironmentURL.PowerPlatformEnvironmentURL)'
+
+          $contentEnvironmentURLUpdated | Set-Content -Path '$(ServiceEndpointsFolderAbsolutePath)/ServiceEndpointCreation_RequestBodies/powerplatform-spn-$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName).json'
+
+      # Commit the changes (creation of the file with the request body for the creation of the Power Platform service endpoint) to the considered branch
+      - task: CmdLine@2
+        inputs:
+          script: |
+            echo commit all changes
+            git config user.email "$(Email)"
+            git config user.name "Automatic Build"
+
+            echo branch full name $(BranchName)
+            git checkout $(BranchName)
+            git add --all
+            git commit -m "Power Platform service endpoint creation request body file generation"
+              
+            echo push code to new repo
+            git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" push origin $(BranchName)
+
+# Stage for the creation of the Power Platform service endpoint
+- stage: 'ServiceEndpointCreation'
+  displayName: 'Service Endpoint Creation'
+  dependsOn: RequestBodyFileGeneration
+  condition: succeeded()
+  jobs:
+    - job: 'ServiceEndpointCreation'
+      displayName: 'ServiceEndpointCreation job'
+      pool:
+        vmImage: 'windows-2019'
+
+      steps:
+      # Call to the pipeline template for the generation of a Power Platform Environment DomainName from the EnvironmentName variable
+      - template: ./generate-powerplatform-environment-domainname-template.yml
+
+      # Pull the last changes made to the branch (file with the request body for the creation of the Power Platform service endpoint)
+      - task: CmdLine@2
+        inputs:
+          script: |
+            echo pull all changes from remote branch
+            git config user.email "$(Email)"
+            git config user.name "Automatic Build"
+
+            echo branch full name $(BranchName)
+            git checkout $(BranchName)
+            git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" pull
+
+      # Create new Power Platform service endpoint based on request body in a file in the repository
+      - powershell: |
+          $org = '$(AzureDevOpsOrganizationURL)'
+          $env:AZURE_DEVOPS_EXT_PAT = '$(PatToken)'
+
+          $newServiceEndpoint = az devops service-endpoint create --organization $org --project $(System.TeamProjectId) --service-endpoint-configuration $(ServiceEndpointsFolderAbsolutePath)/ServiceEndpointCreation_RequestBodies/powerplatform-spn-$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName).json
+
+          $newServiceEndpointAsJSON = $newServiceEndpoint | ConvertFrom-Json
+          
+          $newServiceEndpointId = $newServiceEndpointAsJSON.id
+
+          Write-Host "##vso[task.setvariable variable=NewServiceEndpointId;]$newServiceEndpointId"
+          
+      # Enable the Power Platform service endpoint we just created for all the pipelines
+      - powershell: |
+          $org = '$(AzureDevOpsOrganizationURL)'
+          $env:AZURE_DEVOPS_EXT_PAT = '$(PatToken)'
+
+          az devops service-endpoint update --organization $org --project $(System.TeamProjectId) --id $($env:NewServiceEndpointId) --enable-for-all
+
+# Stage for the deletion of the request body file for the creation of the Power Platform service endpoint
+- stage: 'RequestBodyFileDeletion'
+  displayName: 'Service Endpoint Deletion'
+  dependsOn: ServiceEndpointCreation
+  condition: succeeded()
+  jobs:
+    - job: 'RequestBodyFileDeletion'
+      displayName: 'RequestBodyFileDeletion job'
+      pool:
+        vmImage: 'windows-2019'
+
+      steps:
+      # Call to the pipeline template for the generation of a Power Platform Environment DomainName from the EnvironmentName variable
+      - template: ./generate-powerplatform-environment-domainname-template.yml
+      
+      # Pull the last changes made to the branch (file with the request body for the creation of the Power Platform service endpoint)
+      - task: CmdLine@2
+        inputs:
+          script: |
+            echo pull all changes from remote branch
+            git config user.email "$(Email)"
+            git config user.name "Automatic Build"
+
+            echo branch full name $(BranchName)
+            git checkout $(BranchName)
+            git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" pull
+
+      # Delete the directory containing the file used for the creation of the Power Platform service endpoint
+      - powershell: |
+          Remove-Item $(ServiceEndpointsFolderAbsolutePath)/ServiceEndpointCreation_RequestBodies/powerplatform-spn-$(generatePowerPlatformEnvironmentDomainName.PowerPlatformEnvironmentDomainName).json
+
+      # Commit the changes (deletion of the file with the request body for the creation of the Power Platform service endpoint) to the considered branch
+      - task: CmdLine@2
+        inputs:
+          script: |
+            echo commit all changes
+            echo branch full name $(BranchName)
+            git checkout $(BranchName)
+            git add --all
+            git commit -m "Power Platform service endpoint creation request body file deletion"
+              
+            echo push code to new repo
+            git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" push origin $(BranchName)

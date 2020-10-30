@@ -1,0 +1,25 @@
+# Pipeline template for the generation of a Power Platform Environment DomainName from the EnvironmentName variable
+
+steps:
+# Generate Power Platform Environment DomainName from the the EnvironmentName variable using PowerShell
+#   - Trim
+#   - Replace ' - ' with '-'
+#   - Replace ' -' with '-'
+#   - Replace '- ' with '-'
+#   - Replace ' ' with '-'
+#   - To lower case
+- powershell: |
+    $DOMAIN_NAME_TMP = "$(EnvironmentName)"
+    
+    $DOMAIN_NAME_TMP = $DOMAIN_NAME_TMP.Trim()
+
+    $DOMAIN_NAME_TMP = $DOMAIN_NAME_TMP.Replace(" - ", "-")
+    $DOMAIN_NAME_TMP = $DOMAIN_NAME_TMP.Replace(" -", "-")
+    $DOMAIN_NAME_TMP = $DOMAIN_NAME_TMP.Replace("- ", "-")
+
+    $DOMAIN_NAME_TMP = $DOMAIN_NAME_TMP.Replace(" ", "-")
+
+    $DOMAIN_NAME_TMP = $DOMAIN_NAME_TMP.ToLower()
+
+    echo "##vso[task.setvariable variable=PowerPlatformEnvironmentDomainName;isOutput=true]$DOMAIN_NAME_TMP"
+  name: generatePowerPlatformEnvironmentDomainName
