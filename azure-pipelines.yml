@@ -18,7 +18,7 @@ steps:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'Rpothin Trial'
     DisplayName: 'Production'
-    EnvironmentSku: 'Sandbox'
+    EnvironmentSku: 'Trial'
     AppsTemplate: 'D365_Sales, D365_CustomerService, D365_FieldService, D365_ProjectServiceAutomation'
     LocationName: 'canada'
     LanguageName: '1033'
