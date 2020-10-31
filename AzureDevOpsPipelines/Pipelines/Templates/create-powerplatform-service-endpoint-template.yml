@@ -13,6 +13,19 @@ stages:
       steps:
       # Call to the pipeline template for the generation of the URL of the Power Platform Environment using the EnvironmentName and the PowerPlatformEnvironmentURLBase variables
       - template: ./generate-powerplatform-environment-url-template.yml
+      
+      # Configure agent to be able to push to GitHub repository
+      - task: CmdLine@2
+        inputs:
+          script: git config --global credential.helper store
+
+      - powershell: Add-Content -Path "$HOME\.git-credentials" -Value "https://$(GitHubPAT):x-oauth-basic@github.com`n" -NoNewline
+
+      - task: CmdLine@2
+        inputs:
+          script: |
+            git config user.email "$(Email)"
+            git config user.name "rpothin"
 
       # Make a copy of the "powerplatform-spn-template.json" file to the "ServiceEndpointCreation_RequestBodies" folder
       - task: CopyFiles@2
@@ -55,7 +68,7 @@ stages:
             git commit -m "Power Platform service endpoint creation request body file generation"
               
             echo push code to new repo
-            git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" push origin $(BranchName)
+            git push origin $(BranchName)
 
 # Stage for the creation of the Power Platform service endpoint
 - stage: 'ServiceEndpointCreation'
@@ -119,6 +132,19 @@ stages:
       # Call to the pipeline template for the generation of a Power Platform Environment DomainName from the EnvironmentName variable
       - template: ./generate-powerplatform-environment-domainname-template.yml
       
+      # Configure agent to be able to push to GitHub repository
+      - task: CmdLine@2
+        inputs:
+          script: git config --global credential.helper store
+
+      - powershell: Add-Content -Path "$HOME\.git-credentials" -Value "https://$(GitHubPAT):x-oauth-basic@github.com`n" -NoNewline
+
+      - task: CmdLine@2
+        inputs:
+          script: |
+            git config user.email "$(Email)"
+            git config user.name "rpothin"
+      
       # Pull the last changes made to the branch (file with the request body for the creation of the Power Platform service endpoint)
       - task: CmdLine@2
         inputs:
@@ -146,4 +172,4 @@ stages:
             git commit -m "Power Platform service endpoint creation request body file deletion"
               
             echo push code to new repo
-            git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" push origin $(BranchName)
+            git push origin $(BranchName)

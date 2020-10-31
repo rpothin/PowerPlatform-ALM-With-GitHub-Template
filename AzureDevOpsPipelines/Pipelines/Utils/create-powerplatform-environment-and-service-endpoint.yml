@@ -14,6 +14,7 @@
 #   AzureDevOpsOrganizationURL - String - Not secret - Do not let user override (ex: https://dev.azure.com/<organization>/)
 #   PatToken - String - Secret - Do not let user override
 #   MainPowerPlatformServiceEndpointName - String - Not Secret - Do not let user override
+#   GitHubPAT - String - Secret - Do not let user override
 
 # Pipeline triggered manually
 trigger: none
