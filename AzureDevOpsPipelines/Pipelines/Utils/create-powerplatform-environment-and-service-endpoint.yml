@@ -1,7 +1,6 @@
 # Pipeline used to create of a Power Platform environment and generate the associated Power Platform service endpoint
 
 # Variables:
-#   ServiceConnectionName - String - Not secret - Let user override
 #   EnvironmentName - String - Not secret - Let user override
 #   PowerPlatformEnvironmentSKU - String - Not secret - Let user override (pick one value: Production, Sandbox, Trial)
 #   PowerPlatformEnvironmentAppsTemplates - String - Not secret - Let user override (eliminate the values you do not want: D365_Sales, D365_CustomerService, D365_FieldService, D365_ProjectServiceAutomation, D365_CDSSampleApp, D365_DeveloperEdition)
