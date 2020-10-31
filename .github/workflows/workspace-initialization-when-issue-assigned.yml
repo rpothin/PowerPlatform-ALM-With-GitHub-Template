@@ -10,19 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
+      ISSUE_DEV_BRANCH_NAME_BASE: Dev/issue_
 
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+    - name: Get issue number
+      env:
+        ISSUE_NUMBER: ${{ github.event.issue.number }}
+      run: echo "$ISSUE_NUMBER"
 
-      - name: Get issue number
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: echo "$ISSUE_NUMBER"
-    #- uses: peterjgrainger/action-create-branch@v2.0.1
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #  with:
-    #    branch: 'test'
+    - uses: peterjgrainger/action-create-branch@v2.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        branch: '$ISSUE_DEV_BRANCH_NAME_BASE${{ github.event.issue.number }}'
