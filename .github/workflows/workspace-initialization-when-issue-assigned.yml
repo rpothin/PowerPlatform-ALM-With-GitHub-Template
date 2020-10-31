@@ -6,8 +6,7 @@ on:
     types: [assigned]
 
 env:
-  ISSUE_DEV_BRANCH_NAME_BASE: Dev/issue_
-  BRANCH_NAME: ${{ env.ISSUE_DEV_BRANCH_NAME_BASE }}${{ github.event.issue.number }}
+  BRANCH_NAME: Dev/issue_${{ github.event.issue.number }}
 
 jobs:
   create-issue-development-branch:
