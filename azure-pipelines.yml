@@ -15,12 +15,24 @@ steps:
 
 - task: PowerPlatformCreateEnvironment@0
   inputs:
+    authenticationType: 'PowerPlatformEnvironment'
+    PowerPlatformEnvironment: 'Test'
+    DisplayName: 'Test 0'
+    EnvironmentSku: 'Sandbox'
+    AppsTemplate: 'D365_Sales'
+    LocationName: 'canada'
+    LanguageName: '1033'
+    CurrencyName: 'USD'
+    DomainName: 'crm3.dynamics.com'
+
+- task: PowerPlatformCreateEnvironment@0
+  inputs:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'Rpothin Trial'
     DisplayName: 'Test'
     EnvironmentSku: 'Sandbox'
     AppsTemplate: 'D365_Sales'
-    LocationName: 'Canada'
+    LocationName: 'canada'
     LanguageName: '1033'
     CurrencyName: 'CAD'
     DomainName: 'crm3.dynamics.com'
