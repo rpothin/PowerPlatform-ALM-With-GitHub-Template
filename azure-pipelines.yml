@@ -1,0 +1,27 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: PowerPlatformToolInstaller@0
+  inputs:
+    DefaultVersion: true
+
+- task: PowerPlatformCreateEnvironment@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'Rpothin Trial'
+    DisplayName: 'Production'
+    EnvironmentSku: 'Production'
+    AppsTemplate: 'D365_Sales, D365_CustomerService, D365_FieldService, D365_ProjectServiceAutomation'
+    LocationName: 'canada'
+    LanguageName: '1033'
+    CurrencyName: 'CAD'
+    DomainName: 'crm3.dynamics.com'
