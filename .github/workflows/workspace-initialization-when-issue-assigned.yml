@@ -5,21 +5,19 @@ on:
   issues:
     types: [assigned]
 
+env:
+  ISSUE_DEV_BRANCH_NAME_BASE: Dev/issue_
+  BRANCH_NAME: ${{ env.ISSUE_DEV_BRANCH_NAME_BASE }}${{ github.event.issue.number }}
+
 jobs:
   create-issue-development-branch:
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
-      ISSUE_DEV_BRANCH_NAME_BASE: Dev/issue_
 
     steps:
-    - name: Get issue number
-      env:
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
-      run: echo "$ISSUE_NUMBER"
-
     - uses: peterjgrainger/action-create-branch@v2.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: ${{ env.ISSUE_DEV_BRANCH_NAME_BASE }}${{ github.event.issue.number }}'
+        branch: ${{ env.BRANCH_NAME }}
