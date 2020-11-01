@@ -5,19 +5,11 @@ on:
   issues:
     types: [assigned]
 
-env:
-  BRANCH_NAME: dev/issue_${{ github.event.issue.number }}
-  POWERAPP_ENVIRONMENT_DISPLAY_NAME: Dev - Issue ${{ github.event.issue.number }}
-  POWERAPP_ENVIRONMENT_LOCATION: canada
-  POWERAPP_ENVIRONMENT_SKU: Trial
-  POWERAPP_ENVIRONMENT_CURRENCY_NAME: CAD
-  POWERAPP_ENVIRONMENT_LANGUAGE_CODE: 1033
-  POWERAPP_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.issue.number }}
-
 jobs:
   create-issue-development-branch:
     runs-on: ubuntu-latest
     env:
+      BRANCH_NAME: dev/issue_${{ github.event.issue.number }}
       RUNNER_DEBUG: 1
 
     steps:
@@ -27,9 +19,15 @@ jobs:
       with:
         branch: ${{ env.BRANCH_NAME }}
 
-  create-powerapp-environment:
+  create-powerapps-environment:
     runs-on: windows-latest
     env:
+      POWERAPPS_ENVIRONMENT_DISPLAY_NAME: Dev - Issue ${{ github.event.issue.number }}
+      POWERAPPS_ENVIRONMENT_LOCATION: canada
+      POWERAPPS_ENVIRONMENT_SKU: Trial
+      POWERAPPS_ENVIRONMENT_CURRENCY_NAME: CAD
+      POWERAPPS_ENVIRONMENT_LANGUAGE_CODE: 1033
+      POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.issue.number }}
       RUNNER_DEBUG: 1
 
     steps:
@@ -39,13 +37,10 @@ jobs:
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
-    - name: Add Power Apps account
+    - name: Add Power Apps account & Create Power Apps environment
       shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
-
-    - name: Create Power Apps environment
-      shell: powershell
-      run: |
-        New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPP_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPP_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPP_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPP_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPP_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPP_ENVIRONMENT_DOMAIN_NAME }}'
+        
+        New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
