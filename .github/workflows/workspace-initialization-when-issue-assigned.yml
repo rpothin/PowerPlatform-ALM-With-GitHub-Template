@@ -48,6 +48,7 @@ jobs:
         New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
 
   add-comment-on-issue:
+    needs: [create-issue-development-branch, create-powerapps-environment]
     runs-on: ubuntu-latest
     env:
       POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
