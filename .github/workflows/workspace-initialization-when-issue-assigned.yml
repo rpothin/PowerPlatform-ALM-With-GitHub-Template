@@ -5,11 +5,15 @@ on:
   issues:
     types: [assigned]
 
+env:
+  BRANCH_NAME: dev/issue_${{ github.event.issue.number }}
+  POWERAPPS_ENVIRONMENT_DISPLAY_NAME: Dev - Issue ${{ github.event.issue.number }}
+  POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.issue.number }}
+
 jobs:
   create-issue-development-branch:
     runs-on: ubuntu-latest
     env:
-      BRANCH_NAME: dev/issue_${{ github.event.issue.number }}
       RUNNER_DEBUG: 1
 
     steps:
@@ -22,12 +26,10 @@ jobs:
   create-powerapps-environment:
     runs-on: windows-latest
     env:
-      POWERAPPS_ENVIRONMENT_DISPLAY_NAME: Dev - Issue ${{ github.event.issue.number }}
       POWERAPPS_ENVIRONMENT_LOCATION: canada
       POWERAPPS_ENVIRONMENT_SKU: Trial
       POWERAPPS_ENVIRONMENT_CURRENCY_NAME: CAD
       POWERAPPS_ENVIRONMENT_LANGUAGE_CODE: 1033
-      POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.issue.number }}
       RUNNER_DEBUG: 1
 
     steps:
@@ -44,3 +46,20 @@ jobs:
         Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
         
         New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
+
+  add-comment-on-issue:
+    runs-on: ubuntu-latest
+    env:
+      POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: New comment on issue
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          # Workspace initialized!
+
+          Branch: **${{ env.BRANCH_NAME }}**
+          Power Apps environment: [**${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}**](https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }})
