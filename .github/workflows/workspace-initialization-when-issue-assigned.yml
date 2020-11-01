@@ -48,11 +48,4 @@ jobs:
     - name: Create Power Apps environment
       shell: powershell
       run: |
-        New-AdminPowerAppEnvironment
-          -DisplayName '${{ env.POWERAPP_ENVIRONMENT_DISPLAY_NAME }}'
-          -Location ${{ env.POWERAPP_ENVIRONMENT_LOCATION }}
-          -EnvironmentSku ${{ env.POWERAPP_ENVIRONMENT_SKU }}
-          -ProvisionDatabase
-          -CurrencyName ${{ env.POWERAPP_ENVIRONMENT_CURRENCY_NAME }}
-          -LanguageName ${{ env.POWERAPP_ENVIRONMENT_LANGUAGE_CODE }}
-          -DomainName '${{ env.POWERAPP_ENVIRONMENT_DOMAIN_NAME }}'
+        New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPP_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPP_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPP_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPP_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPP_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPP_ENVIRONMENT_DOMAIN_NAME }}'
