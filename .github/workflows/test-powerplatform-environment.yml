@@ -5,20 +5,20 @@ on:
 
 jobs:
   test-powerplatform-environment:
-    runs-on: windows-2019
+    runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
     - name: Get modules
-      shell: pwsh
+      shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
         Get-InstalledModule
 
     - name: Connect & Get locations
-      shell: pwsh
+      shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.user_password }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.user_login }} -Password $pass
