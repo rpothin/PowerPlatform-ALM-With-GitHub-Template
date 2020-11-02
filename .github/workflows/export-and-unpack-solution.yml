@@ -36,12 +36,12 @@ jobs:
         user-name: ${{ secrets.DEV_USER_LOGIN }}
         password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
-    - name: publish-solution action
-      uses: microsoft/powerplatform-actions/publish-solution@v0
-      with:
-        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
-        user-name: ${{ secrets.DEV_USER_LOGIN }}
-        password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+    #- name: publish-solution action
+    #  uses: microsoft/powerplatform-actions/publish-solution@v0
+    #  with:
+    #    environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+    #    user-name: ${{ secrets.DEV_USER_LOGIN }}
+    #    password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
     - name: export-solution action
       uses: microsoft/powerplatform-actions/export-solution@v0
