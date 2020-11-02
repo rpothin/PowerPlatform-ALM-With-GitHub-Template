@@ -1,6 +1,5 @@
 name: export-and-unpack-solution
-# Export solution from DEV environment
-#  and unpack it in DEV branch
+# Export solution from DEV environment and unpack it in DEV branch
 
 on:
   workflow_dispatch:
