@@ -17,6 +17,4 @@ jobs:
     - name: Test
       shell: powershell
       run: |
-        Write-Host "$NOW"
-        
-        Write-Host "$GITHUB_ENV.NOW"
+        Write-Host "${{ env.NOW }}"
