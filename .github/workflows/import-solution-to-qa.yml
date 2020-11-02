@@ -1,11 +1,15 @@
-name: solution-quality-check-on-pr
-# Check the quality of a Power Apps solution on a pull request to main
-#   source branch name: ${{ github.head_ref }}
+name: import-solution-to-qa
+# Upload the solutions to the GitHub artifacts and deploy to the QA environment
 
 on:
-  pull_request:
-    branches:
-      - main
+  push:
+    branches: [ main ]
+    paths:
+      - 'Solutions/**'
+      - '!.github/**'
+      - '!AzureDevOpsPipelines/**'
+      - '!LICENSE'
+      - '!README.md'
 
 jobs:
   create-build-environment:
@@ -45,8 +49,8 @@ jobs:
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
         New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
-    
-  solution-quality-checks:
+  
+  build-managed-solution:
     needs: create-build-environment
     runs-on: windows-latest
     env:
@@ -98,8 +102,38 @@ jobs:
         name: managedSolutions
         path: out/ship/${{ env.SOLUTION_NAME }}.zip
 
+  import-solution-to-qa:
+    needs: build-managed-solution
+    runs-on: windows-latest
+    env:
+      POWERAPPS_QA_ENVIRONMENT_URL: https://rpothin-qa.crm3.dynamics.com
+      RUNNER_DEBUG: 1
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
+
+    - name: Fetch the ready to ship solution from GH artifact store
+      uses: actions/download-artifact@v2
+      with:
+        name: managedSolutions
+        path: out/release/
+
+    - run: get-childitem .\out\release\
+
+    - name: Import solution to qa env
+      uses: microsoft/powerplatform-actions/import-solution@v0
+      with:
+        environment-url: ${{ env.POWERAPPS_QA_ENVIRONMENT_URL }}
+        user-name: ${{ secrets.QA_USER_LOGIN }}
+        password-secret: ${{ secrets.QA_USER_PASSWORD }}
+        solution-file: out/release/${{ env.SOLUTION_NAME }}.zip
+        force-overwrite: true
+        publish-changes: true
+
   delete-build-environment:
-    needs: solution-quality-checks
+    needs: import-solution-to-qa
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
