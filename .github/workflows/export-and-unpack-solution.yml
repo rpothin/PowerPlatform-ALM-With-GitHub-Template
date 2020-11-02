@@ -14,8 +14,8 @@ on:
         default: 'PowerPlatformALMWithGitHub'
 
 env:
-  BRANCH_NAME: dev/issue_${{ github.event.issue.number }}
-  POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.issue.number }}
+  BRANCH_NAME: dev/issue_${{ github.event.inputs.issue_number }}
+  POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.inputs.issue_number }}
   POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
 
 jobs:
