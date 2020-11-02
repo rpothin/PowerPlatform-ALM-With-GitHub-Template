@@ -3,7 +3,6 @@ name: test
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   create-build-environment:
@@ -16,4 +15,4 @@ jobs:
       run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
     
     - name: Test
-      run: echo $GITHUB_ENV.NOW
+      run: echo $NOW
