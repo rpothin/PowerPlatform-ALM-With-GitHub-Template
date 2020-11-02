@@ -20,5 +20,3 @@ jobs:
         Write-Host "$NOW"
         
         Write-Host "$GITHUB_ENV.NOW"
-        
-        Write-Host "${{ github_env.now }}"
