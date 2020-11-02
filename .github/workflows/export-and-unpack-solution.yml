@@ -1,0 +1,70 @@
+name: export-and-unpack-solution
+# Export solution from DEV environment
+#  and unpack it in DEV branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Number of the issue you are working on'
+        required: true
+      solution_name:
+        description: 'Name of the Power Apps solution you are working on'
+        required: true
+        default: 'PowerPlatformALMWithGitHub'
+
+env:
+  BRANCH_NAME: dev/issue_${{ github.event.issue.number }}
+  POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.issue.number }}
+  POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
+
+jobs:
+  export-from-dev:
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
+
+    - name: who-am-i action
+      uses: microsoft/powerplatform-actions/who-am-i@v0
+      with:
+        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        user-name: ${{ secrets.DEV_USER_LOGIN }}
+        password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+
+    - name: publish-solution action
+      uses: microsoft/powerplatform-actions/publish-solution@v0
+      with:
+        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        user-name: ${{ secrets.DEV_USER_LOGIN }}
+        password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+
+    - name: export-solution action
+      uses: microsoft/powerplatform-actions/export-solution@v0
+      with:
+        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        user-name: ${{ secrets.DEV_USER_LOGIN }}
+        password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+        solution-name: ${{ github.event.inputs.solution_name }}
+        solution-output-file: out/exported/${{ github.event.inputs.solution_name }}.zip
+
+    - name: unpack-solution action
+      uses: microsoft/powerplatform-actions/unpack-solution@v0
+      with:
+        solution-file: out/exported/${{ github.event.inputs.solution_name }}.zip
+        solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
+        solution-type: 'Unmanaged'
+        overwrite-files: true
+
+    - name: branch-solution action
+      uses: microsoft/powerplatform-actions/branch-solution@v0
+      with:
+        solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
+        solution-target-folder: Solutions/${{ github.event.inputs.solution_name }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        branch-name: ${{ env.BRANCH_NAME }}
+        allow-empty-commit: false
