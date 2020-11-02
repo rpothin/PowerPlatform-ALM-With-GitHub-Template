@@ -15,4 +15,10 @@ jobs:
       run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
     
     - name: Test
-      run: echo $NOW
+      shell: powershell
+      run: |
+        Write-Host "$NOW"
+        
+        Write-Host "$GITHUB_ENV.NOW"
+        
+        Write-Host "${{ github_env.now }}"
