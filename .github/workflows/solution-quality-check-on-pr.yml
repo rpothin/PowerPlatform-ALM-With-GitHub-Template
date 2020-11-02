@@ -90,7 +90,7 @@ jobs:
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-name: ${{ env.SOLUTION_NAME }}
         managed: true
-        solution-output-file: out/ship/ALMLab.zip
+        solution-output-file: out/ship/${{ env.SOLUTION_NAME }}.zip
 
     - name: Upload the ready to ship solution to GH artifact store
       uses: actions/upload-artifact@v2
