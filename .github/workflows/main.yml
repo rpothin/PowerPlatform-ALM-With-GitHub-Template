@@ -1,0 +1,19 @@
+name: test
+# Export solution from DEV environment and unpack it in DEV branch
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  create-build-environment:
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Set current date as env variable
+      run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
+    
+    - name: Test
+      run: echo $GITHUB_ENV.NOW
