@@ -3,6 +3,8 @@ name: solution-quality-check-on-pr
 
 on:
   pull_request:
+    branches:
+      - main
 
 env:
   POWERAPPS_ENVIRONMENT_DOMAIN_NAME: build-${{ env.NOW }}-${{ github.run_number }}
