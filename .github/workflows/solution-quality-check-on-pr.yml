@@ -42,6 +42,7 @@ jobs:
         New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
     
   solution-quality-checks:
+    needs: create-build-environment
     runs-on: windows-latest
     env:
       SOLUTION_NAME: PowerPlatformALMWithGitHub
@@ -85,7 +86,8 @@ jobs:
         name: managedSolutions
         path: out/ship/ALMLab.zip
 
-  delete-build-environment:
+  solution-quality-checks:
+    needs: create-build-environment
     runs-on: windows-latest
     env:
       POWERAPPS_ENVIRONMENT_SEARCH_NAME: Build*-*${{ env.NOW }}*-*${{ github.run_number }}
