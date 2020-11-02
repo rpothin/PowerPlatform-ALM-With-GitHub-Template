@@ -104,7 +104,6 @@ jobs:
       run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
 
     - name: Set POWERAPPS_ENVIRONMENT_SEARCH_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_SEARCH_NAME::Build*-*$NOW*-*${{ github.run_number }}"
       run: echo "POWERAPPS_ENVIRONMENT_SEARCH_NAME=Build*-*$NOW*-*${{ github.run_number }}" >> $GITHUB_ENV
     
     - name: Get PowerShell modules
