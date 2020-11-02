@@ -98,10 +98,14 @@ jobs:
 
   delete-build-environment:
     runs-on: windows-latest
-    env:
-      POWERAPPS_ENVIRONMENT_SEARCH_NAME: Build*-*${{ env.NOW }}*-*${{ github.run_number }}
 
     steps:
+    - name: Set current date as env variable
+      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+
+    - name: Set current date as env variable
+      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_SEARCH_NAME::Build*-*${{ env.NOW }}*-*${{ github.run_number }}"
+    
     - name: Get PowerShell modules
       shell: powershell
       run: |
