@@ -25,19 +25,14 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-    
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
     - name: Set powerapps_environment_display_name as env variable
-      run: echo "::set-env name=powerapps_environment_display_name::Build - ${{ env.NOW }} - ${{ github.run_number }}"
+      run: echo "::set-env name=powerapps_environment_display_name::Build - ${{ env.NOW }} - ${{ github.run_id }}"
 
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_number }}"
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
 
     - name: Get PowerShell modules
       shell: powershell
@@ -65,7 +60,7 @@ jobs:
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_number }}"
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
 
     - uses: actions/checkout@v2
       with:
@@ -145,7 +140,7 @@ jobs:
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
     - name: Set powerapps_environment_search_name as env variable
-      run: echo "::set-env name=powerapps_environment_search_name::Build*-*${{ env.NOW }}*-*${{ github.run_number }}"
+      run: echo "::set-env name=powerapps_environment_search_name::Build*-*${{ env.NOW }}*-*${{ github.run_id }}"
     
     - name: Get PowerShell modules
       shell: powershell
