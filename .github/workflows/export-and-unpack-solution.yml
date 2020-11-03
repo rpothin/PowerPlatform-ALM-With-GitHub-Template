@@ -13,9 +13,9 @@ on:
         default: 'PowerPlatformALMWithGitHub'
 
 env:
-  BRANCH_NAME: dev/issue_${{ github.event.inputs.issue_number }}
-  POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.inputs.issue_number }}
-  POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
+  branch_name: dev/issue_${{ github.event.inputs.issue_number }}
+  powerapps_environment_domain_name: dev-issue-${{ github.event.inputs.issue_number }}
+  powerapps_environment_url_base: .crm3.dynamics.com
 
 jobs:
   export-from-dev:
@@ -31,21 +31,21 @@ jobs:
     - name: who-am-i action
       uses: microsoft/powerplatform-actions/who-am-i@v0
       with:
-        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.DEV_USER_LOGIN }}
         password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
     #- name: publish-solution action
     #  uses: microsoft/powerplatform-actions/publish-solution@v0
     #  with:
-    #    environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+    #    environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
     #    user-name: ${{ secrets.DEV_USER_LOGIN }}
     #    password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
     - name: export-solution action
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.DEV_USER_LOGIN }}
         password-secret: ${{ secrets.DEV_USER_PASSWORD }}
         solution-name: ${{ github.event.inputs.solution_name }}
@@ -65,5 +65,5 @@ jobs:
         solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
         solution-target-folder: Solutions/${{ github.event.inputs.solution_name }}
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        branch-name: ${{ env.BRANCH_NAME }}
+        branch-name: ${{ env.branch_name }}
         allow-empty-commit: false
