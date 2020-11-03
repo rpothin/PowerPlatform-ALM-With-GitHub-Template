@@ -1,5 +1,5 @@
 name: export-and-unpack-solution
-# Export solution from DEV environment and unpack it in DEV branch
+# Export solution from a Power Apps Dev environment and unpack it in the associated Dev branch
 
 on:
   workflow_dispatch:

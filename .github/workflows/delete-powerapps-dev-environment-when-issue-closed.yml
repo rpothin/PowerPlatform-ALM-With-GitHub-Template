@@ -1,0 +1,48 @@
+name: delete-powerapps-dev-environment-when-issue-closed
+# Delete the Power Apps Dev environment created to work on the considered issue when it is closed
+
+on:
+  issues:
+    types: [closed]
+
+env:
+  powerapps_environment_display_name: Dev - Issue ${{ github.event.issue.number }}
+  powerapps_environment_domain_name: dev-issue-${{ github.event.issue.number }}
+  powerapps_environment_url_base: .crm3.dynamics.com
+
+jobs:
+  delete-powerapps-dev-environment:
+    runs-on: windows-latest
+    env:
+      powerapps_environment_search_name: Dev*-*Issue*${{ github.event.issue.number }}
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Get PowerShell modules
+      shell: powershell
+      run: |
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
+        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+    
+    - name: Add Power Apps account & Delete Power Apps environment
+      shell: powershell
+      run: |
+        $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
+        Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
+
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.powerapps_environment_search_name }}*
+        Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
+
+  add-comment-on-issue:
+    needs: delete-powerapps-dev-environment
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: New comment on issue
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          [**${{ env.powerapps_environment_display_name }}**](https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}) Power Apps environment deleted!

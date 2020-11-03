@@ -1,5 +1,5 @@
 name: import-solution-to-qa
-# Upload the solutions to the GitHub artifacts and deploy to the QA environment
+# Upload the solutions to the GitHub artifacts and deploy to the Power Apps QA environment
 
 on:
   push:

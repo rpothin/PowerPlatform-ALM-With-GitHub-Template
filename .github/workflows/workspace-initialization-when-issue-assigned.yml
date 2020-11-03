@@ -1,5 +1,5 @@
 name: workspace-initialization-when-issue-assigned
-# Create a branch and generate a Power Apps development environment when an issue is assigned
+# Create a branch and generate a Power Apps Dev environment when an issue is assigned
 
 on:
   issues:
