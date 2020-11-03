@@ -1,16 +1,63 @@
-name: create-release
-# Generate a release for the TeamsCreation solution
+name: create-github-release
+# Generate a GitHub release for the considered solution
 
 on:
   workflow_dispatch:
+      github_release_body:
+        description: 'Text for the body of the GitHub release'
+        required: true
+
+env:
+  solution_name: PowerPlatformALMWithGitHub
   
 jobs:
-  generate-unmanaged-solution:
+  create-build-environment:
     runs-on: windows-latest
     env:
+      powerapps_environment_location: canada
+      powerapps_environment_sku: Trial
+      powerapps_environment_currency_name: CAD
+      powerapps_environment_language_code: 1033
       RUNNER_DEBUG: 1
 
     steps:
+    - name: Set current date as env variable
+      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+
+    - name: Set powerapps_environment_display_name as env variable
+      run: echo "::set-env name=powerapps_environment_display_name::Build - ${{ env.NOW }} - ${{ github.run_id }}"
+
+    - name: Set powerapps_environment_domain_name as env variable
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
+
+    - name: Get PowerShell modules
+      shell: powershell
+      run: |
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
+        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+    
+    - name: Add Power Apps account & Create Power Apps environment
+      shell: powershell
+      run: |
+        $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
+        Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
+        
+        New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
+  
+  build-managed-solution:
+    needs: create-build-environment
+    runs-on: windows-latest
+    env:
+      powerapps_environment_url_base: .crm3.dynamics.com
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Set current date as env variable
+      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+
+    - name: Set powerapps_environment_domain_name as env variable
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
+
     - uses: actions/checkout@v2
       with:
         lfs: true
@@ -18,18 +65,38 @@ jobs:
     - name: Pack solution
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
-        solution-folder: TeamsCreationAutomationWithPowerAutomate/TeamsCreation
-        solution-file: out/TeamsCreationAutomationWithPowerAutomate/TeamsCreation.zip
+        solution-folder: Solutions/${{ env.solution_name }}
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
+
+    - name: Import solution as unmanaged to build env
+      uses: microsoft/powerplatform-actions/import-solution@v0
+      with:
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+        user-name: ${{ secrets.BUILD_USER_LOGIN }}
+        password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
+        force-overwrite: true
+        publish-changes: true
+
+    - name: Export solution as managed
+      uses: microsoft/powerplatform-actions/export-solution@v0
+      with:
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+        user-name: ${{ secrets.BUILD_USER_LOGIN }}
+        password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
+        solution-name: ${{ env.solution_name }}
+        managed: true
+        solution-output-file: out/ship/${{ env.solution_name }}.zip
 
     - name: Upload the ready to ship solution to GH artifact store
       uses: actions/upload-artifact@v2
       with:
-        name: unmanagedSolutions
-        path: out/TeamsCreationAutomationWithPowerAutomate/TeamsCreation.zip
+        name: managedSolutions
+        path: out/ship/${{ env.solution_name }}.zip
 
-  create-release:
-    needs: [ generate-unmanaged-solution ]
+  create-github-release:
+    needs: build-managed-solution
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -41,7 +108,7 @@ jobs:
       - name: Fetch the ready to ship solution from GH artifact store
         uses: actions/download-artifact@v2
         with:
-          name: unmanagedSolutions
+          name: managedSolutions
           path: out/release/
 
       - name: Create Release
@@ -50,11 +117,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: TeamsCreation_${{ env.NOW }}_${{ github.run_id }}
-          release_name: TeamsCreation Release - ${{ env.NOW }} - ${{ github.run_id }}
+          tag_name: ${{ env.solution_name }}_${{ env.NOW }}_${{ github.run_id }}
+          release_name: ${{ env.solution_name }} Release - ${{ env.NOW }} - ${{ github.run_id }}
           body: |
-            Changes in this Release:
-            - Initialization of the TeamsCreation solution
+            ${{ github.event.inputs.github_release_body }}
           draft: false
           prerelease: false
 
@@ -65,8 +131,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: out/release/TeamsCreation.zip
-          asset_name: TeamsCreation.zip
+          asset_path: out/release/${{ env.solution_name }}.zip
+          asset_name: ${{ env.solution_name }}.zip
           asset_content_type: application/zip
 
       - name: Upload Release Asset - README
@@ -76,6 +142,34 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: TeamsCreationAutomationWithPowerAutomate/README.md
+          asset_path: README.md
           asset_name: README.md
           asset_content_type: application/md
+
+  delete-build-environment:
+    needs: create-github-release
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Set current date as env variable
+      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+
+    - name: Set powerapps_environment_search_name as env variable
+      run: echo "::set-env name=powerapps_environment_search_name::Build*-*${{ env.NOW }}*-*${{ github.run_id }}"
+    
+    - name: Get PowerShell modules
+      shell: powershell
+      run: |
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
+        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+    
+    - name: Add Power Apps account & Delete Power Apps environment
+      shell: powershell
+      run: |
+        $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
+        Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
+
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.powerapps_environment_search_name }}*
+        Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
