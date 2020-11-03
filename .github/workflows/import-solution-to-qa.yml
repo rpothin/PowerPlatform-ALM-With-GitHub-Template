@@ -11,6 +11,9 @@ on:
       - '!LICENSE'
       - '!README.md'
 
+env:
+  solution_name: PowerPlatformALMWithGitHub
+
 jobs:
   create-build-environment:
     runs-on: windows-latest
@@ -55,7 +58,6 @@ jobs:
     runs-on: windows-latest
     env:
       powerapps_environment_url_base: .crm3.dynamics.com
-      solution_name: PowerPlatformALMWithGitHub
       RUNNER_DEBUG: 1
 
     steps:
