@@ -72,6 +72,17 @@ jobs:
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
+    - name: Get PowerShell modules
+      shell: powershell
+      run: |
+        Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
+
+    - name: Invoke solution checker
+      shell: powershell
+      run: |
+        $rulesets = Get-PowerAppsCheckerRulesets -Geography Canada
+        $rulesetToUse = $rulesets | where Name -NE 'AppSource Certification'
+
     - name: Import solution as unmanaged to build env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
