@@ -35,6 +35,7 @@ jobs:
         user-name: ${{ secrets.DEV_USER_LOGIN }}
         password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
+    # This action is not yet available
     #- name: publish-solution action
     #  uses: microsoft/powerplatform-actions/publish-solution@v0
     #  with:
