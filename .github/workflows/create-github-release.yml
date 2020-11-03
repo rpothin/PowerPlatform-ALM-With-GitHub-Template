@@ -3,6 +3,7 @@ name: create-github-release
 
 on:
   workflow_dispatch:
+    inputs:
       github_release_body:
         description: 'Text for the body of the GitHub release'
         required: true
