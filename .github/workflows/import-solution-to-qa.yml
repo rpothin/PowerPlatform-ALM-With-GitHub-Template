@@ -106,7 +106,7 @@ jobs:
     needs: build-managed-solution
     runs-on: windows-latest
     env:
-      powerapps_qa_environment_url: https://rpothin-qa.crm3.dynamics.com
+      powerapps_qa_environment_url: https://rpothin-qa.crm3.dynamics.com/
       RUNNER_DEBUG: 1
 
     steps:

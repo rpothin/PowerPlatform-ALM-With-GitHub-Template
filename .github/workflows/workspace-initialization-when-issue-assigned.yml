@@ -80,7 +80,7 @@ jobs:
   #      publish-changes: true
 
   add-comment-on-issue:
-    needs: [create-issue-development-branch, import-solution-to-dev-environment]
+    needs: [create-issue-development-branch, create-powerapps-dev-environment] #Change "create-powerapps-dev-environment" for "import-solution-to-dev-environment" only after the initialization of the solution in the repository
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
