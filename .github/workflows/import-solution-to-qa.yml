@@ -15,10 +15,10 @@ jobs:
   create-build-environment:
     runs-on: windows-latest
     env:
-      POWERAPPS_ENVIRONMENT_LOCATION: canada
-      POWERAPPS_ENVIRONMENT_SKU: Trial
-      POWERAPPS_ENVIRONMENT_CURRENCY_NAME: CAD
-      POWERAPPS_ENVIRONMENT_LANGUAGE_CODE: 1033
+      powerapps_environment_location: canada
+      powerapps_environment_sku: Trial
+      powerapps_environment_currency_name: CAD
+      powerapps_environment_language_code: 1033
       RUNNER_DEBUG: 1
 
     steps:
@@ -30,11 +30,11 @@ jobs:
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
-    - name: Set POWERAPPS_ENVIRONMENT_DISPLAY_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_DISPLAY_NAME::Build - ${{ env.NOW }} - ${{ github.run_number }}"
+    - name: Set powerapps_environment_display_name as env variable
+      run: echo "::set-env name=powerapps_environment_display_name::Build - ${{ env.NOW }} - ${{ github.run_number }}"
 
-    - name: Set POWERAPPS_ENVIRONMENT_DOMAIN_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_DOMAIN_NAME::build-${{ env.NOW }}-${{ github.run_number }}"
+    - name: Set powerapps_environment_domain_name as env variable
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_number }}"
 
     - name: Get PowerShell modules
       shell: powershell
@@ -48,22 +48,22 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
-        New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
+        New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
   
   build-managed-solution:
     needs: create-build-environment
     runs-on: windows-latest
     env:
-      POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
-      SOLUTION_NAME: PowerPlatformALMWithGitHub
+      powerapps_environment_url_base: .crm3.dynamics.com
+      solution_name: PowerPlatformALMWithGitHub
       RUNNER_DEBUG: 1
 
     steps:
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
-    - name: Set POWERAPPS_ENVIRONMENT_DOMAIN_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_DOMAIN_NAME::build-${{ env.NOW }}-${{ github.run_number }}"
+    - name: Set powerapps_environment_domain_name as env variable
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_number }}"
 
     - uses: actions/checkout@v2
       with:
@@ -72,41 +72,41 @@ jobs:
     - name: Pack solution
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
-        solution-folder: Solutions/${{ env.SOLUTION_NAME }}
-        solution-file: out/Solutions/${{ env.SOLUTION_NAME }}.zip
+        solution-folder: Solutions/${{ env.solution_name }}
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
     - name: Import solution as unmanaged to build env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
-        solution-file: out/Solutions/${{ env.SOLUTION_NAME }}.zip
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
 
     - name: Export solution as managed
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
-        solution-name: ${{ env.SOLUTION_NAME }}
+        solution-name: ${{ env.solution_name }}
         managed: true
-        solution-output-file: out/ship/${{ env.SOLUTION_NAME }}.zip
+        solution-output-file: out/ship/${{ env.solution_name }}.zip
 
     - name: Upload the ready to ship solution to GH artifact store
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
-        path: out/ship/${{ env.SOLUTION_NAME }}.zip
+        path: out/ship/${{ env.solution_name }}.zip
 
   import-solution-to-qa:
     needs: build-managed-solution
     runs-on: windows-latest
     env:
-      POWERAPPS_QA_ENVIRONMENT_URL: https://rpothin-qa.crm3.dynamics.com
+      powerapps_qa_environment_url: https://rpothin-qa.crm3.dynamics.com
       RUNNER_DEBUG: 1
 
     steps:
@@ -125,10 +125,10 @@ jobs:
     - name: Import solution to qa env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: ${{ env.POWERAPPS_QA_ENVIRONMENT_URL }}
+        environment-url: ${{ env.powerapps_qa_environment_url }}
         user-name: ${{ secrets.QA_USER_LOGIN }}
         password-secret: ${{ secrets.QA_USER_PASSWORD }}
-        solution-file: out/release/${{ env.SOLUTION_NAME }}.zip
+        solution-file: out/release/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
 
@@ -142,8 +142,8 @@ jobs:
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
-    - name: Set POWERAPPS_ENVIRONMENT_SEARCH_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_SEARCH_NAME::Build*-*${{ env.NOW }}*-*${{ github.run_number }}"
+    - name: Set powerapps_environment_search_name as env variable
+      run: echo "::set-env name=powerapps_environment_search_name::Build*-*${{ env.NOW }}*-*${{ github.run_number }}"
     
     - name: Get PowerShell modules
       shell: powershell
@@ -157,5 +157,5 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.POWERAPPS_ENVIRONMENT_SEARCH_NAME }}*
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.powerapps_environment_search_name }}*
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName

@@ -6,9 +6,9 @@ on:
     types: [assigned]
 
 env:
-  BRANCH_NAME: dev/issue_${{ github.event.issue.number }}
-  POWERAPPS_ENVIRONMENT_DISPLAY_NAME: Dev - Issue ${{ github.event.issue.number }}
-  POWERAPPS_ENVIRONMENT_DOMAIN_NAME: dev-issue-${{ github.event.issue.number }}
+  branch_name: dev/issue_${{ github.event.issue.number }}
+  powerapps_environment_display_name: Dev - Issue ${{ github.event.issue.number }}
+  powerapps_environment_domain_name: dev-issue-${{ github.event.issue.number }}
 
 jobs:
   create-issue-development-branch:
@@ -21,15 +21,15 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: ${{ env.BRANCH_NAME }}
+        branch: ${{ env.branch_name }}
 
   create-powerapps-environment:
     runs-on: windows-latest
     env:
-      POWERAPPS_ENVIRONMENT_LOCATION: canada
-      POWERAPPS_ENVIRONMENT_SKU: Trial
-      POWERAPPS_ENVIRONMENT_CURRENCY_NAME: CAD
-      POWERAPPS_ENVIRONMENT_LANGUAGE_CODE: 1033
+      powerapps_environment_location: canada
+      powerapps_environment_sku: Trial
+      powerapps_environment_currency_name: CAD
+      powerapps_environment_language_code: 1033
       RUNNER_DEBUG: 1
 
     steps:
@@ -45,13 +45,13 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
         
-        New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
+        New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
 
   add-comment-on-issue:
     needs: [create-issue-development-branch, create-powerapps-environment]
     runs-on: ubuntu-latest
     env:
-      POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
+      powerapps_environment_url_base: .crm3.dynamics.com
       RUNNER_DEBUG: 1
 
     steps:
@@ -62,5 +62,5 @@ jobs:
         body: |
           # Workspace initialized!
 
-          Branch: **${{ env.BRANCH_NAME }}**
-          Power Apps environment: [**${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}**](https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }})
+          Branch: **${{ env.branch_name }}**
+          Power Apps environment: [**${{ env.powerapps_environment_display_name }}**](https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }})

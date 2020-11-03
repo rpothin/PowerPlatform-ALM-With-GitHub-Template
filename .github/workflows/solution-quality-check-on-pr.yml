@@ -11,10 +11,10 @@ jobs:
   create-build-environment:
     runs-on: windows-latest
     env:
-      POWERAPPS_ENVIRONMENT_LOCATION: canada
-      POWERAPPS_ENVIRONMENT_SKU: Trial
-      POWERAPPS_ENVIRONMENT_CURRENCY_NAME: CAD
-      POWERAPPS_ENVIRONMENT_LANGUAGE_CODE: 1033
+      powerapps_environment_location: canada
+      powerapps_environment_sku: Trial
+      powerapps_environment_currency_name: CAD
+      powerapps_environment_language_code: 1033
       RUNNER_DEBUG: 1
 
     steps:
@@ -26,11 +26,11 @@ jobs:
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
-    - name: Set POWERAPPS_ENVIRONMENT_DISPLAY_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_DISPLAY_NAME::Build - ${{ env.NOW }} - ${{ github.run_number }}"
+    - name: Set powerapps_environment_display_name as env variable
+      run: echo "::set-env name=powerapps_environment_display_name::Build - ${{ env.NOW }} - ${{ github.run_number }}"
 
-    - name: Set POWERAPPS_ENVIRONMENT_DOMAIN_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_DOMAIN_NAME::build-${{ env.NOW }}-${{ github.run_number }}"
+    - name: Set powerapps_environment_domain_name as env variable
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_number }}"
 
     - name: Get PowerShell modules
       shell: powershell
@@ -44,7 +44,7 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
-        New-AdminPowerAppEnvironment -DisplayName '${{ env.POWERAPPS_ENVIRONMENT_DISPLAY_NAME }}' -Location ${{ env.POWERAPPS_ENVIRONMENT_LOCATION }} -EnvironmentSku ${{ env.POWERAPPS_ENVIRONMENT_SKU }} -ProvisionDatabase -CurrencyName ${{ env.POWERAPPS_ENVIRONMENT_CURRENCY_NAME }} -LanguageName ${{ env.POWERAPPS_ENVIRONMENT_LANGUAGE_CODE }} -DomainName '${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}'
+        New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
     
   solution-quality-checks:
     needs: create-build-environment
@@ -58,8 +58,8 @@ jobs:
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
-    - name: Set POWERAPPS_ENVIRONMENT_DOMAIN_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_DOMAIN_NAME::build-${{ env.NOW }}-${{ github.run_number }}"
+    - name: Set powerapps_environment_domain_name as env variable
+      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_number }}"
 
     - uses: actions/checkout@v2
       with:
@@ -75,7 +75,7 @@ jobs:
     - name: Import solution as unmanaged to build env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.SOLUTION_NAME }}.zip
@@ -85,7 +85,7 @@ jobs:
     - name: Export solution as managed
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${{ env.POWERAPPS_ENVIRONMENT_DOMAIN_NAME }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-name: ${{ env.SOLUTION_NAME }}
@@ -108,8 +108,8 @@ jobs:
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
-    - name: Set POWERAPPS_ENVIRONMENT_SEARCH_NAME as env variable
-      run: echo "::set-env name=POWERAPPS_ENVIRONMENT_SEARCH_NAME::Build*-*${{ env.NOW }}*-*${{ github.run_number }}"
+    - name: Set powerapps_environment_search_name as env variable
+      run: echo "::set-env name=powerapps_environment_search_name::Build*-*${{ env.NOW }}*-*${{ github.run_number }}"
     
     - name: Get PowerShell modules
       shell: powershell
@@ -123,5 +123,5 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.POWERAPPS_ENVIRONMENT_SEARCH_NAME }}*
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.powerapps_environment_search_name }}*
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
