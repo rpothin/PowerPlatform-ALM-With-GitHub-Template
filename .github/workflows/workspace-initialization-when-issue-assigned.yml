@@ -9,6 +9,7 @@ env:
   branch_name: dev/issue_${{ github.event.issue.number }}
   powerapps_environment_display_name: Dev - Issue ${{ github.event.issue.number }}
   powerapps_environment_domain_name: dev-issue-${{ github.event.issue.number }}
+  powerapps_environment_url_base: .crm3.dynamics.com
 
 jobs:
   create-issue-development-branch:
@@ -23,7 +24,7 @@ jobs:
       with:
         branch: ${{ env.branch_name }}
 
-  create-powerapps-environment:
+  create-powerapps-dev-environment:
     runs-on: windows-latest
     env:
       powerapps_environment_location: canada
@@ -47,11 +48,41 @@ jobs:
         
         New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
 
+  # Enable this job only after the initialization of the solution in the repository
+  #import-solution-to-dev-environment:
+  #  needs: create-powerapps-dev-environment
+  #  runs-on: windows-latest
+  #  env:
+  #    powerapps_environment_url_base: .crm3.dynamics.com
+  #    solution_name: PowerPlatformALMWithGitHub
+  #    RUNNER_DEBUG: 1
+
+  #  steps:
+  #  - uses: actions/checkout@v2
+  #    with:
+  #      lfs: true
+
+  #  - name: Pack solution
+  #    uses: microsoft/powerplatform-actions/pack-solution@v0
+  #    with:
+  #      solution-folder: Solutions/${{ env.solution_name }}
+  #      solution-file: out/Solutions/${{ env.solution_name }}.zip
+  #      solution-type: Unmanaged
+
+  #  - name: Import solution as unmanaged to dev env
+  #    uses: microsoft/powerplatform-actions/import-solution@v0
+  #    with:
+  #      environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+  #      user-name: ${{ secrets.DEV_USER_LOGIN }}
+  #      password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+  #      solution-file: out/Solutions/${{ env.solution_name }}.zip
+  #      force-overwrite: true
+  #      publish-changes: true
+
   add-comment-on-issue:
-    needs: [create-issue-development-branch, create-powerapps-environment]
+    needs: [create-issue-development-branch, import-solution-to-dev-environment]
     runs-on: ubuntu-latest
     env:
-      powerapps_environment_url_base: .crm3.dynamics.com
       RUNNER_DEBUG: 1
 
     steps:
