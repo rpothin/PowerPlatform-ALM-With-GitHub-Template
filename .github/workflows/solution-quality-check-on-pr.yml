@@ -50,8 +50,8 @@ jobs:
     needs: create-build-environment
     runs-on: windows-latest
     env:
-      POWERAPPS_ENVIRONMENT_URL_BASE: .crm3.dynamics.com
-      SOLUTION_NAME: PowerPlatformALMWithGitHub
+      powerapps_environment_url_base: .crm3.dynamics.com
+      solution_name: PowerPlatformALMWithGitHub
       RUNNER_DEBUG: 1
 
     steps:
@@ -68,35 +68,35 @@ jobs:
     - name: Pack solution
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
-        solution-folder: Solutions/${{ env.SOLUTION_NAME }}
-        solution-file: out/Solutions/${{ env.SOLUTION_NAME }}.zip
+        solution-folder: Solutions/${{ env.solution_name }}
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
     - name: Import solution as unmanaged to build env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
-        solution-file: out/Solutions/${{ env.SOLUTION_NAME }}.zip
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
 
     - name: Export solution as managed
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.POWERAPPS_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
-        solution-name: ${{ env.SOLUTION_NAME }}
+        solution-name: ${{ env.solution_name }}
         managed: true
-        solution-output-file: out/ship/${{ env.SOLUTION_NAME }}.zip
+        solution-output-file: out/ship/${{ env.solution_name }}.zip
 
     - name: Upload the ready to ship solution to GH artifact store
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
-        path: out/ship/${{ env.SOLUTION_NAME }}.zip
+        path: out/ship/${{ env.solution_name }}.zip
 
   delete-build-environment:
     needs: solution-quality-checks
