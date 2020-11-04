@@ -6,7 +6,7 @@ on:
   
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub
       RUNNER_DEBUG: 1
