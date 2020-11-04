@@ -37,6 +37,8 @@ jobs:
     - name: Invoke solution checker
       shell: powershell
       run: |
+        New-Item -ItemType Directory -Force -Path ${{ env.solution_checker_result_output_directory }}
+
         $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
         
