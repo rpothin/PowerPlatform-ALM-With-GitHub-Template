@@ -15,4 +15,4 @@ jobs:
       run: echo "action_state=yellow" >> $GITHUB_ENV
 
     - name: Test use env variable
-      run: echo $action_state
+      run: '$action_state'
