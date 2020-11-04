@@ -54,6 +54,6 @@ jobs:
       run: |
         Get-ChildItem "${{ env.solution_checker_result_output_directory }}" -Filter *.zip | Expand-Archive -DestinationPath '${{ env.solution_checker_result_output_directory }}' -Force
 
-        Get-ChildItem "${{ env.solution_checker_result_output_directory }}" -Filter *.sarif | $SolutionCheckerResultJson = Get-Content
+        $SolutionCheckerResultJson = Get-ChildItem "${{ env.solution_checker_result_output_directory }}" -Filter *.sarif | Get-Content
 
         $SolutionCheckerResultJson
