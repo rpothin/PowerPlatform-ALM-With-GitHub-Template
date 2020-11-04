@@ -18,11 +18,6 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-    
     - name: Set current date as env variable
       run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
 
