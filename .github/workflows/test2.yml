@@ -52,5 +52,7 @@ jobs:
     - name: Test
       shell: powershell
       run: |
+        Get-ChildItem "${{ env.solution_checker_result_output_directory }}" -Filter *.zip | Expand-Archive -DestinationPath '${{ env.solution_checker_result_output_directory }}' -Force
+
         cd ${{ env.solution_checker_result_output_directory }}
         ls
