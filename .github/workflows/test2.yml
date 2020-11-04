@@ -92,10 +92,9 @@ jobs:
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
         
-    - name: Conditional step
+    - name: Cancel action
       if: ${Env:NB_OF_MEDIUM_SEVERITY_POINTS} < 3
-      run: |
-        echo "Good!"
+      uses: andymckay/cancel-action@0.2
 
   test2:
     runs-on: windows-latest
