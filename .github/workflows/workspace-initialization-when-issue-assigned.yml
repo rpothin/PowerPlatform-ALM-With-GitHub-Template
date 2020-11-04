@@ -1,67 +1,85 @@
 name: workspace-initialization-when-issue-assigned
 # Create a branch and generate a Power Apps Dev environment when an issue is assigned
 
+# Workflow triggered when an issue is assigned
 on:
   issues:
     types: [assigned]
 
 env:
-  branch_name: dev/issue_${{ github.event.issue.number }}
-  powerapps_environment_display_name: Dev - Issue ${{ github.event.issue.number }}
-  powerapps_environment_domain_name: dev-issue-${{ github.event.issue.number }}
-  powerapps_environment_url_base: .crm3.dynamics.com
+  branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
+  powerapps_environment_display_name: Dev - Issue ${{ github.event.issue.number }} # Display name for the new Power Apps Dev environment
+  powerapps_environment_domain_name: dev-issue-${{ github.event.issue.number }} # Domain name for the new Power Apps Dev environment
+  powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the new Power Apps Dev environment
 
 jobs:
+  # Job for the creation of the new dev branch
   create-issue-development-branch:
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
+    # Create the new dev branch
+    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-branch
     - uses: peterjgrainger/action-create-branch@v2.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         branch: ${{ env.branch_name }}
 
+  # Job for the creation of the new Power Apps Dev environment
   create-powerapps-dev-environment:
     runs-on: windows-latest
     env:
-      powerapps_environment_location: canada
-      powerapps_environment_sku: Trial
-      powerapps_environment_currency_name: CAD
-      powerapps_environment_language_code: 1033
+      powerapps_environment_location: canada # Location for the new Power Apps Dev environment
+      powerapps_environment_sku: Trial # SKU for the new Power Apps Dev environment: Production, Sandbox or Trial
+      powerapps_environment_currency_name: CAD # Currency name for the new Power Apps Dev environment
+      powerapps_environment_language_code: 1033 # Language code for the new Power Apps Dev environment (ex: 1033 for English)
       RUNNER_DEBUG: 1
 
     steps:
+    # Install the PowerShell modules we will need for the creation of the new Power Apps Dev environment
     - name: Get PowerShell modules
       shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
+    # Add a Power Apps account to use the PowerShell Power Apps Admin module & Create the new Power Apps Dev environment
     - name: Add Power Apps account & Create Power Apps environment
       shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
         
-        New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
+        New-AdminPowerAppEnvironment `
+          -DisplayName '${{ env.powerapps_environment_display_name }}' `
+          -Location ${{ env.powerapps_environment_location }} `
+          -EnvironmentSku ${{ env.powerapps_environment_sku }} `
+          -ProvisionDatabase `
+          -CurrencyName ${{ env.powerapps_environment_currency_name }} `
+          -LanguageName ${{ env.powerapps_environment_language_code }} `
+          -DomainName '${{ env.powerapps_environment_domain_name }}'
 
-  # Enable this job only after the initialization of the solution in the repository
+  # Job for the import of the version of the solution in the main branch to the new Power Apps Dev environment
+  #   Enable this job only after the initialization of the solution in the repository
   import-solution-to-dev-environment:
     needs: create-powerapps-dev-environment
     runs-on: windows-latest
     env:
-      powerapps_environment_url_base: .crm3.dynamics.com
-      solution_name: PowerPlatformALMWithGitHub
+      solution_name: PowerPlatformALMWithGitHub # Name of the Power Apps solution considered
       RUNNER_DEBUG: 1
 
     steps:
+    # Action used to checkout the repository
+    #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
       with:
         lfs: true
 
+    # Pack the solution as unmanaged
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
@@ -69,6 +87,8 @@ jobs:
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
+    # Import the solution as unmanaged to the new Power Apps Dev environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to dev env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
@@ -79,13 +99,16 @@ jobs:
         force-overwrite: true
         publish-changes: true
 
+  # Add a comment on the issue with the dev branch name and the Power Apps Dev environment information
   add-comment-on-issue:
-    needs: [create-issue-development-branch, create-powerapps-dev-environment] #Change "create-powerapps-dev-environment" for "import-solution-to-dev-environment" only after the initialization of the solution in the repository
+    # Change "create-powerapps-dev-environment" for "import-solution-to-dev-environment" only after the initialization of the solution in the repository
+    needs: [create-issue-development-branch, create-powerapps-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
+    # Add the new comment to the issue
     - name: New comment on issue
       uses: peter-evans/create-or-update-comment@v1
       with:
