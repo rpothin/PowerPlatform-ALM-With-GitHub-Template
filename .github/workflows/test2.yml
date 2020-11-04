@@ -93,7 +93,7 @@ jobs:
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
         
     - name: Conditional step
-      if: ${Env:NB_OF_MEDIUM_SEVERITY_POINTS} < 3
+      if: env.NB_OF_MEDIUM_SEVERITY_POINTS < 3
       run: |
         echo "Good!"
 
