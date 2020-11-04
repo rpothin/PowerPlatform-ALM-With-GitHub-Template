@@ -13,6 +13,14 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    - name: Set variable
+      run: |
+        echo "TEST=Hello world!" >> $Env:GITHUB_ENV
+    
+    - name: Use variable
+      run: |
+        echo "${Env:TEST}"
+
     - name: Set powerapps_environment_domain_name as env variable
       run: echo "::set-env name=path_to_solution_zip_file::out/Solutions/${{ env.solution_name }}.zip"
       
@@ -61,4 +69,8 @@ jobs:
             $SolutionCheckerResultJson = Get-Content -Path ${{ env.solution_checker_result_output_directory }}/$sarif_file
         }
 
-        $SolutionCheckerResultJson
+        $SolutionCheckerResult = $SolutionCheckerResultJson | ConvertFrom-Json
+
+        $results = $SolutionCheckerResult.runs.results
+
+        $results
