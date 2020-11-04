@@ -8,11 +8,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
+      solution_name: PowerPlatformALMWithGitHub
       RUNNER_DEBUG: 1
 
     steps:
-    - name: Test set env variable
-      run: echo "action_state=yellow" >> $GITHUB_ENV
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
 
-    - name: Test use env variable
-      run: echo $action_state
+    - name: Pack solution
+      uses: microsoft/powerplatform-actions/pack-solution@v0
+      with:
+        solution-folder: Solutions/${{ env.solution_name }}
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
+        solution-type: Unmanaged
+
+    - name: Test
+      run: ls
