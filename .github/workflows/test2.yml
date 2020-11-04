@@ -97,12 +97,23 @@ jobs:
       run: exit 1
 
   test2:
-    runs-on: windows-latest
+    name: test2
     needs: test
+    runs-on: windows-latest
+    if: always() # set always
     env:
       RUNNER_DEBUG: 1
 
     steps:
-    - name: Check step
-      run: |
-        echo "Good!"
+        # run this action to get workflow conclusion
+        # You can get conclusion via env (env.WORKFLOW_CONCLUSION)
+      - uses: technote-space/workflow-conclusion-action@v1
+
+      - name: Not played
+        run: |
+          echo "Good?"
+          echo "${Env:WORKFLOW_CONCLUSION}"
+        with:
+          # status: ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, cancelled, timed_out, failure
+          status: success
+        if: env.WORKFLOW_CONCLUSION == 'success' # notify only if success
