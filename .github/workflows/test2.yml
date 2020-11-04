@@ -93,24 +93,16 @@ jobs:
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
         
     - name: Exit
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS < 3
-      run: exit 1
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > 3
+      run: cd exit
 
   test2:
-    name: test2
     needs: test
     runs-on: windows-latest
-    if: always() # set always
     env:
       RUNNER_DEBUG: 1
 
     steps:
-        # run this action to get workflow conclusion
-        # You can get conclusion via env (env.WORKFLOW_CONCLUSION)
-      - uses: technote-space/workflow-conclusion-action@v1
-
       - name: Not played
-        if: env.WORKFLOW_CONCLUSION == 'success' # notify only if success
         run: |
           echo "Good?"
-          echo "${Env:WORKFLOW_CONCLUSION}"
