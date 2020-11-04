@@ -6,7 +6,7 @@ on:
   
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
@@ -15,4 +15,4 @@ jobs:
       run: echo "action_state=yellow" >> $GITHUB_ENV
 
     - name: Test use env variable
-      run: '$action_state'
+      run: echo $action_state
