@@ -110,10 +110,7 @@ jobs:
       - uses: technote-space/workflow-conclusion-action@v1
 
       - name: Not played
+        if: env.WORKFLOW_CONCLUSION == 'success' # notify only if success
         run: |
           echo "Good?"
           echo "${Env:WORKFLOW_CONCLUSION}"
-        with:
-          # status: ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, cancelled, timed_out, failure
-          status: success
-        if: env.WORKFLOW_CONCLUSION == 'success' # notify only if success
