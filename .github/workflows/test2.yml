@@ -73,4 +73,21 @@ jobs:
 
         $results = $SolutionCheckerResult.runs.results
 
-        $results
+        $nbOfMediumSeverityPoints = 0
+        $nbOfHighSeverityPoints = 0
+
+        $results.foreach(
+          {
+            if($_.properties.severity -eq "Medium")
+            {
+              $nbOfMediumSeverityPoints++
+            }
+            elseif($_.properties.severity -eq "High")
+            {
+              $nbOfHighSeverityPoints++
+            }
+          }
+        )
+
+        $nbOfMediumSeverityPoints
+        $nbOfHighSeverityPoints
