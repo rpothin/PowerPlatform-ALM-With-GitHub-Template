@@ -1,0 +1,19 @@
+name: 'pack-solution'
+description: 'Power Platform Pack Solution'
+inputs:
+  solution-file:
+    description: 'Path/filename of the local solution zip file'
+    required: true
+
+  solution-folder:
+    description: 'Target folder into which to unpack the solution.zip contents'
+    required: true
+
+  solution-type:
+    description: 'Solution type to pack as: "Unmanaged", "Managed" or "Both"'
+    required: false
+    default: 'Unmanaged'
+
+runs:
+  using: 'node12'
+  main: '../dist/actions/pack-solution/index.js'
