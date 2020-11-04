@@ -35,6 +35,9 @@ jobs:
     - name: Invoke solution checker
       shell: powershell
       run: |
+        $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
+        Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
+        
         $rulesets = Get-PowerAppsCheckerRulesets -Geography Canada
         $rulesetToUse = $rulesets | where Name -NE 'AppSource Certification'
         
