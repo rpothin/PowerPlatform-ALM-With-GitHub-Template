@@ -1,0 +1,18 @@
+name: test
+# Test
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  test:
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Test set env variable
+      run: echo "action_state=yellow" >> $GITHUB_ENV
+
+    - name: Test use env variable
+      run: echo $action_state
