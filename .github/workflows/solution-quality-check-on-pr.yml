@@ -187,14 +187,10 @@ jobs:
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
       run: echo "::set-output name=status::KO"
 
-    # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
-    - name: Exit if too many notable points in solution checker results
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
-      run: cd exit
-
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
         environment-url: "https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}"
@@ -207,6 +203,7 @@ jobs:
     # Export solution as managed from the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
         environment-url: "https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}"
@@ -219,6 +216,7 @@ jobs:
     # Upload the managed solution we got in the previous step to the GitHub artifact store
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
     - name: Upload the ready to ship solution to GH artifact store
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
