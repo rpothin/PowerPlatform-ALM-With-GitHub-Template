@@ -193,7 +193,7 @@ jobs:
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: "https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}"
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
@@ -206,7 +206,7 @@ jobs:
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: "https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}"
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-name: ${{ env.solution_name }}
