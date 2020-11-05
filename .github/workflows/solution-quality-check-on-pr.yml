@@ -168,7 +168,7 @@ jobs:
 
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
-        echo "SOLUTION_CHECKER_RESULT_DETAILS=$resultsJson" >> $Env:GITHUB_ENV
+        echo "SOLUTION_CHECKER_RESULT_DETAILS='$resultsJson'" >> $Env:GITHUB_ENV
 
     - name: test
       run: echo ${Env:SOLUTION_CHECKER_RESULT_DETAILS}
