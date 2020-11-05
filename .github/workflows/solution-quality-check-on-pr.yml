@@ -48,7 +48,7 @@ jobs:
         
         echo "New-AdminPowerAppEnvironment -DisplayName '${Env:powerapps_environment_display_name}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${Env:powerapps_environment_domain_name}'"
 
-        New-AdminPowerAppEnvironment -DisplayName '${Env:powerapps_environment_display_name}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${Env:powerapps_environment_domain_name}'
+        New-AdminPowerAppEnvironment -DisplayName "${Env:powerapps_environment_display_name}" -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName "${Env:powerapps_environment_domain_name}"
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
@@ -93,7 +93,7 @@ jobs:
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
         solution-folder: Solutions/${{ env.solution_name }}
-        solution-file: ${Env:path_to_solution_zip_file}
+        solution-file: "${Env:path_to_solution_zip_file}"
         solution-type: Unmanaged
 
     # Install the PowerShell modules we will need to execute the solution checker on the solution package generated in the previous step
