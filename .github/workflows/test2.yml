@@ -89,10 +89,6 @@ jobs:
           }
         )
 
-<<<<<<< HEAD
-        $nbOfMediumSeverityPoints
-        $nbOfHighSeverityPoints
-=======
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
         
@@ -108,6 +104,7 @@ jobs:
 
     steps:
 <<<<<<< HEAD
+<<<<<<< HEAD
     - name: Check step
       run: |
         echo "Good!"
@@ -117,3 +114,8 @@ jobs:
         run: |
           echo "Good?"
 >>>>>>> origin/main
+=======
+      - name: Not played
+        run: |
+          echo "Good?"
+>>>>>>> 8270783dc9620d4ef87b4b888ffa8bf1eaeee3f2
