@@ -261,5 +261,5 @@ jobs:
         
     # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
     - name: Exit if too many notable points in solution checker results
-      if: needs.solution-quality-checks.outputs.solution_checker_status == KO
+      if: needs.solution-quality-checks.outputs.solution_checker_status == 'KO'
       run: cd exit
