@@ -1,5 +1,5 @@
 name: solution-quality-check-on-pr
-# Check the quality of a Power Apps solution on a pull request to main - test
+# Check the quality of a Power Apps solution on a pull request to main
 
 # Workflow triggered by a pull request targeting the main branch
 on:
@@ -180,8 +180,8 @@ jobs:
           # Too many Medium or High severity points in solution checker results!
 
           Details:
-          - NB_OF_HIGH_SEVERITY_POINTS: ${{ env.NB_OF_HIGH_SEVERITY_POINTS }}
-          - NB_OF_MEDIUM_SEVERITY_POINTS: ${{ env.NB_OF_MEDIUM_SEVERITY_POINTS }}
+          - NB_OF_HIGH_SEVERITY_POINTS: ${{ env.NB_OF_HIGH_SEVERITY_POINTS }} (Max: ${{ env.solution_checker_max_nb_high_severity_points }})
+          - NB_OF_MEDIUM_SEVERITY_POINTS: ${{ env.NB_OF_MEDIUM_SEVERITY_POINTS }} (Max: ${{ env.solution_checker_max_nb_medium_severity_points }})
     
     # Set solution_checker_status job output value to "KO" if too many Medium or High severity points in the results of the solution checker execution
     - name: Set job output
