@@ -46,6 +46,8 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
+        echo "New-AdminPowerAppEnvironment -DisplayName '${Env:powerapps_environment_display_name}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${Env:powerapps_environment_domain_name}'"
+
         New-AdminPowerAppEnvironment -DisplayName '${Env:powerapps_environment_display_name}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${Env:powerapps_environment_domain_name}'
   
   # Job a for simple quality checks on the considered solution
@@ -79,6 +81,11 @@ jobs:
     - uses: actions/checkout@v2
       with:
         lfs: true
+
+    - name: Test
+      shell: powershell
+      run: |
+        echo "${Env:path_to_solution_zip_file}"
 
     # Pack the considered solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
