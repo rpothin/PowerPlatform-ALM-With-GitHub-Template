@@ -95,7 +95,7 @@ jobs:
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
         solution-folder: Solutions/${{ env.solution_name }}
-        solution-file: out/Solutions/${{ env.solution_name }}.zip
+        solution-file: ${{ env.path_to_solution_zip_file }}
         solution-type: Unmanaged
 
     # Install the PowerShell modules we will need to execute the solution checker on the solution package generated in the previous step
