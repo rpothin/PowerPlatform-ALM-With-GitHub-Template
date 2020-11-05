@@ -31,6 +31,13 @@ jobs:
     - name: Set powerapps_environment_domain_name as env variable
       run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
+    - name: Test
+      shell: powershell
+      run: |
+        echo "${Env:NOW}"
+        echo "${Env:powerapps_environment_display_name}"
+        echo "${Env:powerapps_environment_domain_name}"
+
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
       shell: powershell
