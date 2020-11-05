@@ -1,65 +1,90 @@
 name: solution-quality-check-on-pr
 # Check the quality of a Power Apps solution on a pull request to main
-#   source branch name: ${{ github.head_ref }}
 
+# Workflow triggered by a pull request targeting the main branch
 on:
   pull_request:
     branches:
       - main
 
 jobs:
+  # Job for the creation of a just in time Power Apps Build environment
   create-build-environment:
     runs-on: windows-latest
     env:
-      powerapps_environment_location: canada
-      powerapps_environment_sku: Trial
-      powerapps_environment_currency_name: CAD
-      powerapps_environment_language_code: 1033
+      powerapps_environment_location: canada # Location for the just in time Power Apps Build environment
+      powerapps_environment_sku: Trial # SKU for the just in time Power Apps Build environment: Production, Sandbox or Trial
+      powerapps_environment_currency_name: CAD # Currency name for the just in time Power Apps Build environment
+      powerapps_environment_language_code: 1033 # Language code for the just in time Power Apps Build environment (ex: 1033 for English)
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
-      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
 
+    # Set a powerapps_environment_display_name environment variable for the Display Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_display_name as env variable
-      run: echo "::set-env name=powerapps_environment_display_name::Build - ${{ env.NOW }} - ${{ github.run_id }}"
-
+      run: echo "powerapps_environment_display_name=Build - ${Env:NOW} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+    
+    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
+      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
+    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
       shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
+    # Add a Power Apps account to use the PowerShell Power Apps Admin module
+    # Create the just in time Power Apps Build environment
     - name: Add Power Apps account & Create Power Apps environment
       shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
-        New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
-    
+        New-AdminPowerAppEnvironment `
+          -DisplayName '${Env:powerapps_environment_display_name}' `
+          -Location ${{ env.powerapps_environment_location }} `
+          -EnvironmentSku ${{ env.powerapps_environment_sku }} `
+          -ProvisionDatabase `
+          -CurrencyName ${{ env.powerapps_environment_currency_name }} `
+          -LanguageName ${{ env.powerapps_environment_language_code }} `
+          -DomainName '${Env:powerapps_environment_domain_name}'
+  
+  # Job a for simple quality checks on the considered solution
   solution-quality-checks:
     needs: create-build-environment
     runs-on: windows-latest
     env:
-      powerapps_environment_url_base: .crm3.dynamics.com
-      solution_name: PowerPlatformALMWithGitHub
+      powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Power Apps Build environment
+      solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
+      solution_checker_result_output_directory:  solutionchecker/ # Output folder for the results of the solution checker execution
+      solution_checker_geography: Canada # Considered geography for the solution checker execution
+      solution_checker_max_nb_medium_severity_points: 3 # Maximum number of the Medium severity points that will be tolerate in the solution checker results
+      solution_checker_max_nb_high_severity_points: 0 # Maximum number of the High severity points that will be tolerate in the solution checker results
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
-      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
 
+    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
+      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
+    # Action used to checkout the repository
+    #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
       with:
         lfs: true
 
+    # Pack the considered solution as unmanaged
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
@@ -67,43 +92,127 @@ jobs:
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
+    # Install the PowerShell modules we will need to execute the solution checker on the solution package generated in the previous step
     - name: Get PowerShell modules
       shell: powershell
       run: |
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
+        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
 
+    # Create the output folder for the results of the solution checker execution
+    # Add a Power Apps account to use the PowerShell Checker module
+    # Set some parameters to call the solution checker
+    # Invoke the solution checker
     - name: Invoke solution checker
       shell: powershell
       run: |
-        $rulesets = Get-PowerAppsCheckerRulesets -Geography Canada
-        $rulesetToUse = $rulesets | where Name -NE 'AppSource Certification'
+        New-Item -ItemType Directory -Force -Path ${{ env.solution_checker_result_output_directory }}
 
+        $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
+        Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
+        
+        $rulesets = Get-PowerAppsCheckerRulesets -Geography ${{ env.solution_checker_geography }}
+        $rulesetToUse = $rulesets | where Name -NE 'AppSource Certification'
+        
+        $analyzeResult = Invoke-PowerAppsChecker `
+          -Geography ${{ env.solution_checker_geography }} `
+          -ClientApplicationId '${{ secrets.APPLICATION_ID }}' `
+          -TenantId '${{ secrets.TENANT_ID }}' `
+          -Ruleset $rulesetToUse `
+          -FileUnderAnalysis "${{ env.path_to_solution_zip_file }}" `
+          -OutputDirectory "${{ env.solution_checker_result_output_directory }}" `
+          -ClientApplicationSecret (ConvertTo-SecureString -AsPlainText -Force -String '${{ secrets.CLIENT_SECRET }}')
+
+    # Unzip file generated by the solution checker execution
+    # Put the content of the sarif file generated by the solution checker execution in a variable
+    # Get the results of the solution checker execution
+    # Extract the number of the Medium and High severity points from the results of the solution checker execution
+    - name: Extract results of solution checker execution
+      shell: powershell
+      run:  |
+        Get-ChildItem "${{ env.solution_checker_result_output_directory }}" -Filter *.zip | Expand-Archive -DestinationPath '${{ env.solution_checker_result_output_directory }}' -Force
+
+        $sarif_files = Get-ChildItem "${{ env.solution_checker_result_output_directory }}" -Filter *.sarif
+
+        foreach ($sarif_file in $sarif_files)
+        {
+            $SolutionCheckerResultJson = Get-Content -Path ${{ env.solution_checker_result_output_directory }}/$sarif_file
+        }
+
+        $SolutionCheckerResult = $SolutionCheckerResultJson | ConvertFrom-Json
+        $results = $SolutionCheckerResult.runs.results
+
+        $nbOfMediumSeverityPoints = 0
+        $nbOfHighSeverityPoints = 0
+
+        $results.foreach(
+          {
+            if($_.properties.severity -eq "Medium")
+            {
+              $nbOfMediumSeverityPoints++
+            }
+            elseif($_.properties.severity -eq "High")
+            {
+              $nbOfHighSeverityPoints++
+            }
+          }
+        )
+
+        echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
+        echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
+        echo "SOLUTION_CHECKER_RESULT_DETAILS=$results" >> $Env:GITHUB_ENV
+        
+    # Add the new comment to the pull request if too many Medium or High severity points in the results of the solution checker execution
+    - name: New comment on pull request
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > {{ env.solution_checker_max_nb_medium_severity_points }} || Env.NB_OF_HIGH_SEVERITY_POINTS > {{ env.solution_checker_max_nb_high_severity_points }}
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          # Too many Medium or High severity points in solution checker results!
+
+          Details:
+          ${Env:SOLUTION_CHECKER_RESULT_DETAILS}
+    
+    # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
+    - name: Exit if too many notable points in solution checker results
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > {{ env.solution_checker_max_nb_medium_severity_points }} || Env.NB_OF_HIGH_SEVERITY_POINTS > {{ env.solution_checker_max_nb_high_severity_points }}
+      run: cd exit
+
+    # Import the considered solution unmanaged package to the just in time Power Apps Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
 
+    # Export solution as managed from the just in time Power Apps Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-name: ${{ env.solution_name }}
         managed: true
         solution-output-file: out/ship/${{ env.solution_name }}.zip
 
+    # Upload the managed solution we got in the previous step to the GitHub artifact store
+    #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
     - name: Upload the ready to ship solution to GH artifact store
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
         path: out/ship/${{ env.solution_name }}.zip
 
+  # Job to delete the just in time Power Apps Build environment
   delete-build-environment:
     needs: solution-quality-checks
     runs-on: windows-latest
@@ -111,23 +220,29 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
-      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
 
+    # Set a powerapps_environment_search_name environment variable for the Display Name of the just in time Power Apps Build environment where the " " are replaced by "*"
     - name: Set powerapps_environment_search_name as env variable
-      run: echo "::set-env name=powerapps_environment_search_name::Build*-*${{ env.NOW }}*-*${{ github.run_id }}"
+      run: echo "powerapps_environment_search_name=Build*-*${Env:NOW}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
     
+    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
       shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
+    # Add a Power Apps account to use the PowerShell Power Apps Admin module
+    # Search the just in time Power Apps Build environment to get its ID (EnvironmentName)
+    # Delete the just in time Power Apps Build environment
     - name: Add Power Apps account & Delete Power Apps environment
       shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.powerapps_environment_search_name }}*
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${Env:powerapps_environment_search_name}*
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName

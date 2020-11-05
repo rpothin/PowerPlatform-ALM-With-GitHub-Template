@@ -1,6 +1,7 @@
 name: export-and-unpack-solution
 # Export solution from a Power Apps Dev environment and unpack it in the associated Dev branch
 
+# Workflow triggered manually providing the 2 mandatory information described below
 on:
   workflow_dispatch:
     inputs:
@@ -13,21 +14,26 @@ on:
         default: 'PowerPlatformALMWithGitHub'
 
 env:
-  branch_name: dev/issue_${{ github.event.inputs.issue_number }}
-  powerapps_environment_domain_name: dev-issue-${{ github.event.inputs.issue_number }}
-  powerapps_environment_url_base: .crm3.dynamics.com
+  branch_name: dev/issue_${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
+  powerapps_environment_domain_name: dev-issue-${{ github.event.inputs.issue_number }} # Domain name for the new Power Apps Dev environment
+  powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the new Power Apps Dev environment
 
 jobs:
+  # Job for the export of the considered solution from the dev environment associated to the issue
   export-from-dev:
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
+    # Action used to checkout the repository
+    #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
       with:
         lfs: true
 
+    # Test the connection to the Power Apps Dev environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/who-am-i/action.yml
     - name: who-am-i action
       uses: microsoft/powerplatform-actions/who-am-i@v0
       with:
@@ -35,7 +41,8 @@ jobs:
         user-name: ${{ secrets.DEV_USER_LOGIN }}
         password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
-    # This action is not yet available
+    # Publish all customizations on the Power Apps Dev environment (not yet available)
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/publish-solution/action.yml
     #- name: publish-solution action
     #  uses: microsoft/powerplatform-actions/publish-solution@v0
     #  with:
@@ -43,6 +50,8 @@ jobs:
     #    user-name: ${{ secrets.DEV_USER_LOGIN }}
     #    password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
+    # Export the considered solution as unmanaged from the Power Apps Dev environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: export-solution action
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
@@ -52,6 +61,8 @@ jobs:
         solution-name: ${{ github.event.inputs.solution_name }}
         solution-output-file: out/exported/${{ github.event.inputs.solution_name }}.zip
 
+    # Unpack the unmanaged solution exported in the previous step
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/unpack-solution/action.yml
     - name: unpack-solution action
       uses: microsoft/powerplatform-actions/unpack-solution@v0
       with:
@@ -60,6 +71,8 @@ jobs:
         solution-type: 'Unmanaged'
         overwrite-files: true
 
+    # Push the unpacked solution generated in the previous step to the branch associated to the issue
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
     - name: branch-solution action
       uses: microsoft/powerplatform-actions/branch-solution@v0
       with:

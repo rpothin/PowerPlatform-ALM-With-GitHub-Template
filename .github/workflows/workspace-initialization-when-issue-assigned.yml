@@ -46,7 +46,8 @@ jobs:
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
-    # Add a Power Apps account to use the PowerShell Power Apps Admin module & Create the new Power Apps Dev environment
+    # Add a Power Apps account to use the PowerShell Power Apps Admin module
+    # Create the new Power Apps Dev environment
     - name: Add Power Apps account & Create Power Apps environment
       shell: powershell
       run: |

@@ -1,6 +1,7 @@
 name: create-github-release
 # Generate a GitHub release for the considered solution
 
+# Workflow triggered manually providing the mandatory information described below
 on:
   workflow_dispatch:
     inputs:
@@ -9,42 +10,56 @@ on:
         required: true
 
 env:
-  solution_name: PowerPlatformALMWithGitHub
+  solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
   
 jobs:
   create-build-environment:
     runs-on: windows-latest
     env:
-      powerapps_environment_location: canada
-      powerapps_environment_sku: Trial
-      powerapps_environment_currency_name: CAD
-      powerapps_environment_language_code: 1033
+      powerapps_environment_location: canada # Location for the just in time Power Apps Build environment
+      powerapps_environment_sku: Trial # SKU for the just in time Power Apps Build environment: Production, Sandbox or Trial
+      powerapps_environment_currency_name: CAD # Currency name for the just in time Power Apps Build environment
+      powerapps_environment_language_code: 1033 # Language code for the just in time Power Apps Build environment (ex: 1033 for English)
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
-      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
 
+    # Set a powerapps_environment_display_name environment variable for the Display Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_display_name as env variable
-      run: echo "::set-env name=powerapps_environment_display_name::Build - ${{ env.NOW }} - ${{ github.run_id }}"
-
+      run: echo "powerapps_environment_display_name=Build - ${Env:NOW} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+    
+    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
+      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
+    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
       shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
+    # Add a Power Apps account to use the PowerShell Power Apps Admin module
+    # Create the just in time Power Apps Build environment
     - name: Add Power Apps account & Create Power Apps environment
       shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
-        New-AdminPowerAppEnvironment -DisplayName '${{ env.powerapps_environment_display_name }}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${{ env.powerapps_environment_domain_name }}'
+        New-AdminPowerAppEnvironment `
+          -DisplayName '${Env:powerapps_environment_display_name}' `
+          -Location ${{ env.powerapps_environment_location }} `
+          -EnvironmentSku ${{ env.powerapps_environment_sku }} `
+          -ProvisionDatabase `
+          -CurrencyName ${{ env.powerapps_environment_currency_name }} `
+          -LanguageName ${{ env.powerapps_environment_language_code }} `
+          -DomainName '${Env:powerapps_environment_domain_name}'
   
+  # Job to build a managed solution in the just in time Power Apps Build environment
   build-managed-solution:
     needs: create-build-environment
     runs-on: windows-latest
@@ -53,16 +68,22 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
-      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
 
+    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "::set-env name=powerapps_environment_domain_name::build-${{ env.NOW }}-${{ github.run_id }}"
+      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
+    # Action used to checkout the repository
+    #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
       with:
         lfs: true
 
+    # Pack the considered solution as unmanaged
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
@@ -70,48 +91,62 @@ jobs:
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
+    # Import the considered solution unmanaged package to the just in time Power Apps Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
 
+    # Export solution as managed from the just in time Power Apps Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-name: ${{ env.solution_name }}
         managed: true
         solution-output-file: out/ship/${{ env.solution_name }}.zip
 
+    # Upload the managed solution we got in the previous step to the GitHub artifact store
+    #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
     - name: Upload the ready to ship solution to GH artifact store
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
         path: out/ship/${{ env.solution_name }}.zip
 
+  # Job to create a GitHub release from the managed solution generate in the previous job
   create-github-release:
     needs: build-managed-solution
     runs-on: ubuntu-latest
     steps:
+      # Set a current date environment variable in the following format: YYYYMMDD
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
+
+      # Action used to checkout the repository
+      #   Community action: https://github.com/actions/checkout
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set current date as env variable
-        run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
-
+      # Get the content of the GitHub artifact store we got in the previous job
+      #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
       - name: Fetch the ready to ship solution from GH artifact store
         uses: actions/download-artifact@v2
         with:
           name: managedSolutions
           path: out/release/
 
+      # Create a GitHub release
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-a-release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -125,6 +160,8 @@ jobs:
           draft: false
           prerelease: false
 
+      # Upload the managed solution as asset to the GitHub release created in the previous step
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
       - name: Upload Release Asset - Solution
         id: upload-release-asset-solution
         uses: actions/upload-release-asset@v1
@@ -136,6 +173,8 @@ jobs:
           asset_name: ${{ env.solution_name }}.zip
           asset_content_type: application/zip
 
+      # Upload the README.md file as asset to the GitHub release created in a previous step
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
       - name: Upload Release Asset - README
         id: upload-release-asset-readme
         uses: actions/upload-release-asset@v1
@@ -147,6 +186,7 @@ jobs:
           asset_name: README.md
           asset_content_type: application/md
 
+  # Job to delete the just in time Power Apps Build environment
   delete-build-environment:
     needs: create-github-release
     runs-on: windows-latest
@@ -154,23 +194,29 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
-      run: echo "::set-env name=NOW::$(date +'%Y%m%d')"
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
 
+    # Set a powerapps_environment_search_name environment variable for the Display Name of the just in time Power Apps Build environment where the " " are replaced by "*"
     - name: Set powerapps_environment_search_name as env variable
-      run: echo "::set-env name=powerapps_environment_search_name::Build*-*${{ env.NOW }}*-*${{ github.run_id }}"
+      run: echo "powerapps_environment_search_name=Build*-*${Env:NOW}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
     
+    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
       shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
+    # Add a Power Apps account to use the PowerShell Power Apps Admin module
+    # Search the just in time Power Apps Build environment to get its ID (EnvironmentName)
+    # Delete the just in time Power Apps Build environment
     - name: Add Power Apps account & Delete Power Apps environment
       shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${{ env.powerapps_environment_search_name }}*
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${Env:powerapps_environment_search_name}*
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
