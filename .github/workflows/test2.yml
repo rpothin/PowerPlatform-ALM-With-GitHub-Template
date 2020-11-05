@@ -96,19 +96,24 @@ jobs:
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
         
-    - name: Conditional step
-      if: ${Env:NB_OF_MEDIUM_SEVERITY_POINTS} < 3
-      run: |
-        echo "Good!"
+    - name: Exit
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > 3
+      run: cd exit
 
   test2:
-    runs-on: windows-latest
     needs: test
+    runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
+<<<<<<< HEAD
     - name: Check step
       run: |
         echo "Good!"
+>>>>>>> origin/main
+=======
+      - name: Not played
+        run: |
+          echo "Good?"
 >>>>>>> origin/main
