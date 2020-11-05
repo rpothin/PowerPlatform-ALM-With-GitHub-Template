@@ -77,6 +77,10 @@ jobs:
     - name: Set powerapps_environment_domain_name as env variable
       run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
+    # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
+    - name: Set path_to_solution_zip_file as env variable
+      run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
+
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
@@ -89,7 +93,7 @@ jobs:
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
         solution-folder: Solutions/${{ env.solution_name }}
-        solution-file: out/Solutions/${{ env.solution_name }}.zip
+        solution-file: ${Env:path_to_solution_zip_file}
         solution-type: Unmanaged
 
     # Install the PowerShell modules we will need to execute the solution checker on the solution package generated in the previous step
@@ -120,7 +124,7 @@ jobs:
           -ClientApplicationId '${{ secrets.APPLICATION_ID }}' `
           -TenantId '${{ secrets.TENANT_ID }}' `
           -Ruleset $rulesetToUse `
-          -FileUnderAnalysis "${{ env.path_to_solution_zip_file }}" `
+          -FileUnderAnalysis "${Env:path_to_solution_zip_file}" `
           -OutputDirectory "${{ env.solution_checker_result_output_directory }}" `
           -ClientApplicationSecret (ConvertTo-SecureString -AsPlainText -Force -String '${{ secrets.CLIENT_SECRET }}')
 
