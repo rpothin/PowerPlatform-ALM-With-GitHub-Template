@@ -79,7 +79,7 @@ jobs:
 
     # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
     - name: Set path_to_solution_zip_file as env variable
-      run: echo "path_to_solution_zip_file=out\Solutions\${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
+      run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
 
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
@@ -93,7 +93,7 @@ jobs:
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
         solution-folder: Solutions/${{ env.solution_name }}
-        solution-file: "${Env:path_to_solution_zip_file}"
+        solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
     # Install the PowerShell modules we will need to execute the solution checker on the solution package generated in the previous step
