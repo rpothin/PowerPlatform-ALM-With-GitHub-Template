@@ -38,6 +38,11 @@ jobs:
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
     
+    - name: Test
+      shell: powershell
+      run: |
+        echo "New-AdminPowerAppEnvironment -DisplayName '${Env:powerapps_environment_display_name}' -Location ${{ env.powerapps_environment_location }} -EnvironmentSku ${{ env.powerapps_environment_sku }} -ProvisionDatabase -CurrencyName ${{ env.powerapps_environment_currency_name }} -LanguageName ${{ env.powerapps_environment_language_code }} -DomainName '${Env:powerapps_environment_domain_name}'""
+
     # Add a Power Apps account to use the PowerShell Power Apps Admin module
     # Create the just in time Power Apps Build environment
     - name: Add Power Apps account & Create Power Apps environment
