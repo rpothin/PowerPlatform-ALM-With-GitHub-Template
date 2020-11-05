@@ -55,13 +55,13 @@ jobs:
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
         New-AdminPowerAppEnvironment `
-          -DisplayName '${Env:powerapps_environment_display_name}' `
+          -DisplayName "${Env:powerapps_environment_display_name}" `
           -Location ${{ env.powerapps_environment_location }} `
           -EnvironmentSku ${{ env.powerapps_environment_sku }} `
           -ProvisionDatabase `
           -CurrencyName ${{ env.powerapps_environment_currency_name }} `
           -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName '${Env:powerapps_environment_domain_name}'
+          -DomainName "${Env:powerapps_environment_domain_name}"
   
   # Job to build a managed solution in the just in time Power Apps Build environment
   build-managed-solution:
@@ -100,7 +100,7 @@ jobs:
     - name: Import solution as unmanaged to build env
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
+        environment-url: "https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}"
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
@@ -112,7 +112,7 @@ jobs:
     - name: Export solution as managed
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
+        environment-url: "https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}"
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-name: ${{ env.solution_name }}
@@ -196,5 +196,5 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${Env:powerapps_environment_search_name}*
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment "*${Env:powerapps_environment_search_name}*"
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
