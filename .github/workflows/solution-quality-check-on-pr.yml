@@ -165,7 +165,7 @@ jobs:
         
     # Add the new comment to the pull request if too many Medium or High severity points in the results of the solution checker execution
     - name: New comment on pull request
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > {{ env.solution_checker_max_nb_medium_severity_points }} || Env.NB_OF_HIGH_SEVERITY_POINTS > {{ env.solution_checker_max_nb_high_severity_points }}
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.pull_request.number }}
@@ -177,7 +177,7 @@ jobs:
     
     # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
     - name: Exit if too many notable points in solution checker results
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > {{ env.solution_checker_max_nb_medium_severity_points }} || Env.NB_OF_HIGH_SEVERITY_POINTS > {{ env.solution_checker_max_nb_high_severity_points }}
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
       run: cd exit
 
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
