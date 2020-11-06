@@ -51,7 +51,7 @@ jobs:
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
         
         New-AdminPowerAppEnvironment `
-          -DisplayName ${{ env.powerapps_environment_display_name }} `
+          -DisplayName '${{ env.powerapps_environment_display_name }}' `
           -Location ${{ env.powerapps_environment_location }} `
           -EnvironmentSku ${{ env.powerapps_environment_sku }} `
           -ProvisionDatabase `
