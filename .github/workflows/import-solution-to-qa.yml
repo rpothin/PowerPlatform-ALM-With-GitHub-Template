@@ -104,7 +104,7 @@ jobs:
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: false
-        publish-changes: true
+        publish-changes: false
         skip-dependency-check: true
 
     # Export solution as managed from the just in time Power Apps Build environment
