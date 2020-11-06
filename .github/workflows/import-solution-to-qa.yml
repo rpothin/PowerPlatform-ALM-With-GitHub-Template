@@ -105,6 +105,7 @@ jobs:
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
+        skip-dependency-check: true
 
     # Export solution as managed from the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
@@ -162,6 +163,7 @@ jobs:
         solution-file: out/release/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
+        skip-dependency-check: true
 
   # Job to delete the just in time Power Apps Build environment
   delete-build-environment:

@@ -99,6 +99,7 @@ jobs:
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
+        skip-dependency-check: true
 
   # Add a comment on the issue with the dev branch name and the Power Apps Dev environment information
   add-comment-on-issue:
