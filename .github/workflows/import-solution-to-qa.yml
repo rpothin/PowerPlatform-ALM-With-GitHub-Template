@@ -1,5 +1,5 @@
 name: import-solution-to-qa
-# Upload the solutions to the GitHub artifacts and deploy to the Power Apps QA environment
+# Upload the solutions to the GitHub artifacts and deploy to the Power Apps QA environment - test
 
 # Workflow that is triggered by a push of updates in the "Solutions/" folder on the main branch
 on:
