@@ -131,7 +131,7 @@ jobs:
     steps:
       # Set a current date environment variable in the following format: YYYYMMDD
       - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
+        run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
 
       # Action used to checkout the repository
       #   Community action: https://github.com/actions/checkout
@@ -154,8 +154,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.solution_name }}_${{ env.NOW }}_${{ github.run_id }}
-          release_name: ${{ env.solution_name }} Release - ${{ env.NOW }} - ${{ github.run_id }}
+          tag_name: ${{ env.solution_name }}_${NOW}_${{ github.run_id }}
+          release_name: ${{ env.solution_name }} Release - ${NOW} - ${{ github.run_id }}
           body: |
             ${{ github.event.inputs.github_release_body }}
           draft: false
