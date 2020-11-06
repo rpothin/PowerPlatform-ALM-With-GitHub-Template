@@ -25,11 +25,11 @@ jobs:
 
     # Set a powerapps_environment_display_name environment variable for the Display Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_display_name as env variable
-      run: echo "powerapps_environment_display_name=Build - ${Env:NOW} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
     
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
@@ -37,7 +37,7 @@ jobs:
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
-    
+
     # Add a Power Apps account to use the PowerShell Power Apps Admin module
     # Create the just in time Power Apps Build environment
     - name: Add Power Apps account & Create Power Apps environment
@@ -45,26 +45,28 @@ jobs:
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
-        
+
         New-AdminPowerAppEnvironment `
-          -DisplayName '${Env:powerapps_environment_display_name}' `
+          -DisplayName '${{ env.powerapps_environment_display_name }}' `
           -Location ${{ env.powerapps_environment_location }} `
           -EnvironmentSku ${{ env.powerapps_environment_sku }} `
           -ProvisionDatabase `
           -CurrencyName ${{ env.powerapps_environment_currency_name }} `
           -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName '${Env:powerapps_environment_domain_name}'
+          -DomainName ${{ env.powerapps_environment_domain_name }}
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
     needs: create-build-environment
     runs-on: windows-latest
+    outputs:
+      solution_checker_status: ${{ steps.solution_checker_status.outputs.status }}
     env:
       powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Power Apps Build environment
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       solution_checker_result_output_directory:  solutionchecker/ # Output folder for the results of the solution checker execution
       solution_checker_geography: Canada # Considered geography for the solution checker execution
-      solution_checker_max_nb_medium_severity_points: 3 # Maximum number of the Medium severity points that will be tolerate in the solution checker results
+      solution_checker_max_nb_medium_severity_points: 5 # Maximum number of the Medium severity points that will be tolerate in the solution checker results
       solution_checker_max_nb_high_severity_points: 0 # Maximum number of the High severity points that will be tolerate in the solution checker results
       RUNNER_DEBUG: 1
 
@@ -75,7 +77,11 @@ jobs:
 
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+
+    # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
+    - name: Set path_to_solution_zip_file as env variable
+      run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
 
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
@@ -89,7 +95,7 @@ jobs:
       uses: microsoft/powerplatform-actions/pack-solution@v0
       with:
         solution-folder: Solutions/${{ env.solution_name }}
-        solution-file: out/Solutions/${{ env.solution_name }}.zip
+        solution-file: ${{ env.path_to_solution_zip_file }}
         solution-type: Unmanaged
 
     # Install the PowerShell modules we will need to execute the solution checker on the solution package generated in the previous step
@@ -120,7 +126,7 @@ jobs:
           -ClientApplicationId '${{ secrets.APPLICATION_ID }}' `
           -TenantId '${{ secrets.TENANT_ID }}' `
           -Ruleset $rulesetToUse `
-          -FileUnderAnalysis "${{ env.path_to_solution_zip_file }}" `
+          -FileUnderAnalysis ${{ env.path_to_solution_zip_file }} `
           -OutputDirectory "${{ env.solution_checker_result_output_directory }}" `
           -ClientApplicationSecret (ConvertTo-SecureString -AsPlainText -Force -String '${{ secrets.CLIENT_SECRET }}')
 
@@ -143,6 +149,8 @@ jobs:
         $SolutionCheckerResult = $SolutionCheckerResultJson | ConvertFrom-Json
         $results = $SolutionCheckerResult.runs.results
 
+        echo $results
+
         $nbOfMediumSeverityPoints = 0
         $nbOfHighSeverityPoints = 0
 
@@ -161,11 +169,10 @@ jobs:
 
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
-        echo "SOLUTION_CHECKER_RESULT_DETAILS=$results" >> $Env:GITHUB_ENV
         
     # Add the new comment to the pull request if too many Medium or High severity points in the results of the solution checker execution
     - name: New comment on pull request
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > {{ env.solution_checker_max_nb_medium_severity_points }} || Env.NB_OF_HIGH_SEVERITY_POINTS > {{ env.solution_checker_max_nb_high_severity_points }}
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.pull_request.number }}
@@ -173,19 +180,22 @@ jobs:
           # Too many Medium or High severity points in solution checker results!
 
           Details:
-          ${Env:SOLUTION_CHECKER_RESULT_DETAILS}
+          - NB_OF_HIGH_SEVERITY_POINTS: ${{ env.NB_OF_HIGH_SEVERITY_POINTS }} (Max: ${{ env.solution_checker_max_nb_high_severity_points }})
+          - NB_OF_MEDIUM_SEVERITY_POINTS: ${{ env.NB_OF_MEDIUM_SEVERITY_POINTS }} (Max: ${{ env.solution_checker_max_nb_medium_severity_points }})
     
-    # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
-    - name: Exit if too many notable points in solution checker results
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > {{ env.solution_checker_max_nb_medium_severity_points }} || Env.NB_OF_HIGH_SEVERITY_POINTS > {{ env.solution_checker_max_nb_high_severity_points }}
-      run: cd exit
+    # Set solution_checker_status job output value to "KO" if too many Medium or High severity points in the results of the solution checker execution
+    - name: Set job output
+      id: solution_checker_status
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
+      run: echo "::set-output name=status::KO"
 
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
-        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
@@ -195,9 +205,10 @@ jobs:
     # Export solution as managed from the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
-        environment-url: https://${Env:powerapps_environment_domain_name}${{ env.powerapps_environment_url_base }}
+        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-name: ${{ env.solution_name }}
@@ -207,6 +218,7 @@ jobs:
     # Upload the managed solution we got in the previous step to the GitHub artifact store
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
     - name: Upload the ready to ship solution to GH artifact store
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
@@ -226,7 +238,7 @@ jobs:
 
     # Set a powerapps_environment_search_name environment variable for the Display Name of the just in time Power Apps Build environment where the " " are replaced by "*"
     - name: Set powerapps_environment_search_name as env variable
-      run: echo "powerapps_environment_search_name=Build*-*${Env:NOW}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_search_name=Build*-*${{ env.NOW }}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
     
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
@@ -244,5 +256,10 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment *${Env:powerapps_environment_search_name}*
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment "*${{ env.powerapps_environment_search_name }}*"
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
+        
+    # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
+    - name: Exit if too many notable points in solution checker results
+      if: needs.solution-quality-checks.outputs.solution_checker_status == 'KO'
+      run: cd exit

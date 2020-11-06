@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>ppwg_demonstrationsapp_6b287</Name>
+  <AppVersion>2020-11-04T01:39:57Z</AppVersion>
+  <Status>Ready</Status>
+  <CreatedByClientVersion>3.20104.33.0</CreatedByClientVersion>
+  <MinClientVersion>3.20104.33.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"640","primaryDeviceHeight":"1136","sienaVersion":"20201104T013957Z-3.20104.33.0","deviceCapabilities":"","supportsPortrait":"true","supportsLandscape":"false","primaryFormFactor":"Phone","publisherVersion":"3.20104.33","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
+  <IsCdsUpgraded>0</IsCdsUpgraded>
+  <GalleryItemId xsi:nil="true"></GalleryItemId>
+  <BackgroundColor>rgba(37, 62, 143, 1)</BackgroundColor>
+  <DisplayName>Demonstrations App</DisplayName>
+  <Description xsi:nil="true"></Description>
+  <CommitMessage xsi:nil="true"></CommitMessage>
+  <Publisher xsi:nil="true"></Publisher>
+  <AuthorizationReferences xsi:nil="true"></AuthorizationReferences>
+  <ConnectionReferences>{}</ConnectionReferences>
+  <DatabaseReferences>{"default.cds":{"databaseDetails":{"referenceType":"NotSpecified","environmentName":"default.cds"},"dataSources":{"Demonstrations":{"entitySetName":"ppwg_demonstrations","logicalName":"ppwg_demonstration"}}}}</DatabaseReferences>
+  <CanConsumeAppPass>1</CanConsumeAppPass>
+  <CanvasAppType>0</CanvasAppType>
+  <BypassConsent>0</BypassConsent>
+  <AdminControlBypassConsent>0</AdminControlBypassConsent>
+  <EmbeddedApp xsi:nil="true"></EmbeddedApp>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <CdsDependencies>{"cdsdependencies":[{"logicalname":"ppwg_demonstration","componenttype":1}]}</CdsDependencies>
+  <BackgroundImageUri>/CanvasApps/ppwg_demonstrationsapp_6b287_BackgroundImageUri</BackgroundImageUri>
+  <DocumentUri>/CanvasApps/ppwg_demonstrationsapp_6b287_DocumentUri.msapp</DocumentUri>
+</CanvasApp>
