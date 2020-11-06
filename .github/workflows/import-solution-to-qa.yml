@@ -18,6 +18,8 @@ jobs:
   # Job for the creation of a just in time Power Apps Build environment
   create-build-environment:
     runs-on: windows-latest
+    outputs:
+      job_status: ${{ steps.job_status.outputs.status }}
     env:
       powerapps_environment_location: canada # Location for the just in time Power Apps Build environment
       powerapps_environment_sku: Trial # SKU for the just in time Power Apps Build environment: Production, Sandbox or Trial
@@ -61,6 +63,11 @@ jobs:
           -CurrencyName ${{ env.powerapps_environment_currency_name }} `
           -LanguageName ${{ env.powerapps_environment_language_code }} `
           -DomainName ${{ env.powerapps_environment_domain_name }}
+    
+    # Set job_status job output value to "OK"
+    - name: Set job output
+      id: job_status
+      run: echo "::set-output name=status::OK"
   
   # Job to build a managed solution in the just in time Power Apps Build environment
   build-managed-solution:
@@ -167,7 +174,8 @@ jobs:
 
   # Job to delete the just in time Power Apps Build environment
   delete-build-environment:
-    needs: import-solution-to-qa
+    needs: [create-build-environment, import-solution-to-qa]
+    if: (jobs.create-build-environment.job_status == 'OK')
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
