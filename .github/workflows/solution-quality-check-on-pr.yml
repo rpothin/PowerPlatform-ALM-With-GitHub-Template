@@ -25,11 +25,11 @@ jobs:
 
     # Set a powerapps_environment_display_name environment variable for the Display Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_display_name as env variable
-      run: echo "powerapps_environment_display_name=Build - ${Env:NOW} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
     
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
@@ -47,13 +47,13 @@ jobs:
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
         New-AdminPowerAppEnvironment `
-          -DisplayName "${Env:powerapps_environment_display_name}" `
+          -DisplayName ${{ env.powerapps_environment_display_name }} `
           -Location ${{ env.powerapps_environment_location }} `
           -EnvironmentSku ${{ env.powerapps_environment_sku }} `
           -ProvisionDatabase `
           -CurrencyName ${{ env.powerapps_environment_currency_name }} `
           -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName "${Env:powerapps_environment_domain_name}"
+          -DomainName ${{ env.powerapps_environment_domain_name }}
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
@@ -66,7 +66,7 @@ jobs:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       solution_checker_result_output_directory:  solutionchecker/ # Output folder for the results of the solution checker execution
       solution_checker_geography: Canada # Considered geography for the solution checker execution
-      solution_checker_max_nb_medium_severity_points: 3 # Maximum number of the Medium severity points that will be tolerate in the solution checker results
+      solution_checker_max_nb_medium_severity_points: 5 # Maximum number of the Medium severity points that will be tolerate in the solution checker results
       solution_checker_max_nb_high_severity_points: 0 # Maximum number of the High severity points that will be tolerate in the solution checker results
       RUNNER_DEBUG: 1
 
@@ -77,7 +77,7 @@ jobs:
 
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=build-${Env:NOW}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
     # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
     - name: Set path_to_solution_zip_file as env variable
@@ -126,7 +126,7 @@ jobs:
           -ClientApplicationId '${{ secrets.APPLICATION_ID }}' `
           -TenantId '${{ secrets.TENANT_ID }}' `
           -Ruleset $rulesetToUse `
-          -FileUnderAnalysis "${Env:path_to_solution_zip_file}" `
+          -FileUnderAnalysis ${{ env.path_to_solution_zip_file }} `
           -OutputDirectory "${{ env.solution_checker_result_output_directory }}" `
           -ClientApplicationSecret (ConvertTo-SecureString -AsPlainText -Force -String '${{ secrets.CLIENT_SECRET }}')
 
@@ -238,7 +238,7 @@ jobs:
 
     # Set a powerapps_environment_search_name environment variable for the Display Name of the just in time Power Apps Build environment where the " " are replaced by "*"
     - name: Set powerapps_environment_search_name as env variable
-      run: echo "powerapps_environment_search_name=Build*-*${Env:NOW}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_search_name=Build*-*${{ env.NOW }}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
     
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
@@ -256,7 +256,7 @@ jobs:
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment "*${Env:powerapps_environment_search_name}*"
+        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment "*${{ env.powerapps_environment_search_name }}*"
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
         
     # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
