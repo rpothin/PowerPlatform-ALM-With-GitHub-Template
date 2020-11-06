@@ -175,7 +175,7 @@ jobs:
   # Job to delete the just in time Power Apps Build environment
   delete-build-environment:
     needs: [create-build-environment, import-solution-to-qa]
-    if: (jobs.create-build-environment.job_status == 'OK')
+    if: needs.create-build-environment.outputs.job_status == 'OK'
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
