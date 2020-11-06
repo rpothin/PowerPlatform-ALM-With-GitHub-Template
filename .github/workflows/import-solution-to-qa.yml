@@ -104,9 +104,8 @@ jobs:
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: false
-        publish-changes: false
+        publish-changes: true
         skip-dependency-check: true
-        activate-plugins: false
 
     # Export solution as managed from the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
@@ -163,7 +162,7 @@ jobs:
         password-secret: ${{ secrets.QA_USER_PASSWORD }}
         solution-file: out/release/${{ env.solution_name }}.zip
         force-overwrite: true
-        publish-changes: true
+        publish-changes: false
         skip-dependency-check: true
 
   # Job to delete the just in time Power Apps Build environment

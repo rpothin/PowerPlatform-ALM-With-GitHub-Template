@@ -100,7 +100,7 @@ jobs:
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
         password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
-        force-overwrite: true
+        force-overwrite: false
         publish-changes: true
         skip-dependency-check: true
 
