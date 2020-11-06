@@ -161,9 +161,10 @@ jobs:
         user-name: ${{ secrets.QA_USER_LOGIN }}
         password-secret: ${{ secrets.QA_USER_PASSWORD }}
         solution-file: out/release/${{ env.solution_name }}.zip
-        force-overwrite: true
+        force-overwrite: false
         publish-changes: false
         skip-dependency-check: true
+        activatePlugins: false
 
   # Job to delete the just in time Power Apps Build environment
   delete-build-environment:
