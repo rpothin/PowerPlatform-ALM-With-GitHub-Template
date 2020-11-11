@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.1.0.24930" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.1.0.25232" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>PowerPlatformALMWithGitHub</UniqueName>
     <LocalizedNames>
       <LocalizedName description="Power Platform ALM With GitHub" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>powerplatformalmwithgithub</UniqueName>
