@@ -98,7 +98,7 @@ jobs:
     - name: Wait few seconds to avoid import error
       shell: powershell
       run: |
-        Start-Sleep -Seconds 15
+        Start-Sleep -Seconds 30
 
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
@@ -157,12 +157,6 @@ jobs:
 
     # Get the managed solution
     - run: get-childitem .\out\release\
-
-    # Wait few seconds to avoid import error, due for example to import conflict
-    - name: Wait few seconds to avoid import error
-      shell: powershell
-      run: |
-        Start-Sleep -Seconds 15
 
     # Import the considered solution managed package to the Power Apps QA environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
