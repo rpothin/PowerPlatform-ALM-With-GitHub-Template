@@ -7,7 +7,7 @@ on:
     branches: [ main ]
     paths:
       - 'Solutions/**'
-      - '!.github/**'
+      - '.github/**'
       - '!LICENSE'
       - '!README.md'
 
@@ -94,6 +94,12 @@ jobs:
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
+    # Wait few seconds to avoid import error, due for example to import conflict
+    - name: Wait few seconds to avoid import error
+      shell: powershell
+      run: |
+        Start-Sleep -Seconds 15
+
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
@@ -151,6 +157,12 @@ jobs:
 
     # Get the managed solution
     - run: get-childitem .\out\release\
+
+    # Wait few seconds to avoid import error, due for example to import conflict
+    - name: Wait few seconds to avoid import error
+      shell: powershell
+      run: |
+        Start-Sleep -Seconds 15
 
     # Import the considered solution managed package to the Power Apps QA environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
