@@ -31,5 +31,10 @@
         <label description="Governance" languagecode="1033" />
       </labels>
     </option>
+    <option value="112920004">
+      <labels>
+        <label description="Community" languagecode="1033" />
+      </labels>
+    </option>
   </options>
 </optionset>
