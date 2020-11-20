@@ -63,7 +63,7 @@ jobs:
       solution_checker_status: ${{ steps.solution_checker_status.outputs.status }}
     env:
       powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Power Apps Build environment
-      solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
+      solution_name: DemoLive # Name of the considered solution
       solution_checker_result_output_directory:  solutionchecker/ # Output folder for the results of the solution checker execution
       solution_checker_geography: Canada # Considered geography for the solution checker execution
       solution_checker_max_nb_medium_severity_points: 5 # Maximum number of the Medium severity points that will be tolerate in the solution checker results
