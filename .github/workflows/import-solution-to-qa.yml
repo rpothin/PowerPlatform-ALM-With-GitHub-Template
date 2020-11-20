@@ -12,7 +12,7 @@ on:
       - '!README.md'
 
 env:
-  solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
+  solution_name: DemoLive # Name of the considered solution
 
 jobs:
   # Job for the creation of a just in time Power Apps Build environment
