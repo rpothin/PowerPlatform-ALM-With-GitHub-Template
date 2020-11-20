@@ -98,7 +98,7 @@ jobs:
     - name: Wait few seconds to avoid import error
       shell: powershell
       run: |
-        Start-Sleep -Seconds 90
+        Start-Sleep -Seconds 60
 
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
