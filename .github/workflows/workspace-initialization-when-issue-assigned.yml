@@ -92,7 +92,7 @@ jobs:
     - name: Wait few seconds to avoid import error
       shell: powershell
       run: |
-        Start-Sleep -Seconds 30
+        Start-Sleep -Seconds 60
 
     # Import the solution as unmanaged to the new Power Apps Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
