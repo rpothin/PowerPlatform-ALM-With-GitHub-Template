@@ -6,7 +6,7 @@
       <LocalizedName description="Power Platform ALM With GitHub" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.8</Version>
+    <Version>1.1.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>powerplatformalmwithgithub</UniqueName>
@@ -79,6 +79,7 @@
     </Publisher>
     <RootComponents>
       <RootComponent type="1" schemaName="ppwg_demonstration" behavior="0" />
+      <RootComponent type="9" schemaName="ppwg_level" behavior="0" />
       <RootComponent type="9" schemaName="ppwg_type" behavior="0" />
       <RootComponent type="300" schemaName="ppwg_demonstrationsapp_6b287" behavior="0" />
     </RootComponents>
