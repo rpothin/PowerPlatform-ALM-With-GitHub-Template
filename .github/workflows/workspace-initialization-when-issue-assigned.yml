@@ -61,7 +61,8 @@ jobs:
           -ProvisionDatabase `
           -CurrencyName ${{ env.powerapps_environment_currency_name }} `
           -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName ${{ env.powerapps_environment_domain_name }}
+          -DomainName ${{ env.powerapps_environment_domain_name }} `
+          -WaitUntilFinished true
 
   # Job for the import of the version of the solution in the main branch to the new Power Apps Dev environment
   #   Enable this job only after the initialization of the solution in the repository
@@ -89,10 +90,10 @@ jobs:
         solution-type: Unmanaged
 
     # Wait few seconds to avoid import error, due for example to import conflict
-    - name: Wait few seconds to avoid import error
-      shell: powershell
-      run: |
-        Start-Sleep -Seconds 90
+    #- name: Wait few seconds to avoid import error
+    #  shell: powershell
+    #  run: |
+    #    Start-Sleep -Seconds 90
 
     # Import the solution as unmanaged to the new Power Apps Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
