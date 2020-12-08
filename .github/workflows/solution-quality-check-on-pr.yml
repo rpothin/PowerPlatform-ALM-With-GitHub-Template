@@ -53,7 +53,8 @@ jobs:
           -ProvisionDatabase `
           -CurrencyName ${{ env.powerapps_environment_currency_name }} `
           -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName ${{ env.powerapps_environment_domain_name }}
+          -DomainName ${{ env.powerapps_environment_domain_name }} `
+          -WaitUntilFinished 1
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
@@ -190,10 +191,10 @@ jobs:
       run: echo "::set-output name=status::KO"
 
     # Wait few seconds to avoid import error, due for example to import conflict
-    - name: Wait few seconds to avoid import error
-      shell: powershell
-      run: |
-        Start-Sleep -Seconds 90
+    #- name: Wait few seconds to avoid import error
+    #  shell: powershell
+    #  run: |
+    #    Start-Sleep -Seconds 90
 
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
