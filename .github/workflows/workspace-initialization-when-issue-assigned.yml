@@ -62,7 +62,7 @@ jobs:
           -CurrencyName ${{ env.powerapps_environment_currency_name }} `
           -LanguageName ${{ env.powerapps_environment_language_code }} `
           -DomainName ${{ env.powerapps_environment_domain_name }} `
-          -WaitUntilFinished true
+          -WaitUntilFinished 1
 
   # Job for the import of the version of the solution in the main branch to the new Power Apps Dev environment
   #   Enable this job only after the initialization of the solution in the repository
