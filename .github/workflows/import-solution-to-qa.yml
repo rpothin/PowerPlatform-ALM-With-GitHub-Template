@@ -89,7 +89,7 @@ jobs:
     # Pack the considered solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
-      uses: microsoft/powerplatform-actions/pack-solution@v0
+      uses: microsoft/powerplatform-actions/pack-solution@v0.1.8
       with:
         solution-folder: Solutions/${{ env.solution_name }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
@@ -98,7 +98,7 @@ jobs:
     # Import the considered solution unmanaged package to the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
-      uses: microsoft/powerplatform-actions/import-solution@v0
+      uses: microsoft/powerplatform-actions/import-solution@v0.1.8
       with:
         environment-url: "https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}"
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
@@ -111,7 +111,7 @@ jobs:
     # Export solution as managed from the just in time Power Apps Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
-      uses: microsoft/powerplatform-actions/export-solution@v0
+      uses: microsoft/powerplatform-actions/export-solution@v0.1.8
       with:
         environment-url: "https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}"
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
@@ -156,7 +156,7 @@ jobs:
     # Import the considered solution managed package to the Power Apps QA environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution to qa env
-      uses: microsoft/powerplatform-actions/import-solution@v0
+      uses: microsoft/powerplatform-actions/import-solution@v0.1.8
       with:
         environment-url: ${{ secrets.POWERAPPS_QA_ENVIRONMENT_URL }}
         user-name: ${{ secrets.QA_USER_LOGIN }}

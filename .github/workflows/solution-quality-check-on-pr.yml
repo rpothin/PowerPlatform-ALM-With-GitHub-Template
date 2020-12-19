@@ -93,7 +93,7 @@ jobs:
     # Pack the considered solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
-      uses: microsoft/powerplatform-actions/pack-solution@v0
+      uses: microsoft/powerplatform-actions/pack-solution@v0.1.8
       with:
         solution-folder: Solutions/${{ env.solution_name }}
         solution-file: ${{ env.path_to_solution_zip_file }}
@@ -194,7 +194,7 @@ jobs:
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
-      uses: microsoft/powerplatform-actions/import-solution@v0
+      uses: microsoft/powerplatform-actions/import-solution@v0.1.8
       with:
         environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
@@ -208,7 +208,7 @@ jobs:
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
-      uses: microsoft/powerplatform-actions/export-solution@v0
+      uses: microsoft/powerplatform-actions/export-solution@v0.1.8
       with:
         environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
         user-name: ${{ secrets.BUILD_USER_LOGIN }}
