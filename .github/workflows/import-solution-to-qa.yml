@@ -36,7 +36,7 @@ jobs:
     
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=rpo-gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
@@ -66,6 +66,9 @@ jobs:
   # Job to build a managed solution in the just in time Power Apps Build environment
   build-managed-solution:
     needs: create-build-environment
+    environment:
+      name: build_environment
+      url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
     runs-on: windows-latest
     env:
       powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Power Apps Build environment
@@ -78,7 +81,7 @@ jobs:
 
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=rpo-gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
@@ -131,6 +134,9 @@ jobs:
   # Job to import the managed solution generated in the previous job to the Power Apps QA environment
   import-solution-to-qa:
     needs: build-managed-solution
+    environment:
+      name: qa_environment
+      url: ${{ secrets.POWERAPPS_QA_ENVIRONMENT_URL }}
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1

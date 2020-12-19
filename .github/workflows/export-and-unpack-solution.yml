@@ -15,7 +15,7 @@ on:
 
 env:
   branch_name: dev/issue_${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
-  powerapps_environment_domain_name: dev-issue-${{ github.event.inputs.issue_number }} # Domain name for the new Power Apps Dev environment
+  powerapps_environment_domain_name: rpo-gh-dev-issue-${{ github.event.inputs.issue_number }} # Domain name for the new Power Apps Dev environment
   powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the new Power Apps Dev environment
 
 jobs:

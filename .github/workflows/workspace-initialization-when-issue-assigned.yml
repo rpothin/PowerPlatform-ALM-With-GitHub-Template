@@ -9,7 +9,7 @@ on:
 env:
   branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
   powerapps_environment_display_name: Dev - Issue ${{ github.event.issue.number }} # Display name for the new Power Apps Dev environment
-  powerapps_environment_domain_name: dev-issue-${{ github.event.issue.number }} # Domain name for the new Power Apps Dev environment
+  powerapps_environment_domain_name: rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name for the new Power Apps Dev environment
   powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the new Power Apps Dev environment
 
 jobs:
