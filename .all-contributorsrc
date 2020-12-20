@@ -1,0 +1,30 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "rpothin",
+      "name": "Raphael Pothin",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/23240245?v=4",
+      "profile": "https://medium.com/rapha%C3%ABl-pothin",
+      "contributions": [
+        "ideas",
+        "code",
+        "content",
+        "doc",
+        "maintenance",
+        "projectManagement",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "PowerPlatform-ALM-With-GitHub-Template",
+  "projectOwner": "rpothin",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
