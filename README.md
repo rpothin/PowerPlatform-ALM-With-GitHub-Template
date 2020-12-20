@@ -38,7 +38,18 @@
 
 ## 🚀 Features
 
-To do
+- **Workspace initialization** when an issue is assigned in GitHub:
+  - create a new branch dedicated to the issue
+  - create a new Power Platform dev environment dedicated to the issue
+  - import the existing solution in the main branch of the repository to the new dev environment
+  - add a comment to the issue with workspace details
+- **On-demand solution export and unpack** from a Power Platform dev environment using the issue number
+- **Solution checker** execution on solution version in dev branch on the creation of a pull request targeting the main branch
+- **Import solution to a Power Platform QA environment** when a new commit is maid on the main branch with changes in the "Solutions/" folder
+- **Delete a Power Platform dev environment** when the associated issue is closed or canceled
+- **Create a GitHub release** containing a packed managed version of the solution
+
+> *Note: Some of these features used a Just In Time (JIT) Power Platform Build environment to build a managed version of a solution based on an export and unpack of an unmanaged solution.*
 
 <p align="center">
     <h3 align="center">
@@ -64,7 +75,13 @@ To do
 
 ### Prerequisites
 
-To do
+- A user account capable of creating Power Platform environments on on your tenant
+
+> *Note: If you want to try this solution on a trial tenant, you will need at least 3 different users (1 per Power Platform environment used in this solution)*
+
+- A service principal regesterd in Azure Active Directory on your tenant with the following API Permissions (at least) that will be user to execute the **Power Apps Solution Checker**: Dynamics CRM.user_impersonation and Microsoft Graph.User.Read
+
+- A Power Platform QA environment already created on your tenant
 
 ### Step by step configuration procedure
 
@@ -72,7 +89,16 @@ To do
 
 ## 📅 Roadmap
 
-To do
+- Replace the creation and deletion of Power Platform environments using PowerShell by the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions) when they will be available
+
+- Add the **publish-solution** and **update-solution-version** actions when it will be available in the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions)
+
+- Improve the documentation about the usage of this solution
+
+- Take in account more complex scenarios:
+  - multiple solutions
+  - solution upgrade
+  - ...
 
 ## ❗ Code of Conduct
 
@@ -121,5 +147,5 @@ This project is licensed under the [MIT](https://github.com/rpothin/PowerPlatfor
 
 I would like to thank the open-source projects below that helped me finding some ideas on how to organize this project.
 
-- README: [budibase](https://github.com/Budibase/budibase/blob/master/README.md)
-- Contributors list: [all-contributors](https://github.com/all-contributors/all-contributors)
+- [budibase](https://github.com/Budibase/budibase/)
+- [all-contributors](https://github.com/all-contributors/all-contributors)
