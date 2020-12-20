@@ -1,7 +1,14 @@
-# Power Platform ALM With GitHub Template
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+<p align="center">
+    <h1 align="center">
+        Power Platform ALM With GitHub - Template
+    </h1>
+    <h3 align="center">
+        Easily start a new GitHub repository to build Power Platform solutions
+    </h3>
+    <p align="center">
+        This project is an open-source template whose main purpose is to help you start your ALM journey for Power Platform solutions using GitHub.
+    </p>
+</p>
 
 <p align="center">
     <a href="#repolicense" alt="Repository License">
@@ -21,29 +28,69 @@
         <img src="https://img.shields.io/github/stars/rpothin/PowerPlatform-ALM-With-GitHub-Template?style=social" /></a>
 </p>
 
-Template repository for the ALM of Power Platform solutions with GitHub
+<h3 align="center">
+  <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions?discussions_q=category%3AIdeas">Feature request</a>
+  <span> · </span>
+  <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues">Report a bug</a>
+  <span> · </span>
+  Support: <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions">Discussions</a>
+</h3>
 
-## Prerequisites
+## 🚀 Features
 
 To do
 
-## How to use this template?
+<p align="center">
+    <h3 align="center">
+        🤖 GitHub Actions last run status
+    </h3>
+</p>
+<p align="center">
+    <a href="#workspace-initialization-when-issue-assigned" alt="Workspace initialization">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/workspace-initialization-when-issue-assigned/badge.svg" /></a>
+    <a href="#export-and-unpack-solution" alt="Export & Unpack solution">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/export-and-unpack-solution/badge.svg" /></a>
+    <a href="#solution-quality-check-on-pr" alt="Quality checks">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/solution-quality-check-on-pr/badge.svg" /></a>
+    <a href="#import-solution-to-qa" alt="Import to QA">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/import-solution-to-qa/badge.svg" /></a>
+    <a href="#delete-powerapps-dev-environment-when-issue-closed" alt="Delete dev environment">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/delete-powerapps-dev-environment-when-issue-closed/badge.svg" /></a>
+    <a href="#create-github-release" alt="Create release">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/create-github-release/badge.svg" /></a>
+</p>
+
+---
+
+## ✈️ How to use this repository template?
+
+### Prerequisites
 
 To do
 
-## Contributing to the Power Platform ALM With GitHub Template
+### Step by step configuration procedure
 
-1. Fork this repository.
-2. Create a branch: `git checkout -b <branch_name>`.
-3. Make your changes and commit them: `git commit -m '<commit_message>'`
-4. Push to the original branch: `git push origin <project_name>/<location>`
-5. Create the pull request.
+To do
 
-Alternatively see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
+---
+
+## 📅 Roadmap
+
+To do
+
+---
+
+## ❗ Code of Conduct
+
+I, Raphael Pothin, as main (unique) maintainer of this project, am dedicated to providing a welcoming, diverse, and harrassment-free experience for everyone. I expect everyone visiting or participating to this project to abide by the following [**Code of Conduct**](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CODE_OF_CONDUCT.md). Please read it. 
+
+## 👐 Contributing to this project
+
+To do
 
 ## Contributors
 
-Thanks to the following people who have contributed to this template:
+Thanks to the following people who have contributed to this project:
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -57,35 +104,13 @@ Thanks to the following people who have contributed to this template:
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-<!-- Static version of the contributors list for now, but if all owners agree, we can install the AllContributors GitHub App (https://allcontributors.org/docs/en/bot/installation) 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center">
-        <a href="https%3A%2F%2Ftwitter.com%2FRaphaelPothin">
-            <img src="https://avatars.githubusercontent.com/u/23240245?v=3" width="100px;" alt=""/>
-            <br />
-            <sub>
-                <b>Raphael Pothin</b>
-            </sub>
-        </a>
-        <br />
-        <a title="Documentation">📖</a>
-    </td>
-  </tr>
-</table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-## Contact
-
-If needed, you can contact us on twitter:
-- [@RaphaelPothin on Twitter](https://twitter.com/RaphaelPothin)
-
-## License
+## 📝 License
 
 This project is licensed under the [MIT](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/LICENSE) license.
+
+## 💡 Inspiration
+
+I would like to thank the open-source projects below that helped me finding some inspiration on how to organize this repository template.
+
+- README: [budibase](https://github.com/Budibase/budibase/blob/master/README.md)
+- Contributors list: [all-contributors](https://github.com/all-contributors/all-contributors)
