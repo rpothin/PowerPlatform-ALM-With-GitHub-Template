@@ -81,7 +81,7 @@ I, Raphael Pothin, as creator of this project, am dedicated to providing a welco
 ## 👐 Contributing to this project
 
 From opening a bug report to creating a pull request: every contribution is appreciated and welcomed.
-For more information, see [CONTRIBUTING.md](https://github.com/Budibase/budibase/blob/master/.github/CONTRIBUTING.md)
+For more information, see [CONTRIBUTING.md](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CONTRIBUTING.md)
 
 ### Not Sure Where to Start?
 
