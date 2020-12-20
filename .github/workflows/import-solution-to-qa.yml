@@ -136,7 +136,7 @@ jobs:
     needs: build-managed-solution
     environment:
       name: qa_environment
-      url: ${{ secrets.POWERAPPS_QA_ENVIRONMENT_URL }}
+      url: https://rpothin-qa.crm3.dynamics.com/
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
