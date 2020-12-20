@@ -1,10 +1,10 @@
 name: workspace-initialization-when-issue-assigned
 # Create a branch and generate a Power Apps Dev environment when an issue is assigned
 
-# Workflow triggered when an issue is assigned
+# Workflow triggered when an issue is labeled is a specific label (in our case 'work in progress')
 on:
   issues:
-    types: [assigned]
+    types: [labeled]
 
 env:
   branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
@@ -15,6 +15,7 @@ env:
 jobs:
   # Job for the creation of the new dev branch
   create-issue-development-branch:
+    if: contains(github.event.issue.labels.*.name, 'work in progress')
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -30,6 +31,7 @@ jobs:
 
   # Job for the creation of the new Power Apps Dev environment
   create-powerapps-dev-environment:
+    if: contains(github.event.issue.labels.*.name, 'work in progress')
     runs-on: windows-latest
     env:
       powerapps_environment_location: canada # Location for the new Power Apps Dev environment
