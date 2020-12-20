@@ -29,7 +29,7 @@ jobs:
     
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=rpo-gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=rpo-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
@@ -81,7 +81,7 @@ jobs:
 
     # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
     - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=rpo-gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "powerapps_environment_domain_name=rpo-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
 
     # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
     - name: Set path_to_solution_zip_file as env variable
