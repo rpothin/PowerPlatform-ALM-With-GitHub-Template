@@ -60,8 +60,6 @@ To do
         <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/create-github-release/badge.svg" /></a>
 </p>
 
----
-
 ## ✈️ How to use this repository template?
 
 ### Prerequisites
@@ -72,17 +70,13 @@ To do
 
 To do
 
----
-
 ## 📅 Roadmap
 
 To do
 
----
-
 ## ❗ Code of Conduct
 
-I, Raphael Pothin, as main (unique) maintainer of this project, am dedicated to providing a welcoming, diverse, and harrassment-free experience for everyone. I expect everyone visiting or participating to this project to abide by the following [**Code of Conduct**](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CODE_OF_CONDUCT.md). Please read it. 
+I, Raphael Pothin, as creator of this project, am dedicated to providing a welcoming, diverse, and harrassment-free experience for everyone. I expect everyone visiting or participating to this project to abide by the following [**Code of Conduct**](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CODE_OF_CONDUCT.md). Please read it.
 
 ## 👐 Contributing to this project
 
@@ -90,7 +84,7 @@ To do
 
 ## Contributors
 
-Thanks to the following people who have contributed to this project:
+Thanks to the following people who have contributed to this project ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -104,13 +98,15 @@ Thanks to the following people who have contributed to this project:
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
+This project follows the [all-contributors](https://allcontributors.org/docs/en/specification) specification. Everyone who would like to contribute to it is welcome!
+
 ## 📝 License
 
 This project is licensed under the [MIT](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/LICENSE) license.
 
 ## 💡 Inspiration
 
-I would like to thank the open-source projects below that helped me finding some inspiration on how to organize this repository template.
+I would like to thank the open-source projects below that helped me finding some ideas on how to organize this project.
 
 - README: [budibase](https://github.com/Budibase/budibase/blob/master/README.md)
 - Contributors list: [all-contributors](https://github.com/all-contributors/all-contributors)
