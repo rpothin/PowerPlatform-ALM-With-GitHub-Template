@@ -63,6 +63,9 @@ jobs:
   # Job to build a managed solution in the just in time Power Apps Build environment
   build-managed-solution:
     needs: create-build-environment
+    environment:
+      name: build_environment
+      url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
     runs-on: windows-latest
     env:
       powerapps_environment_url_base: .crm3.dynamics.com
