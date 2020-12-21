@@ -22,7 +22,7 @@ jobs:
     - name: Test
       shell: powershell
       run: |
-        echo ${{ github.event.issue }}
+        Write-Host "${{ github.event.issue }}"
     
 
   # Job for the creation of the new dev branch
