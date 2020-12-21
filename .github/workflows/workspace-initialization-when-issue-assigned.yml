@@ -4,7 +4,7 @@ name: workspace-initialization-when-issue-assigned
 # Workflow triggered when an issue is labeled is a specific label (in our case 'work in progress')
 on:
   issues:
-    types: [assigned, labeled]
+    types: [labeled]
 
 env:
   branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
