@@ -85,7 +85,49 @@
 
 ### Step by step configuration procedure
 
-To do
+1. Click on the **Use this template** button on the top of the main page of [this repository](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template)
+2. In the page that will open, enter the information for the creation of the new repository based on this template
+
+> *Note: Let the **Include all branches** option unchecked.*
+
+3. Click on the **Create repository from template** button
+4. In the new repository, go to the **Settings** tab
+5. Open the **Environments** section
+6. Create the following environments:
+   - dev_environment
+   - build_environment
+   - qa_environment
+
+> *Note: We suggest to add a protection rule (at least one reviewer for solution deployments targeting this environment) on the **qa_environment**.*
+
+7. Open the **Secrets** section
+8. Add the following repository secrets to the new repository:
+   - APPLICATION_ID: Application (client) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API Permissions
+   - CLIENT_SECRET: Client secret of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API Permissions
+   - TENANT_ID: Directory (tenant) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API Permissions
+   - DEV_USER_LOGIN: User login for the management of the Dev environments that will be created
+   - DEV_USER_PASSWORD: User password for the management of the Dev environments that will be created
+   - BUILD_USER_LOGIN: User login for the management of the Build environments that will be created
+   - BUILD_USER_PASSWORD: User password for the management of the Build environments that will be created
+   - POWERAPPS_QA_ENVIRONMENT_URL: URL of the existing QA environment
+   - QA_USER_LOGIN: User login for the management of the existing QA environment
+   - QA_USER_PASSWORD: User password for the management of the existing QA environment
+9. In the new repository, go to the **Issues** tab
+10. Click on **Labels**
+11. Create the following labels using the **New label** button
+    - **work in progress**: Trigger the workspace initialization (branch and environment)
+    - **dev env created**: Power Platform Dev environment created for this issue
+
+> *Note: you can change the name of the labels but you will need to make some replacements in the GitHub actions.*
+
+12. In the new repository, go to the **Code** tab
+13. Open the **.github/workflows** folder
+14. Open and update each YAML file in this folder:
+    - environment variables
+    - job conditions (if you decided to go for different label names)
+    - default value for the **solution_name** input variable in the **export-and-unpack-solution** GitHub Actions
+
+You should now be ready to start using this solution!
 
 ## 📅 Roadmap
 
