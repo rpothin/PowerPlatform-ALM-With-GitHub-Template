@@ -120,12 +120,16 @@
 
 > *Note: you can change the name of the labels but you will need to make some replacements in the GitHub actions.*
 
-12. In the new repository, go to the **Code** tab
-13. Open the **.github/workflows** folder
-14. Open and update each YAML file in this folder:
+1.  In the new repository, go to the **Code** tab
+2.  Open the **.github/workflows** folder
+3.  Open and update each YAML file in this folder:
     - environment variables
     - job conditions (if you decided to go for different label names)
     - default value for the **solution_name** input variable in the **export-and-unpack-solution** GitHub Actions
+
+> *Notes:*
+> - *you can delete the **Solutions** folder if you want. It contains a simple solution to test the GitHub Actions.*
+> - *if you do not have a solution in your repository (in the **Solutions** folder) and you create a new issue, the **import-solution-to-dev-environment** job in the **workspace-initialization-when-issue-assigned** GitHub Actions will fail, but you will be able to start building your solution.*
 
 You should now be ready to start using this solution!
 
@@ -134,6 +138,8 @@ You should now be ready to start using this solution!
 - Replace the creation and deletion of Power Platform environments using PowerShell by the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions) when they will be available
 
 - Add the **publish-solution** and **update-solution-version** actions when it will be available in the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions)
+
+- Improve the way we manage the configuration of the Power Platform environments we create
 
 - Improve the documentation about the usage of this solution
 
