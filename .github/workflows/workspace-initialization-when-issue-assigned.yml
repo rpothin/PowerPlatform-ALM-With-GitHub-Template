@@ -14,15 +14,10 @@ env:
 
 jobs:
   test:
-    runs-on: windows-latest
-    env:
-      RUNNER_DEBUG: 1
-
+    runs-on: ubuntu-latest
     steps:
-    - name: Test
-      shell: powershell
-      run: |
-        Write-Host "${{ github.event.issue }}"
+    - run: |
+        echo "${{ github.event }}"
     
 
   # Job for the creation of the new dev branch
