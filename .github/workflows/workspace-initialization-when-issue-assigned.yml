@@ -129,7 +129,7 @@ jobs:
 
     # Add the 'dev env created' label to the current issue
     - name: Add 'dev env created' label
-        uses: ActionsRML/add-labels-to-issue@v1
-        with:
-          issue_number: ${{ github.event.issue.number }}
-          labels: 'dev env created'
+      uses: ActionsRML/add-labels-to-issue@v1
+      with:
+        issue_number: ${{ github.event.issue.number }}
+        labels: 'dev env created'
