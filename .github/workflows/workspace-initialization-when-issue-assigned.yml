@@ -14,13 +14,12 @@ env:
 
 jobs:
   test:
-    if: contains(github.event.issue.labels.*.name, 'bug') && !contains(github.event.issue.comments.*.body, 'salut')
+    if: contains(github.event.issue.labels.*.name, 'bug') && !contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: ubuntu-latest
     steps:
     - run: |
         echo "Hello!"
     
-
   # Job for the creation of the new dev branch
   create-issue-development-branch:
     if: contains(github.event.issue.labels.*.name, 'work in progress')
