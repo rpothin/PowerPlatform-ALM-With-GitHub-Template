@@ -14,6 +14,7 @@ env:
 jobs:
   # Job to delete the Power Apps Dev environment associated to the issue
   delete-powerapps-dev-environment:
+    if: contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: windows-latest
     env:
       powerapps_environment_search_name: Dev*-*Issue*${{ github.event.issue.number }} # Display name of the Power Apps Dev environment associated to the issue where the " " are replaced by "*"

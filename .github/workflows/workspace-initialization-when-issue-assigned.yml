@@ -13,16 +13,9 @@ env:
   powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the new Power Apps Dev environment
 
 jobs:
-  test:
-    if: contains(github.event.issue.labels.*.name, 'bug') && !contains(github.event.issue.labels.*.name, 'dev env created')
-    runs-on: ubuntu-latest
-    steps:
-    - run: |
-        echo "Hello!"
-    
   # Job for the creation of the new dev branch
   create-issue-development-branch:
-    if: contains(github.event.issue.labels.*.name, 'work in progress')
+    if: contains(github.event.issue.labels.*.name, 'work in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -38,7 +31,7 @@ jobs:
 
   # Job for the creation of the new Power Apps Dev environment
   create-powerapps-dev-environment:
-    if: contains(github.event.issue.labels.*.name, 'work in progress')
+    if: contains(github.event.issue.labels.*.name, 'work in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: windows-latest
     env:
       powerapps_environment_location: canada # Location for the new Power Apps Dev environment
