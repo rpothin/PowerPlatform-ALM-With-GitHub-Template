@@ -38,18 +38,19 @@
 
 ## 🚀 Features
 
-- **Workspace initialization** when an issue is assigned in GitHub:
+- **Workspace initialization** when a specific label is added to an issue in GitHub:
   - create a new branch dedicated to the issue
   - create a new Power Platform dev environment dedicated to the issue
   - import the existing solution in the main branch of the repository to the new dev environment
   - add a comment to the issue with workspace details
-- **On-demand solution export and unpack** from a Power Platform dev environment using the issue number
-- **Solution checker** execution on solution version in dev branch on the creation of a pull request targeting the main branch
-- **Import solution to a Power Platform QA environment** when a new commit is maid on the main branch with changes in the "Solutions/" folder
+  - add a specific label to the issue to indicate a Power Platform dev environment has been created for this issue
+- **On-demand solution export and unpack** from a Power Platform dev environment using the issue number and the name of the considered solution
+- **Solution checker** execution on solution version in a dev branch on the creation of a pull request targeting the main branch
+- **Import solution to a Power Platform QA environment** when a new commit is made on the main branch with changes in the **Solutions/** folder
 - **Delete a Power Platform dev environment** when the associated issue is closed or canceled
 - **Create a GitHub release** containing a packed managed version of the solution
 
-> *Note: Some of these features used a Just In Time (JIT) Power Platform Build environment to build a managed version of a solution based on an export and unpack of an unmanaged solution.*
+> *Note: Some of these features used a Just In Time (JIT) Power Platform Build environment to build a managed version of a solution based on an exported and unpacked unmanaged solution.*
 
 <p align="center">
     <h3 align="center">
@@ -79,7 +80,7 @@
 
 > *Note: If you want to try this solution on a trial tenant, you will need at least 3 different users (1 per Power Platform environment used in this solution)*
 
-- A service principal regesterd in Azure Active Directory on your tenant with the following API Permissions (at least) that will be user to execute the **Power Apps Solution Checker**: Dynamics CRM.user_impersonation and Microsoft Graph.User.Read
+- A service principal regesterd in Azure Active Directory on your tenant with the following API Permissions (at least) that will be used to execute the **Power Apps Solution Checker**: Dynamics CRM.user_impersonation and Microsoft Graph.User.Read
 
 - A Power Platform QA environment already created on your tenant
 
@@ -98,13 +99,13 @@
    - build_environment
    - qa_environment
 
-> *Note: We suggest to add a protection rule (at least one reviewer for solution deployments targeting this environment) on the **qa_environment**.*
+> *Note: We suggest to add a protection rule (at least one reviewer for solution deployments) on the **qa_environment**.*
 
 7. Open the **Secrets** section
 8. Add the following repository secrets to the new repository:
-   - APPLICATION_ID: Application (client) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API Permissions
-   - CLIENT_SECRET: Client secret of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API Permissions
-   - TENANT_ID: Directory (tenant) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API Permissions
+   - APPLICATION_ID: Application (client) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
+   - CLIENT_SECRET: Client secret of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
+   - TENANT_ID: Directory (tenant) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
    - DEV_USER_LOGIN: User login for the management of the Dev environments that will be created
    - DEV_USER_PASSWORD: User password for the management of the Dev environments that will be created
    - BUILD_USER_LOGIN: User login for the management of the Build environments that will be created
@@ -113,35 +114,35 @@
    - QA_USER_LOGIN: User login for the management of the existing QA environment
    - QA_USER_PASSWORD: User password for the management of the existing QA environment
 9. In the new repository, go to the **Issues** tab
-10. Click on **Labels**
-11. Create the following labels using the **New label** button
+10.  Click on **Labels**
+11.  Create the following labels using the **New label** button:
     - **work in progress**: Trigger the workspace initialization (branch and environment)
     - **dev env created**: Power Platform Dev environment created for this issue
 
-> *Note: you can change the name of the labels but you will need to make some replacements in the GitHub actions.*
+> *Note: you can change the name of the labels, but you will need to make some replacements in the GitHub actions.*
 
-1.  In the new repository, go to the **Code** tab
-2.  Open the **.github/workflows** folder
-3.  Open and update each YAML file in this folder:
+12.  In the new repository, go to the **Code** tab
+13.  Open the **.github/workflows** folder
+14.  Open and update each YAML file in this folder:
     - environment variables
     - job conditions (if you decided to go for different label names)
     - default value for the **solution_name** input variable in the **export-and-unpack-solution** GitHub Actions
 
 > *Notes:*
 > - *you can delete the **Solutions** folder if you want. It contains a simple solution to test the GitHub Actions.*
-> - *if you do not have a solution in your repository (in the **Solutions** folder) and you create a new issue, the **import-solution-to-dev-environment** job in the **workspace-initialization-when-issue-assigned** GitHub Actions will fail, but you will be able to start building your solution.*
+> - *if you do not have a solution in your repository (in the **Solutions** folder) and you create a new issue, the **import-solution-to-dev-environment** job in the **workspace-initialization-when-issue-assigned** GitHub Actions will fail, but you will still be able to start building your solution.*
 
-You should now be ready to start using this solution!
+You should now be ready to start using this solution 🎉
 
 ## 📅 Roadmap
 
-- Replace the creation and deletion of Power Platform environments using PowerShell by the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions) when they will be available
+- Replace the creation and deletion of Power Platform environments using PowerShell by the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions) project when they will be available
 
-- Add the **publish-solution** and **update-solution-version** actions when it will be available in the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions)
+- Add the **publish-solution** and **update-solution-version** actions when they will be available in the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions) repository
 
 - Improve the way we manage the configuration of the Power Platform environments we create
 
-- Improve the documentation about the usage of this solution
+- Improve the documentation about the usage of this solution (branching strategy...)
 
 - Take in account more complex scenarios:
   - multiple solutions
@@ -168,6 +169,7 @@ If you want to participate to this project, but you are not sure how you can do 
 At a high level, here are the main parts of this repository:
 
 - [.github/workflows](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/.github/workflows) - contains all the GitHub Actions workflows available in this repository and that can be use to manage the ALM process of Power Platform solutions directly from GitHub.
+- [Solutions/PowerPlatformALMWithGitHub](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/Solutions/PowerPlatformALMWithGitHub) - contains a simple Power Platform solution used for the tests of the GitHub Actions.
 
 ## Contributors
 
@@ -193,7 +195,7 @@ This project is licensed under the [MIT](https://github.com/rpothin/PowerPlatfor
 
 ## 💡 Inspiration
 
-I would like to thank the open-source projects below that helped me finding some ideas on how to organize this project.
+I would like to thank the open-source projects below that helped me find some ideas on how to organize this project.
 
 - [budibase](https://github.com/Budibase/budibase/)
 - [all-contributors](https://github.com/all-contributors/all-contributors)
