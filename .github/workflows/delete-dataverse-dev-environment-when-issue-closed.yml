@@ -45,4 +45,6 @@ jobs:
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
+          # Workspace deleted!
+
           [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}) Dataverse Dev environment deleted!
