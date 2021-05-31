@@ -120,4 +120,4 @@ jobs:
           # Workspace initialized!
 
           Branch: **${{ env.branch_name }}**
-          Dataverse Dev environment: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }})
+          Dataverse Dev environment created: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }})
