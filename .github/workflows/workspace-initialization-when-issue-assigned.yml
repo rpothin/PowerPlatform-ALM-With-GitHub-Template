@@ -1,5 +1,5 @@
 name: workspace-initialization-when-issue-assigned
-# Create a branch and generate a Power Apps Dev environment when an issue is assigned
+# Create a branch and generate a Dataverse Dev environment when an issue is assigned in GitHub
 
 # Workflow triggered when an issue is labeled is a specific label (in our case 'work in progress')
 on:
@@ -8,9 +8,9 @@ on:
 
 env:
   branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
-  powerapps_environment_display_name: Dev - Issue ${{ github.event.issue.number }} # Display name for the new Power Apps Dev environment
-  powerapps_environment_domain_name: gh-dev-issue-${{ github.event.issue.number }} # Domain name for the new Power Apps Dev environment
-  powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the new Power Apps Dev environment
+  dataverse_environment_display_name: BAFC - Raphael - Dev - Issue ${{ github.event.issue.number }} # Display name for the new Dataverse Dev environment
+  dataverse_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name for the new Dataverse Dev environment
+  dataverse_environment_url_base: .crm12.dynamics.com # Base URL for the new Dataverse Dev environment
 
 jobs:
   # Job for the creation of the new dev branch
@@ -29,88 +29,77 @@ jobs:
       with:
         branch: ${{ env.branch_name }}
 
-  # Job for the creation of the new Power Apps Dev environment
-  create-powerapps-dev-environment:
+  # Job for the creation of the new Dataverse Dev environment
+  create-dataverse-dev-environment:
     if: contains(github.event.issue.labels.*.name, 'work in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
-      powerapps_environment_location: canada # Location for the new Power Apps Dev environment
-      powerapps_environment_sku: Trial # SKU for the new Power Apps Dev environment: Production, Sandbox or Trial
-      powerapps_environment_currency_name: CAD # Currency name for the new Power Apps Dev environment
-      powerapps_environment_language_code: 1033 # Language code for the new Power Apps Dev environment (ex: 1033 for English)
+      dataverse_environment_region: france # Location for the new Dataverse Dev environment (ex: unitedstates)
+      dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
+      dataverse_environment_currency_name: EUR # Currency name for the new Dataverse Dev environment (ex: USD)
+      dataverse_environment_language_name: English # Language name for the new Dataverse Dev environment (ex: English)
       RUNNER_DEBUG: 1
 
     steps:
-    # Install the PowerShell modules we will need for the creation of the new Power Apps Dev environment
-    - name: Get PowerShell modules
-      shell: powershell
-      run: |
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
-        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
-    
-    # Add a Power Apps account to use the PowerShell Power Apps Admin module
-    # Create the new Power Apps Dev environment
-    - name: Add Power Apps account & Create Power Apps environment
-      shell: powershell
-      run: |
-        $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
-        Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
-        
-        New-AdminPowerAppEnvironment `
-          -DisplayName '${{ env.powerapps_environment_display_name }}' `
-          -Location ${{ env.powerapps_environment_location }} `
-          -EnvironmentSku ${{ env.powerapps_environment_sku }} `
-          -ProvisionDatabase `
-          -CurrencyName ${{ env.powerapps_environment_currency_name }} `
-          -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName ${{ env.powerapps_environment_domain_name }} `
-          -WaitUntilFinished 1
+    # Create the new Dataverse Dev environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
+    - name: Create environment
+      uses: microsoft/powerplatform-actions/create-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        name: ${{ env.dataverse_environment_display_name }}
+        region: ${{ env.dataverse_environment_region }}
+        type: ${{ env.dataverse_environment_sku }}
+        currency: ${{ env.dataverse_environment_currency_name }}
+        language: ${{ env.dataverse_environment_language_name }}
+        domain: ${{ env.dataverse_environment_domain_name }}
 
-  # Job for the import of the version of the solution in the main branch to the new Power Apps Dev environment
+  # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   #   Enable this job only after the initialization of the solution in the repository
   import-solution-to-dev-environment:
-    needs: create-powerapps-dev-environment
+    needs: create-dataverse-dev-environment
     environment:
       name: dev_environment
-      url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
-    runs-on: windows-latest
+      url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+    runs-on: ubuntu-latest
     env:
-      solution_name: PowerPlatformALMWithGitHub # Name of the Power Apps solution considered
+      solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       RUNNER_DEBUG: 1
 
     steps:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
-      with:
-        lfs: true
 
     # Pack the solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
-      uses: microsoft/powerplatform-actions/pack-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/pack-solution@main
       with:
         solution-folder: Solutions/${{ env.solution_name }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
 
-    # Import the solution as unmanaged to the new Power Apps Dev environment
+    # Import the solution as unmanaged to the new Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
-    - name: Import solution as unmanaged to dev env
-      uses: microsoft/powerplatform-actions/import-solution@v0.1.8
+    - name: Import solution as unmanaged to Dev
+      uses: microsoft/powerplatform-actions/import-solution@main
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
-        user-name: ${{ secrets.DEV_USER_LOGIN }}
-        password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: false
 
-  # Add a comment on the issue with the dev branch name and the Power Apps Dev environment information
+  # Add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
-    # Change "create-powerapps-dev-environment" for "import-solution-to-dev-environment" only after the initialization of the solution in the repository
-    needs: [create-issue-development-branch, create-powerapps-dev-environment]
+    # Change "create-dataverse-dev-environment" for "import-solution-to-dev-environment" only after the initialization of the solution in the repository
+    needs: [create-issue-development-branch, create-dataverse-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -125,7 +114,7 @@ jobs:
           # Workspace initialized!
 
           Branch: **${{ env.branch_name }}**
-          Power Apps environment: [**${{ env.powerapps_environment_display_name }}**](https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }})
+          Dataverse Dev environment: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }})
 
     # Add the 'dev env created' label to the current issue
     - name: Add 'dev env created' label
