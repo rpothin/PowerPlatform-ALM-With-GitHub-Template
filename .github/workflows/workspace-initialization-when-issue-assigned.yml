@@ -105,7 +105,7 @@ jobs:
   # Add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
     # Change "create-dataverse-dev-environment" for "import-solution-to-dev-environment" only after the initialization of the solution in the repository
-    needs: [create-issue-development-branch, create-dataverse-dev-environment]
+    needs: [create-issue-development-branch, import-solution-to-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
