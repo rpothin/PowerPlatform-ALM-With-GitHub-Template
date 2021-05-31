@@ -56,6 +56,12 @@ jobs:
         language: ${{ env.dataverse_environment_language_name }}
         domain: ${{ env.dataverse_environment_domain_name }}
 
+    # Add the 'dev env created' label to the current issue
+    - name: Add 'dev env created' label
+      uses: andymckay/labeler@master
+      with:
+        add-labels: 'dev env created'
+
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   #   Enable this job only after the initialization of the solution in the repository
   import-solution-to-dev-environment:
@@ -63,7 +69,7 @@ jobs:
     environment:
       name: dev_environment
       url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       RUNNER_DEBUG: 1
@@ -115,10 +121,3 @@ jobs:
 
           Branch: **${{ env.branch_name }}**
           Dataverse Dev environment: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }})
-
-    # Add the 'dev env created' label to the current issue
-    - name: Add 'dev env created' label
-      uses: ActionsRML/add-labels-to-issue@v1
-      with:
-        issue_number: ${{ github.event.issue.number }}
-        labels: 'dev env created'
