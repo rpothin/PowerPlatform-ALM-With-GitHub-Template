@@ -1,0 +1,47 @@
+name: delete-dataverse-dev-environment-when-issue-closed
+# Delete the Dataverse Dev environment created to work on the considered issue when it is closed
+
+# Workflow that is triggered when an issue is closed or deleted
+on:
+  issues:
+    types: [closed, deleted]
+
+env:
+  dataverse_environment_display_name: BAFC - Raphael - Dev - Issue ${{ github.event.issue.number }} # Display name of the Dataverse Dev environment associated to the issue
+  dataverse_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name of the Dataverse Dev environment associated to the issue
+  dataverse_environment_url_base: .crm12.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
+
+jobs:
+  # Job to delete the Dataverse Dev environment associated to the issue
+  delete-dataverse-dev-environment:
+    if: contains(github.event.issue.labels.*.name, 'dev env created')
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Delete the Dataverse Dev environment associated to the issue
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
+    - name: Delete environment
+      uses: microsoft/powerplatform-actions/delete-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+  
+  # Add a comment on the issue to notify that the Dataverse Dev environment has been deleted
+  add-comment-on-issue:
+    needs: delete-dataverse-dev-environment
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Add the new comment to the issue
+    - name: New comment on issue
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}) Dataverse Dev environment deleted!
