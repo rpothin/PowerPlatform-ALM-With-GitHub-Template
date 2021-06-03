@@ -1,0 +1,22 @@
+name: test
+
+on: workflow_dispatch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Test1
+      run: echo ${{ secrets.TEST }}
+
+    - name: Test2
+      run: echo ${{ secrets.TEST.clientId }}
+      
+    - name: Test3
+      run: echo ${{ secrets.TEST.clientSecret }}
+      
+    - name: Test4
+      run: echo ${{ secrets.TEST.subscriptionId }}
