@@ -29,6 +29,14 @@ jobs:
       with:
         branch: ${{ env.branch_name }}
 
+    # Add "Branch created" comment to the issue
+    - name: Branch created comment on issue
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          Branch created!
+
   # Job for the creation of the new Dataverse Dev environment
   create-dataverse-dev-environment:
     if: contains(github.event.issue.labels.*.name, 'work in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
@@ -61,6 +69,14 @@ jobs:
       uses: andymckay/labeler@master
       with:
         add-labels: 'dev env created'
+
+    # Add "Environment created" comment to the issue
+    - name: Environment created comment on issue
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          Environment created!
 
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   #   Enable this job only after the initialization of the solution in the repository
@@ -102,6 +118,14 @@ jobs:
         publish-changes: true
         skip-dependency-check: false
 
+    # Add "Solution imported" comment to the issue
+    - name: Solution imported comment on issue
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          Solution imported!
+
   # Add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
     # Change "create-dataverse-dev-environment" for "import-solution-to-dev-environment" only after the initialization of the solution in the repository
@@ -111,8 +135,8 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Add the new comment to the issue
-    - name: New comment on issue
+    # Add "Workplace initialized" comment to the issue
+    - name: Workplace initialized comment on issue
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.issue.number }}

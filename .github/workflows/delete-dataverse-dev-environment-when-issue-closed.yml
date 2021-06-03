@@ -39,12 +39,12 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Add the new comment to the issue
-    - name: New comment on issue
+    # Add Environment deleted comment to the issue
+    - name: Environment deleted comment on issue
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
-          # Workspace deleted!
+          # Environment deleted!
 
           [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}) Dataverse Dev environment deleted!
