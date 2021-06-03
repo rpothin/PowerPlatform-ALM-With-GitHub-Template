@@ -1,4 +1,4 @@
-name: create-github-release
+name: 6-create-github-release
 # Generate a GitHub release for the considered solution
 
 # Workflow triggered manually providing the mandatory information described below

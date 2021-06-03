@@ -1,4 +1,4 @@
-name: import-solution-to-qa
+name: 4-import-solution-to-qa
 # Upload the solutions to the GitHub artifacts and deploy to the Power Apps QA environment
 
 # Workflow that is triggered by a push of updates in the "Solutions/" folder on the main branch

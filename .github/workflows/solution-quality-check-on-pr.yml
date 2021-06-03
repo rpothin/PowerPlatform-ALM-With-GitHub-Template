@@ -1,4 +1,4 @@
-name: solution-quality-check-on-pr
+name: 3-solution-quality-check-on-pr
 # Check the quality of a Power Apps solution on a pull request to main
 
 # Workflow triggered by a pull request targeting the main branch

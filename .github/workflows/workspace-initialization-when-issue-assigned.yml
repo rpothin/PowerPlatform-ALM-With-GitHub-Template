@@ -1,4 +1,4 @@
-name: workspace-initialization-when-issue-assigned
+name: 1-workspace-initialization-when-issue-assigned
 # Create a branch and generate a Dataverse Dev environment when an issue is assigned in GitHub
 
 # Workflow triggered when an issue is labeled is a specific label (in our case 'work in progress')
