@@ -32,7 +32,7 @@ jobs:
   
   # Add a comment on the issue to notify that the Dataverse Dev environment has been deleted
   add-comment-on-issue:
-    if: github.event.issue.type == 'closed'
+    if: ${{ github.event.issue.type == 'closed' }}
     needs: delete-dataverse-dev-environment
     runs-on: ubuntu-latest
     env:
@@ -45,7 +45,7 @@ jobs:
       uses: andymckay/labeler@master
       with:
         remove-labels: 'dev env created'
-        
+
     # Add Environment deleted comment to the issue
     - name: Environment deleted comment on issue
       uses: peter-evans/create-or-update-comment@v1
