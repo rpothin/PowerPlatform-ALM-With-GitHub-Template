@@ -22,7 +22,7 @@ jobs:
     steps:
     # Test
     - run: |
-        echo "${{ toJSON(github.event.issue) }}"
+        echo "${{ github.event.issue.state }}"
 
     # Delete the Dataverse Dev environment associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
