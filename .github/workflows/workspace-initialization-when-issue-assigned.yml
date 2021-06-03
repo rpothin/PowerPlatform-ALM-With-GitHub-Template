@@ -35,7 +35,7 @@ jobs:
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
-          Branch created!
+          ✨Branch created!
 
   # Job for the creation of the new Dataverse Dev environment
   create-dataverse-dev-environment:
@@ -76,7 +76,7 @@ jobs:
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
-          Environment created!
+          🎉 Environment created!
 
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   #   Enable this job only after the initialization of the solution in the repository
@@ -124,7 +124,7 @@ jobs:
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
-          Solution imported!
+          🎊 Solution imported!
 
   # Add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
@@ -141,7 +141,7 @@ jobs:
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
-          # Workspace initialized!
+          # 🎆 Workspace initialized!
 
           Branch: **${{ env.branch_name }}**
           Dataverse Dev environment created: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }})
