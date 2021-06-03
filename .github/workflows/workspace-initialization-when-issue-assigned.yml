@@ -65,6 +65,7 @@ jobs:
         domain: ${{ env.dataverse_environment_domain_name }}
 
     # Add the 'dev env created' label to the current issue
+    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
     - name: Add 'dev env created' label
       uses: andymckay/labeler@master
       with:
