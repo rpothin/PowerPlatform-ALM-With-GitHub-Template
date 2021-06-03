@@ -144,5 +144,5 @@ jobs:
         body: |
           # 🎆 Workspace initialized!
 
-          Branch: **${{ env.branch_name }}**
+          Branch: [**${{ env.branch_name }}**](https://github.com/$GITHUB_REPOSITORY/tree/${{ env.branch_name }})
           Dataverse Dev environment created: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }})
