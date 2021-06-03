@@ -30,8 +30,8 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
   
-  # Add a comment on the issue to notify that the Dataverse Dev environment has been deleted
-  add-comment-on-issue:
+  # Remove the 'dev env created' label and add a comment on the issue to notify that the Dataverse Dev environment has been deleted
+  update-issue:
     if: ${{ github.event.issue.state == 'closed' }}
     needs: delete-dataverse-dev-environment
     runs-on: ubuntu-latest
@@ -52,6 +52,6 @@ jobs:
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
-          # Environment deleted!
+          # 🛑 Environment deleted!
 
           [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}) Dataverse Dev environment deleted!
