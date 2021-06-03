@@ -20,10 +20,6 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Test
-    - run: |
-        echo "${{ github.event.issue.state }}"
-
     # Delete the Dataverse Dev environment associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
     - name: Delete environment
@@ -36,7 +32,7 @@ jobs:
   
   # Add a comment on the issue to notify that the Dataverse Dev environment has been deleted
   add-comment-on-issue:
-    if: ${{ github.event.issue.type == 'closed' }}
+    if: ${{ github.event.issue.state == 'closed' }}
     needs: delete-dataverse-dev-environment
     runs-on: ubuntu-latest
     env:
