@@ -20,6 +20,10 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Test
+    - run: |
+        echo "${{ github.event.issue }}"
+
     # Delete the Dataverse Dev environment associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
     - name: Delete environment
