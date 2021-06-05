@@ -7,10 +7,9 @@ on:
     types: [labeled]
 
 env:
-  branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
-  dataverse_environment_display_name: BAFC - Raphael - Dev - Issue ${{ github.event.issue.number }} # Display name for the new Dataverse Dev environment
-  dataverse_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name for the new Dataverse Dev environment
-  dataverse_environment_url_base: .crm12.dynamics.com # Base URL for the new Dataverse Dev environment
+  branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.issue.number }} # Name of the new dev branch
+  dataverse_environment_display_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DISPLAY_NAME_BASE }}${{ github.event.issue.number }} # Display name for the new Dataverse Dev environment
+  dataverse_environment_domain_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }} # Domain name for the new Dataverse Dev environment
 
 jobs:
   # Job for the creation of the new dev branch
@@ -42,10 +41,7 @@ jobs:
     if: contains(github.event.issue.labels.*.name, 'work in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: ubuntu-latest
     env:
-      dataverse_environment_region: france # Location for the new Dataverse Dev environment (ex: unitedstates)
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
-      dataverse_environment_currency_name: EUR # Currency name for the new Dataverse Dev environment (ex: USD)
-      dataverse_environment_language_name: English # Language name for the new Dataverse Dev environment (ex: English)
       RUNNER_DEBUG: 1
 
     steps:
@@ -58,10 +54,10 @@ jobs:
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ env.dataverse_environment_display_name }}
-        region: ${{ env.dataverse_environment_region }}
+        region: ${{ secrets.DATAVERSE_ENVIRONMENT_REGION }}
         type: ${{ env.dataverse_environment_sku }}
-        currency: ${{ env.dataverse_environment_currency_name }}
-        language: ${{ env.dataverse_environment_language_name }}
+        currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
+        language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
         domain: ${{ env.dataverse_environment_domain_name }}
 
     # Add the 'dev env created' label to the current issue
@@ -85,8 +81,8 @@ jobs:
     needs: create-dataverse-dev-environment
     environment:
       name: dev_environment
-      url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-    runs-on: windows-latest
+      url: https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
+    runs-on: ubuntu-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       RUNNER_DEBUG: 1
@@ -113,7 +109,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -145,4 +141,4 @@ jobs:
           # 🎆 Workspace initialized!
 
           Branch: [**${{ env.branch_name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ env.branch_name }})
-          Dataverse Dev environment created: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }})
+          Dataverse Dev environment created: [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }})

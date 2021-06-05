@@ -14,9 +14,8 @@ on:
         default: 'PowerPlatformALMWithGitHub'
 
 env:
-  branch_name: dev/issue_${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
+  branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
   dataverse_environment_domain_name: gh-dev-issue-${{ github.event.inputs.issue_number }} # Domain name for the new Dataverse Dev environment
-  dataverse_environment_url_base: .crm3.dynamics.com # Base URL for the new Dataverse Dev environment
 
 jobs:
   # Job for the export of the considered solution from the dev environment associated to the issue
@@ -37,7 +36,7 @@ jobs:
     - name: who-am-i action
       uses: microsoft/powerplatform-actions/who-am-i@v0.1.8
       with:
-        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
         user-name: ${{ secrets.DEV_USER_LOGIN }}
         password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
@@ -46,7 +45,7 @@ jobs:
     #- name: publish-solution action
     #  uses: microsoft/powerplatform-actions/publish-solution@v0
     #  with:
-    #    environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+    #    environment-url: https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
     #    user-name: ${{ secrets.DEV_USER_LOGIN }}
     #    password-secret: ${{ secrets.DEV_USER_PASSWORD }}
 
@@ -55,7 +54,7 @@ jobs:
     - name: export-solution action
       uses: microsoft/powerplatform-actions/export-solution@v0.1.8
       with:
-        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
         user-name: ${{ secrets.DEV_USER_LOGIN }}
         password-secret: ${{ secrets.DEV_USER_PASSWORD }}
         solution-name: ${{ github.event.inputs.solution_name }}

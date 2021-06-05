@@ -7,9 +7,8 @@ on:
     types: [closed, deleted]
 
 env:
-  dataverse_environment_display_name: BAFC - Raphael - Dev - Issue ${{ github.event.issue.number }} # Display name of the Dataverse Dev environment associated to the issue
-  dataverse_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name of the Dataverse Dev environment associated to the issue
-  dataverse_environment_url_base: .crm12.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
+  dataverse_environment_display_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DISPLAY_NAME_BASE }}${{ github.event.issue.number }} # Display name of the Dataverse Dev environment associated to the issue
+  dataverse_environment_domain_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }} # Domain name of the Dataverse Dev environment associated to the issue
 
 jobs:
   # Job to delete the Dataverse Dev environment associated to the issue
@@ -28,7 +27,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
   
   # Remove the 'dev env created' label and add a comment on the issue to notify that the Dataverse Dev environment has been deleted
   update-issue:
@@ -54,4 +53,4 @@ jobs:
         body: |
           # 🛑 Environment deleted!
 
-          [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}) Dataverse Dev environment deleted!
+          [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}) Dataverse Dev environment deleted!
