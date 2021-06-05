@@ -82,7 +82,7 @@ jobs:
     needs: create-dataverse-dev-environment
     environment:
       name: dev_environment
-      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ github.event.issue.number }}${{ env.dataverse_environment_url_base }}
+      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -110,7 +110,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ github.event.issue.number }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
