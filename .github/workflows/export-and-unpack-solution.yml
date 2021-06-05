@@ -15,7 +15,7 @@ on:
 
 env:
   branch_name: dev/issue_${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
-  dataverse_environment_domain_name: gh-dev-issue-${{ github.event.inputs.issue_number }} # Domain name for the new Dataverse Dev environment
+  dataverse_dev_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.inputs.issue_number }} # Domain name of the Dataverse Dev environment associated to the issue
   dataverse_environment_url_base: .crm12.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
@@ -29,31 +29,21 @@ jobs:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
-      with:
-        lfs: true
 
-    # Test the connection to the Dataverse Dev environment
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/who-am-i/action.yml
-    - name: who-am-i action
-      uses: microsoft/powerplatform-actions/who-am-i@v0.1.8
-      with:
-        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-        user-name: ${{ secrets.DEV_USER_LOGIN }}
-        password-secret: ${{ secrets.DEV_USER_PASSWORD }}
-
-    # Publish all customizations on the Dataverse Dev environment (not yet available)
+    # Publish all customizations on the Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/publish-solution/action.yml
-    #- name: publish-solution action
-    #  uses: microsoft/powerplatform-actions/publish-solution@v0
-    #  with:
-    #    environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-    #    user-name: ${{ secrets.DEV_USER_LOGIN }}
-    #    password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+    - name: Publish solutions
+      uses: microsoft/powerplatform-actions/publish-solution@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
 
     # Export the considered solution as unmanaged from the Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: export-solution action
-      uses: microsoft/powerplatform-actions/export-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/export-solution@main
       with:
         environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         user-name: ${{ secrets.DEV_USER_LOGIN }}
@@ -64,7 +54,7 @@ jobs:
     # Unpack the unmanaged solution exported in the previous step
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/unpack-solution/action.yml
     - name: unpack-solution action
-      uses: microsoft/powerplatform-actions/unpack-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/unpack-solution@main
       with:
         solution-file: out/exported/${{ github.event.inputs.solution_name }}.zip
         solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
@@ -74,7 +64,7 @@ jobs:
     # Push the unpacked solution generated in the previous step to the branch associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
     - name: branch-solution action
-      uses: microsoft/powerplatform-actions/branch-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/branch-solution@main
       with:
         solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
         solution-target-folder: Solutions/${{ github.event.inputs.solution_name }}
