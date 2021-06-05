@@ -77,7 +77,7 @@ jobs:
 
     # Set dataverse_dev_environment_url environment variable for later use in the workflow
     - name: Set dataverse_dev_environment_url
-      run: echo ::set-env name=dataverse_dev_environment_url::https://${{ env.dataverse_dev_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
+      run: echo "dataverse_dev_environment_url=https://${{ env.dataverse_dev_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}" >> $Env:GITHUB_ENV
 
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   #   Enable this job only after the initialization of the solution in the repository
