@@ -10,7 +10,7 @@ env:
   branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.issue.number }} # Name of the new dev branch
   dataverse_dev_environment_display_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DISPLAY_NAME_BASE }}${{ github.event.issue.number }} # Display name for the new Dataverse Dev environment
   dataverse_dev_environment_domain_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }} # Domain name for the new Dataverse Dev environment
-  dataverse_dev_environment_url: https://${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }} # URL of the Dataverse Dev environment
+  dataverse_environment_url_base: .crm12.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
   # Job for the creation of the new dev branch
@@ -82,7 +82,7 @@ jobs:
     needs: create-dataverse-dev-environment
     environment:
       name: dev_environment
-      url: ${{ env.dataverse_dev_environment_url }}
+      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ github.event.issue.number }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -110,7 +110,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}
+        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ github.event.issue.number }}${{ env.dataverse_environment_url_base }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -142,4 +142,4 @@ jobs:
           # 🎆 Workspace initialized!
 
           Branch: [**${{ env.branch_name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ env.branch_name }})
-          Dataverse Dev environment created: [**${{ env.dataverse_dev_environment_display_name }}**](https://${{ env.dataverse_dev_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }})
+          Dataverse Dev environment created: [**${{ env.dataverse_dev_environment_display_name }}**](https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }})
