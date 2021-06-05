@@ -10,6 +10,7 @@ env:
   branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.issue.number }} # Name of the new dev branch
   dataverse_dev_environment_display_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DISPLAY_NAME_BASE }}${{ github.event.issue.number }} # Display name for the new Dataverse Dev environment
   dataverse_dev_environment_domain_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }} # Domain name for the new Dataverse Dev environment
+  dataverse_dev_environment_url: https://${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }} # URL of the Dataverse Dev environment
 
 jobs:
   # Job for the creation of the new dev branch
@@ -74,10 +75,6 @@ jobs:
         issue-number: ${{ github.event.issue.number }}
         body: |
           🎉 Environment created!
-
-    # Set dataverse_dev_environment_url environment variable for later use in the workflow
-    - name: Set dataverse_dev_environment_url
-      run: echo "dataverse_dev_environment_url=https://${{ env.dataverse_dev_environment_domain_name }}${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }}" >> $Env:GITHUB_ENV
 
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   #   Enable this job only after the initialization of the solution in the repository
