@@ -14,7 +14,7 @@ on:
         default: 'PowerPlatformALMWithGitHub'
 
 env:
-  branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
+  branch_name: dev/issue_${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
   dataverse_environment_domain_name: gh-dev-issue-${{ github.event.inputs.issue_number }} # Domain name for the new Dataverse Dev environment
   dataverse_environment_url_base: .crm12.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 

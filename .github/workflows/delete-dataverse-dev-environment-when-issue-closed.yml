@@ -7,8 +7,8 @@ on:
     types: [closed, deleted]
 
 env:
-  dataverse_environment_display_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DISPLAY_NAME_BASE }}${{ github.event.issue.number }} # Display name of the Dataverse Dev environment associated to the issue
-  dataverse_environment_domain_name: ${{ secrets.DATAVERSE_DEV_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }} # Domain name of the Dataverse Dev environment associated to the issue
+  dataverse_environment_display_name: BAFC - Raphael - Dev - Issue ${{ github.event.issue.number }} # Display name of the Dataverse Dev environment associated to the issue
+  dataverse_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name of the Dataverse Dev environment associated to the issue
   dataverse_environment_url_base: .crm12.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
