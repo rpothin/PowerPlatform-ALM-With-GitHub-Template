@@ -1,5 +1,5 @@
 name: 3-solution-quality-check-on-pr
-# Check the quality of a Power Apps solution on a pull request to main
+# Check the quality of a solution on a pull request to main
 
 # Workflow triggered by a pull request targeting the main branch
 on:
@@ -7,66 +7,65 @@ on:
     branches:
       - main
 
+env:
+  dataverse_environment_url_base: .crm12.dynamics.com # Base URL for the just in time Dataverse Build environment
+
 jobs:
-  # Job for the creation of a just in time Power Apps Build environment
+  # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    outputs:
+      dataverse_build_environment_domain_name: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
     env:
-      powerapps_environment_location: canada # Location for the just in time Power Apps Build environment
-      powerapps_environment_sku: Trial # SKU for the just in time Power Apps Build environment: Production, Sandbox or Trial
-      powerapps_environment_currency_name: CAD # Currency name for the just in time Power Apps Build environment
-      powerapps_environment_language_code: 1033 # Language code for the just in time Power Apps Build environment (ex: 1033 for English)
+      dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
 
     steps:
     # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
+      id: current_date
       run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
+      shell: pwsh
 
-    # Set a powerapps_environment_display_name environment variable for the Display Name of the just in time Power Apps Build environment
-    - name: Set powerapps_environment_display_name as env variable
-      run: echo "powerapps_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+    # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
+    - name: Set dataverse_build_environment_display_name as env variable
+      run: echo "dataverse_build_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+      shell: pwsh
     
-    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
-    - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
-
-    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
-    - name: Get PowerShell modules
-      shell: powershell
+    # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
+    - name: Set dataverse_build_environment_domain_name as env variable
+      id: dataverse_build_environment_domain_name
       run: |
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
-        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+        $dataverseBuildEnvironmentDomainName=gh-build-${{ env.NOW }}-${{ github.run_id }}
+        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
+        echo "::set-output name=dataverse_build_environment_domain_name::$dataverseBuildEnvironmentDomainName"
+      shell: pwsh
 
-    # Add a Power Apps account to use the PowerShell Power Apps Admin module
-    # Create the just in time Power Apps Build environment
-    - name: Add Power Apps account & Create Power Apps environment
-      shell: powershell
-      run: |
-        $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
-        Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
-
-        New-AdminPowerAppEnvironment `
-          -DisplayName '${{ env.powerapps_environment_display_name }}' `
-          -Location ${{ env.powerapps_environment_location }} `
-          -EnvironmentSku ${{ env.powerapps_environment_sku }} `
-          -ProvisionDatabase `
-          -CurrencyName ${{ env.powerapps_environment_currency_name }} `
-          -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName ${{ env.powerapps_environment_domain_name }} `
-          -WaitUntilFinished 1
+    # Create the just in time Dataverse Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
+    - name: Create environment
+      uses: microsoft/powerplatform-actions/create-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        name: ${{ env.dataverse_build_environment_display_name }}
+        region: ${{ secrets.DATAVERSE_ENVIRONMENT_REGION }}
+        type: ${{ env.dataverse_environment_sku }}
+        currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
+        language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
+        domain: ${{ env.dataverse_build_environment_domain_name }}
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
     needs: create-build-environment
     environment:
       name: build_environment
-      url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+      url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     outputs:
       solution_checker_status: ${{ steps.solution_checker_status.outputs.status }}
     env:
-      powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Power Apps Build environment
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       solution_checker_result_output_directory:  solutionchecker/ # Output folder for the results of the solution checker execution
       solution_checker_geography: Canada # Considered geography for the solution checker execution
@@ -75,14 +74,6 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Set a current date environment variable in the following format: YYYYMMDD
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
-
-    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
-    - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
-
     # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
     - name: Set path_to_solution_zip_file as env variable
       run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
@@ -90,13 +81,11 @@ jobs:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
-      with:
-        lfs: true
 
     # Pack the considered solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
-    - name: Pack solution
-      uses: microsoft/powerplatform-actions/pack-solution@v0.1.8
+    - name: Pack solution as unmanaged
+      uses: microsoft/powerplatform-actions/pack-solution@main
       with:
         solution-folder: Solutions/${{ env.solution_name }}
         solution-file: ${{ env.path_to_solution_zip_file }}
@@ -119,8 +108,7 @@ jobs:
       run: |
         New-Item -ItemType Directory -Force -Path ${{ env.solution_checker_result_output_directory }}
 
-        $pass = ConvertTo-SecureString "${{ secrets.DEV_USER_PASSWORD }}" -AsPlainText -Force
-        Add-PowerAppsAccount -Username ${{ secrets.DEV_USER_LOGIN }} -Password $pass
+        Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
         
         $rulesets = Get-PowerAppsCheckerRulesets -Geography ${{ env.solution_checker_geography }}
         $rulesetToUse = $rulesets | where Name -NE 'AppSource Certification'
@@ -145,9 +133,8 @@ jobs:
 
         $sarif_files = Get-ChildItem "${{ env.solution_checker_result_output_directory }}" -Filter *.sarif
 
-        foreach ($sarif_file in $sarif_files)
-        {
-            $SolutionCheckerResultJson = Get-Content -Path ${{ env.solution_checker_result_output_directory }}/$sarif_file
+        foreach ($sarif_file in $sarif_files) {
+          $SolutionCheckerResultJson = Get-Content -Path ${{ env.solution_checker_result_output_directory }}/$sarif_file
         }
 
         $SolutionCheckerResult = $SolutionCheckerResultJson | ConvertFrom-Json
@@ -158,67 +145,65 @@ jobs:
         $nbOfMediumSeverityPoints = 0
         $nbOfHighSeverityPoints = 0
 
-        $results.foreach(
-          {
-            if($_.properties.severity -eq "Medium")
-            {
-              $nbOfMediumSeverityPoints++
-            }
-            elseif($_.properties.severity -eq "High")
-            {
-              $nbOfHighSeverityPoints++
-            }
+        $results.foreach({
+          if($_.properties.severity -eq "Medium") {
+            $nbOfMediumSeverityPoints++
           }
-        )
+          elseif($_.properties.severity -eq "High") {
+            $nbOfHighSeverityPoints++
+          }
+        })
 
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
         
     # Add the new comment to the pull request if too many Medium or High severity points in the results of the solution checker execution
-    - name: New comment on pull request
+    - name: New comment on pull request if too many errors
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
-          # Too many Medium or High severity points in solution checker results!
+          # ⚠ Too many Medium or High severity points in solution checker results!
 
           Details:
           - NB_OF_HIGH_SEVERITY_POINTS: ${{ env.NB_OF_HIGH_SEVERITY_POINTS }} (Max: ${{ env.solution_checker_max_nb_high_severity_points }})
           - NB_OF_MEDIUM_SEVERITY_POINTS: ${{ env.NB_OF_MEDIUM_SEVERITY_POINTS }} (Max: ${{ env.solution_checker_max_nb_medium_severity_points }})
     
     # Set solution_checker_status job output value to "KO" if too many Medium or High severity points in the results of the solution checker execution
-    - name: Set job output
+    - name: Set solution_checker_status job output
       id: solution_checker_status
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS > env.solution_checker_max_nb_high_severity_points
       run: echo "::set-output name=status::KO"
 
-    # Import the considered solution unmanaged package to the just in time Power Apps Build environment
+    # Import the considered solution unmanaged package to the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
-      uses: microsoft/powerplatform-actions/import-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/import-solution@main
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
-        user-name: ${{ secrets.BUILD_USER_LOGIN }}
-        password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: false
 
-    # Export solution as managed from the just in time Power Apps Build environment
+    # Export solution as managed from the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= env.solution_checker_max_nb_medium_severity_points || Env.NB_OF_HIGH_SEVERITY_POINTS <= env.solution_checker_max_nb_high_severity_points
-      uses: microsoft/powerplatform-actions/export-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/export-solution@main
       with:
-        environment-url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
-        user-name: ${{ secrets.BUILD_USER_LOGIN }}
-        password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         solution-name: ${{ env.solution_name }}
-        managed: true
         solution-output-file: out/ship/${{ env.solution_name }}.zip
+        managed: true
 
     # Upload the managed solution we got in the previous step to the GitHub artifact store
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
@@ -229,41 +214,24 @@ jobs:
         name: managedSolutions
         path: out/ship/${{ env.solution_name }}.zip
 
-  # Job to delete the just in time Power Apps Build environment
+  # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
     needs: [create-build-environment, solution-quality-checks]
     if: always()
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
-    # Set a current date environment variable in the following format: YYYYMMDD
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
-
-    # Set a powerapps_environment_search_name environment variable for the Display Name of the just in time Power Apps Build environment where the " " are replaced by "*"
-    - name: Set powerapps_environment_search_name as env variable
-      run: echo "powerapps_environment_search_name=Build*-*${{ env.NOW }}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
-    
-    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
-    - name: Get PowerShell modules
-      shell: powershell
-      run: |
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
-        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
-    
-    # Add a Power Apps account to use the PowerShell Power Apps Admin module
-    # Search the just in time Power Apps Build environment to get its ID (EnvironmentName)
-    # Delete the just in time Power Apps Build environment
-    - name: Add Power Apps account & Delete Power Apps environment
-      shell: powershell
-      run: |
-        $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
-        Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
-
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment "*${{ env.powerapps_environment_search_name }}*"
-        Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
+    # Delete the Dataverse Dev environment associated to the issue
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
+    - name: Delete environment
+      uses: microsoft/powerplatform-actions/delete-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         
     # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
     - name: Exit if too many notable points in solution checker results
