@@ -42,18 +42,20 @@ jobs:
 
     # Export the considered solution as unmanaged from the Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
-    - name: export-solution action
+    - name: Export solution as unmanaged
       uses: microsoft/powerplatform-actions/export-solution@main
       with:
-        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-        user-name: ${{ secrets.DEV_USER_LOGIN }}
-        password-secret: ${{ secrets.DEV_USER_PASSWORD }}
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         solution-name: ${{ github.event.inputs.solution_name }}
         solution-output-file: out/exported/${{ github.event.inputs.solution_name }}.zip
+        managed: false
 
     # Unpack the unmanaged solution exported in the previous step
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/unpack-solution/action.yml
-    - name: unpack-solution action
+    - name: Unpack unmanaged solution
       uses: microsoft/powerplatform-actions/unpack-solution@main
       with:
         solution-file: out/exported/${{ github.event.inputs.solution_name }}.zip
@@ -63,7 +65,7 @@ jobs:
 
     # Push the unpacked solution generated in the previous step to the branch associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
-    - name: branch-solution action
+    - name: Push solution changes to branch
       uses: microsoft/powerplatform-actions/branch-solution@main
       with:
         solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
