@@ -16,7 +16,7 @@ on:
 env:
   branch_name: dev/issue_${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
   dataverse_dev_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.inputs.issue_number }} # Domain name of the Dataverse Dev environment associated to the issue
-  dataverse_environment_url_base: .crm12.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
+  dataverse_environment_url_base: .crm3.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
   # Job for the export of the considered solution from the dev environment associated to the issue

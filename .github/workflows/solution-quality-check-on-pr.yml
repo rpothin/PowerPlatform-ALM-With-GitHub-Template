@@ -8,7 +8,7 @@ on:
       - main
 
 env:
-  dataverse_environment_url_base: .crm12.dynamics.com # Base URL for the just in time Dataverse Build environment
+  dataverse_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Dataverse Build environment
 
 jobs:
   # Job for the creation of a just in time Dataverse Build environment
