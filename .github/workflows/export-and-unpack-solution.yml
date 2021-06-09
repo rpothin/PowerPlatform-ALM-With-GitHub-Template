@@ -63,6 +63,11 @@ jobs:
         solution-type: 'Unmanaged'
         overwrite-files: true
 
+    - name: Test
+      id: test
+      run: git status
+      shell: pwsh
+
     # Push the unpacked solution generated in the previous step to the branch associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
     - name: Push solution changes to branch
