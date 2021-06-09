@@ -28,7 +28,8 @@ jobs:
     steps:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
-    - uses: actions/checkout@v2
+    - name: Checkout branch ${{ env.branch_name }}
+      uses: actions/checkout@v2
       with:
         ref: ${{ env.branch_name }}
 
@@ -64,11 +65,6 @@ jobs:
         solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
         solution-type: 'Unmanaged'
         overwrite-files: true
-
-    - name: Test
-      id: test
-      run: git status
-      shell: pwsh
 
     # Push the unpacked solution generated in the previous step to the branch associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
