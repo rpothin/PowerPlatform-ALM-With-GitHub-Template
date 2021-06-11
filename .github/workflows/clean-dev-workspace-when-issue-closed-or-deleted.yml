@@ -7,11 +7,35 @@ on:
     types: [closed, deleted]
 
 env:
+  branch_name: dev/issue_${{ github.event.inputs.issue_number }} # Name of the dev branch used to push the unpacked solution
   dataverse_environment_display_name: BAFC - Raphael - Dev - Issue ${{ github.event.issue.number }} # Display name of the Dataverse Dev environment associated to the issue
   dataverse_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name of the Dataverse Dev environment associated to the issue
   dataverse_environment_url_base: .crm3.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
+  # Job to delete the Dev branch associated to the issue if it exists
+  delete-dev-branch:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Delete the Dev branch if exists
+    - name: Delete Dev branch if exists
+      run: |
+        git config --global user.name '${{ secrets.USER_NAME }}'
+        git config --global user.email '${{ secrets.USER_EMAIL }}'
+
+        if (git ls-remote origin ${{ env.branch_name }}) {
+          git push origin --delete ${{ env.branch_name }}
+
+          Write-Host "${{ env.branch_name }} branch deleted."
+        }
+        else {
+          Write-Host "${{ env.branch_name }} branch already deleted."
+        }
+      shell: pwsh}
+
   # Job to delete the Dataverse Dev environment associated to the issue
   delete-dataverse-dev-environment:
     if: contains(github.event.issue.labels.*.name, 'dev env created')
@@ -33,7 +57,7 @@ jobs:
   # Remove the 'dev env created' label and add a comment on the issue to notify that the Dataverse Dev environment has been deleted
   update-issue:
     if: ${{ github.event.issue.state == 'closed' }}
-    needs: delete-dataverse-dev-environment
+    needs: [delete-dev-branch, delete-dataverse-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -52,6 +76,8 @@ jobs:
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
-          # 🛑 Environment deleted!
+          # 🛑 Workspace cleaned!
+
+          > The Dev branch associated to the issue has been deleted if it was still existing.
 
           [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}) Dataverse Dev environment deleted!
