@@ -100,7 +100,7 @@ jobs:
     # Push the unpacked solution generated in the previous step to the branch associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
     - name: Push solution changes to branch
-      uses: microsoft/powerplatform-actions/branch-solution@v0.3.0
+      uses: microsoft/powerplatform-actions/branch-solution@v0
       with:
         solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
         solution-target-folder: Solutions/${{ github.event.inputs.solution_name }}
