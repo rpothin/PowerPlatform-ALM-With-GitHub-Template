@@ -34,7 +34,7 @@ jobs:
         else {
           Write-Host "${{ env.branch_name }} branch already deleted."
         }
-      shell: pwsh}
+      shell: pwsh
 
   # Job to delete the Dataverse Dev environment associated to the issue
   delete-dataverse-dev-environment:
