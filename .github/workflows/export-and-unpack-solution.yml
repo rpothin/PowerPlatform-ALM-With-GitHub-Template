@@ -30,6 +30,8 @@ jobs:
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch ${{ env.branch_name }}
       uses: actions/checkout@v2
+      with:
+        ref: ${{ env.branch_name }}
 
     # Publish all customizations on the Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/publish-solution/action.yml
