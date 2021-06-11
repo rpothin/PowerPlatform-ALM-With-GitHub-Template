@@ -66,18 +66,6 @@ jobs:
         solution-type: 'Unmanaged'
         overwrite-files: true
 
-    # Use temp exe from PowerShell to unpack canvas app source files into a folder
-    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml
-    - name: Unpack canvas app source files
-      run: |
-        Get-ChildItem -Path "out\Solutions\${{ github.event.inputs.solution_name }}" -Recurse -Filter *.msapp | 
-        ForEach-Object {
-            $unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
-            Utils\temp-canvas-packager\temp-canvas-packager.exe -unpack $_.FullName $unpackedPath
-            del $_.FullName
-        }
-      shell: pwsh
-
     # Push the unpacked solution generated in the previous step to the branch associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
     - name: Push solution changes to branch
