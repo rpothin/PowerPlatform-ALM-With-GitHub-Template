@@ -105,3 +105,4 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         branch-name: ${{ env.branch_name }}
         allow-empty-commit: false
+        clobber-branch: true
