@@ -97,14 +97,13 @@ jobs:
         del jq.exe
       shell: pwsh
 
-    # Push the unpacked solution generated in the previous step to the branch associated to the issue
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml
-    - name: Push solution changes to branch
-      uses: microsoft/powerplatform-actions/branch-solution@v0
-      with:
-        solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
-        solution-target-folder: Solutions/${{ github.event.inputs.solution_name }}
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        branch-name: ${{ env.branch_name }}
-        allow-empty-commit: false
-        clobber-branch: true
+    # Push changes to Dev branch
+    - name: Push changes to Dev branch
+      run: |
+        git config --global user.name 'action@github.com'
+        git config --global user.email 'GitHub Action'
+
+        git add --all
+        git commit -m "Update of ${{ github.event.inputs.solution_name }} solution - Run ${{ github.run_id }}"
+        git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin ${{ env.branch_name }}
+      shell: pwsh
