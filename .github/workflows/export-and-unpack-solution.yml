@@ -62,7 +62,7 @@ jobs:
       uses: microsoft/powerplatform-actions/unpack-solution@main
       with:
         solution-file: out/exported/${{ github.event.inputs.solution_name }}.zip
-        solution-folder: out/Solutions/${{ github.event.inputs.solution_name }}
+        solution-folder: Solutions/${{ github.event.inputs.solution_name }}
         solution-type: 'Unmanaged'
         overwrite-files: true
 
@@ -95,6 +95,12 @@ jobs:
         }
 
         del jq.exe
+      shell: pwsh
+
+    # Delete out folder with solution exported in zip format
+    - name: Delete exported solution (zip)
+      run: |
+        Remove-Item 'out' -Recurse
       shell: pwsh
 
     # Push changes to Dev branch
