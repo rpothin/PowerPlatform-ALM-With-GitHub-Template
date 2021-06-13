@@ -28,11 +28,11 @@ jobs:
     # Delete the Dev branch if exists
     - name: Delete Dev branch if exists
       run: |
-        git config --global user.name '${{ secrets.USER_NAME }}'
-        git config --global user.email '${{ secrets.USER_EMAIL }}'
+        git config --global user.name 'action@github.com'
+        git config --global user.email 'GitHub Action'
 
         if (git ls-remote origin ${{ env.branch_name }}) {
-          git push origin --delete ${{ env.branch_name }}
+          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete ${{ env.branch_name }}
 
           Write-Host "${{ env.branch_name }} branch deleted."
         }
