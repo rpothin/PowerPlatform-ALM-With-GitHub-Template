@@ -62,13 +62,13 @@ jobs:
     environment:
       name: build_environment
       url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     outputs:
       solution_checker_status: ${{ steps.solution_checker_status.outputs.status }}
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       solution_checker_result_output_directory:  solutionchecker/ # Output folder for the results of the solution checker execution
-      solution_checker_geography: Canada # Considered geography for the solution checker execution
+      solution_checker_geography: Canada # Considered geography for the solution checker execution (https://docs.microsoft.com/en-us/power-platform/alm/checker-api/overview#determine-a-geography)
       solution_checker_max_nb_medium_severity_points: 5 # Maximum number of the Medium severity points that will be tolerate in the solution checker results
       solution_checker_max_nb_high_severity_points: 0 # Maximum number of the High severity points that will be tolerate in the solution checker results
       RUNNER_DEBUG: 1
