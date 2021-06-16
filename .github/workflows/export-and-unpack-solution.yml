@@ -66,6 +66,7 @@ jobs:
         solution-type: 'Unmanaged'
         overwrite-files: true
 
+    # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
     # Use temp exe from PowerShell to unpack canvas app source files into a folder
     #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml
     - name: Unpack canvas app source files
@@ -80,6 +81,7 @@ jobs:
 
     # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
     # Update all the json files to be pretty-print / formatted so they are easier to read in source control
+    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml
     - name: Format JSON files
       run: |
         Invoke-WebRequest -Uri https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe -OutFile  jq.exe
