@@ -93,9 +93,31 @@ jobs:
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
 
+    # Check if solutions exist before continuing the import process
+    - name: Check if solutions exist
+      run: |
+        if (Test-Path 'Solutions/') {
+          $folderChildItems = Get-ChildItem 'Solutions/' | Measure-Object
+          $folderChildItemsCount = $folderChildItems.count
+
+          if ($folderChildItemsCount -gt 0) {
+            $solutionsExist = 'true'
+          }
+          else {
+            $solutionsExist = 'false'
+          }
+        }
+        else {
+          $solutionsExist = 'false'
+        }
+        
+        echo "SolutionsExist='$solutionsExist'" >> $Env:GITHUB_ENV
+      shell: pwsh
+
     # Pack the solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
+      if: env.SolutionsExist == 'true'
       uses: microsoft/powerplatform-actions/pack-solution@main
       with:
         solution-folder: Solutions/${{ env.solution_name }}
@@ -105,6 +127,7 @@ jobs:
     # Import the solution as unmanaged to the new Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to Dev
+      if: env.SolutionsExist == 'true'
       uses: microsoft/powerplatform-actions/import-solution@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
@@ -118,6 +141,7 @@ jobs:
 
     # Add "Solution imported" comment to the issue
     - name: Solution imported comment on issue
+      if: env.SolutionsExist == 'true'
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.issue.number }}
