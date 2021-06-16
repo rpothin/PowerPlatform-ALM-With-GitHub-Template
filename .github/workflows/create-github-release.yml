@@ -83,8 +83,6 @@ jobs:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
-      with:
-        lfs: true
 
     # Pack the considered solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml

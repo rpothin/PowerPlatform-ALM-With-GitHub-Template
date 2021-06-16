@@ -1,5 +1,5 @@
 name: 4-import-solution-to-qa
-# Upload the solutions to the GitHub artifacts and deploy to the Power Apps QA environment
+# Upload the solutions to the GitHub workflow run artifacts and deploy them to the Power Apps QA environment
 
 # Workflow that is triggered by a push of updates in the "Solutions/" folder on the main branch
 on:
@@ -8,6 +8,8 @@ on:
     paths:
       - 'Solutions/**'
       - '!.github/**'
+      - '!Utils/**'
+      - '!.all-contributorsrc'
       - '!CODE_OF_CONDUCT.md'
       - '!CONTRIBUTING.md'
       - '!LICENSE'
@@ -15,115 +17,107 @@ on:
 
 env:
   solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
+  dataverse_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Dataverse Build environment
 
 jobs:
-  # Job for the creation of a just in time Power Apps Build environment
+  # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    outputs:
+      dataverse_build_environment_domain_name: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
     env:
-      powerapps_environment_location: canada # Location for the just in time Power Apps Build environment
-      powerapps_environment_sku: Trial # SKU for the just in time Power Apps Build environment: Production, Sandbox or Trial
-      powerapps_environment_currency_name: CAD # Currency name for the just in time Power Apps Build environment
-      powerapps_environment_language_code: 1033 # Language code for the just in time Power Apps Build environment (ex: 1033 for English)
+      dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
 
     steps:
     # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
       run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
+      shell: pwsh
 
-    # Set a powerapps_environment_display_name environment variable for the Display Name of the just in time Power Apps Build environment
-    - name: Set powerapps_environment_display_name as env variable
-      run: echo "powerapps_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+    # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
+    - name: Set dataverse_build_environment_display_name as env variable
+      run: echo "dataverse_build_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+      shell: pwsh
     
-    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
-    - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+    # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
+    - name: Set dataverse_build_environment_domain_name as env variable
+      id: dataverse_build_environment_domain_name
+      run: |
+        $dataverseBuildEnvironmentDomainName='gh-build-${{ env.NOW }}-${{ github.run_id }}'
+        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
+        echo "::set-output name=dataverse_build_environment_domain_name::$dataverseBuildEnvironmentDomainName"
+      shell: pwsh
 
-    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
-    - name: Get PowerShell modules
-      run: |
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
-        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
-      shell: powershell
-    
-    # Add a Power Apps account to use the PowerShell Power Apps Admin module
-    # Create the just in time Power Apps Build environment
-    - name: Add Power Apps account & Create Power Apps environment
-      run: |
-        $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
-        Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
-        
-        New-AdminPowerAppEnvironment `
-          -DisplayName '${{ env.powerapps_environment_display_name }}' `
-          -Location ${{ env.powerapps_environment_location }} `
-          -EnvironmentSku ${{ env.powerapps_environment_sku }} `
-          -ProvisionDatabase `
-          -CurrencyName ${{ env.powerapps_environment_currency_name }} `
-          -LanguageName ${{ env.powerapps_environment_language_code }} `
-          -DomainName ${{ env.powerapps_environment_domain_name }} `
-          -WaitUntilFinished 1
-      shell: powershell
+    # Create the just in time Dataverse Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
+    - name: Create environment
+      uses: microsoft/powerplatform-actions/create-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        name: ${{ env.dataverse_build_environment_display_name }}
+        region: ${{ secrets.DATAVERSE_ENVIRONMENT_REGION }}
+        type: ${{ env.dataverse_environment_sku }}
+        currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
+        language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
+        domain: ${{ env.dataverse_build_environment_domain_name }}
   
-  # Job to build a managed solution in the just in time Power Apps Build environment
+  # Job to build a managed solution in the just in time Dataverse Build environment
   build-managed-solution:
     needs: create-build-environment
     environment:
       name: build_environment
-      url: https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}
+      url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
-      powerapps_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Power Apps Build environment
       RUNNER_DEBUG: 1
 
     steps:
-    # Set a current date environment variable in the following format: YYYYMMDD
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
-
-    # Set a powerapps_environment_domain_name environment variable for the Domain Name of the just in time Power Apps Build environment
-    - name: Set powerapps_environment_domain_name as env variable
-      run: echo "powerapps_environment_domain_name=gh-build-${{ env.NOW }}-${{ github.run_id }}" >> $Env:GITHUB_ENV
+    # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
+    - name: Set path_to_solution_zip_file as env variable
+      run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
 
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
-      with:
-        lfs: true
 
     # Pack the considered solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
-      uses: microsoft/powerplatform-actions/pack-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/pack-solution@main
       with:
         solution-folder: Solutions/${{ env.solution_name }}
-        solution-file: out/Solutions/${{ env.solution_name }}.zip
+        solution-file: ${{ env.path_to_solution_zip_file }}
         solution-type: Unmanaged
 
-    # Import the considered solution unmanaged package to the just in time Power Apps Build environment
+    # Import the considered solution unmanaged package to the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
-      uses: microsoft/powerplatform-actions/import-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/import-solution@main
       with:
-        environment-url: "https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}"
-        user-name: ${{ secrets.BUILD_USER_LOGIN }}
-        password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
-        solution-file: out/Solutions/${{ env.solution_name }}.zip
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: "https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+        solution-file: ${{ env.path_to_solution_zip_file }}
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: false
 
-    # Export solution as managed from the just in time Power Apps Build environment
+    # Export solution as managed from the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
-      uses: microsoft/powerplatform-actions/export-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/export-solution@main
       with:
-        environment-url: "https://${{ env.powerapps_environment_domain_name }}${{ env.powerapps_environment_url_base }}"
-        user-name: ${{ secrets.BUILD_USER_LOGIN }}
-        password-secret: ${{ secrets.BUILD_USER_PASSWORD }}
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         solution-name: ${{ env.solution_name }}
-        managed: true
         solution-output-file: out/ship/${{ env.solution_name }}.zip
+        managed: true
 
     # Upload the managed solution we got in the previous step to the GitHub artifact store
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
@@ -147,8 +141,6 @@ jobs:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - uses: actions/checkout@v2
-      with:
-        lfs: true
 
     # Get the content of the GitHub artifact store we got in the previous job
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
@@ -158,54 +150,35 @@ jobs:
         name: managedSolutions
         path: out/release/
 
-    # Get the managed solution
-    - run: get-childitem .\out\release\
-
     # Import the considered solution managed package to the Power Apps QA environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution to qa env
-      uses: microsoft/powerplatform-actions/import-solution@v0.1.8
+      uses: microsoft/powerplatform-actions/import-solution@main
       with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
         environment-url: ${{ secrets.POWERAPPS_QA_ENVIRONMENT_URL }}
-        user-name: ${{ secrets.QA_USER_LOGIN }}
-        password-secret: ${{ secrets.QA_USER_PASSWORD }}
         solution-file: out/release/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: true
 
-  # Job to delete the just in time Power Apps Build environment
+  # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
     needs: [create-build-environment, import-solution-to-qa]
     if: always()
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
     steps:
-    # Set a current date environment variable in the following format: YYYYMMDD
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
-
-    # Set a powerapps_environment_search_name environment variable for the Display Name of the just in time Power Apps Build environment where the " " are replaced by "*"
-    - name: Set powerapps_environment_search_name as env variable
-      run: echo "powerapps_environment_search_name=Build*-*${{ env.NOW }}*-*${{ github.run_id }}" >> $Env:GITHUB_ENV
-    
-    # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
-    - name: Get PowerShell modules
-      run: |
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
-        Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
-      shell: powershell
-    
-    # Add a Power Apps account to use the PowerShell Power Apps Admin module
-    # Search the just in time Power Apps Build environment to get its ID (EnvironmentName)
-    # Delete the just in time Power Apps Build environment
-    - name: Add Power Apps account & Delete Power Apps environment
-      run: |
-        $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
-        Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
-
-        $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment "*${{ env.powerapps_environment_search_name }}*"
-        Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
-      shell: powershell
+    # Delete the just in time Dataverse Build environment created in this workflow
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
+    - name: Delete environment
+      uses: microsoft/powerplatform-actions/delete-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
