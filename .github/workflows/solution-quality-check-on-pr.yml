@@ -1,5 +1,5 @@
 name: 3-solution-quality-check-on-pr
-# Check the quality of a solution on a pull request to main
+# Check the quality of a solution on a pull request targeting the main branch
 
 # Workflow triggered by a pull request targeting the main branch
 on:
