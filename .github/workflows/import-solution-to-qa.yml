@@ -156,7 +156,7 @@ jobs:
     environment:
       name: qa_environment
       url: https://rpothin-qa.crm3.dynamics.com/
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
