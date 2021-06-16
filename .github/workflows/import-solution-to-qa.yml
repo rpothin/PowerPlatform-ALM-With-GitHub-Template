@@ -42,15 +42,14 @@ jobs:
 
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
-      shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+      shell: powershell
     
     # Add a Power Apps account to use the PowerShell Power Apps Admin module
     # Create the just in time Power Apps Build environment
     - name: Add Power Apps account & Create Power Apps environment
-      shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
@@ -64,6 +63,7 @@ jobs:
           -LanguageName ${{ env.powerapps_environment_language_code }} `
           -DomainName ${{ env.powerapps_environment_domain_name }} `
           -WaitUntilFinished 1
+      shell: powershell
   
   # Job to build a managed solution in the just in time Power Apps Build environment
   build-managed-solution:
@@ -193,19 +193,19 @@ jobs:
     
     # Install the PowerShell modules we will need for the creation of the just in time Power Apps Build environment
     - name: Get PowerShell modules
-      shell: powershell
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+      shell: powershell
     
     # Add a Power Apps account to use the PowerShell Power Apps Admin module
     # Search the just in time Power Apps Build environment to get its ID (EnvironmentName)
     # Delete the just in time Power Apps Build environment
     - name: Add Power Apps account & Delete Power Apps environment
-      shell: powershell
       run: |
         $pass = ConvertTo-SecureString "${{ secrets.BUILD_USER_PASSWORD }}" -AsPlainText -Force
         Add-PowerAppsAccount -Username ${{ secrets.BUILD_USER_LOGIN }} -Password $pass
 
         $PowerAppEnvironmentDetails = Get-AdminPowerAppEnvironment "*${{ env.powerapps_environment_search_name }}*"
         Remove-AdminPowerAppEnvironment -EnvironmentName $PowerAppEnvironmentDetails.EnvironmentName
+      shell: powershell
