@@ -1,0 +1,4 @@
+location=france
+currencyName=EUR
+languageCode=1033
+templates=D365_Sales
