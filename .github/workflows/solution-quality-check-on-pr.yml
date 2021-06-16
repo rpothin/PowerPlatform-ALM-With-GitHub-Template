@@ -62,7 +62,7 @@ jobs:
     environment:
       name: build_environment
       url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     outputs:
       solution_checker_status: ${{ steps.solution_checker_status.outputs.status }}
     env:
