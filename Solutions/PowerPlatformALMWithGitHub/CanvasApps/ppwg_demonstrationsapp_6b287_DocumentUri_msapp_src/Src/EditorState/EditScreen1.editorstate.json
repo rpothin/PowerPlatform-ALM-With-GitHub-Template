@@ -1,5 +1,6 @@
 {
   "Created On_DataCard2": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -133,6 +134,7 @@
     "Type": "ControlInfo"
   },
   "DataCardKey3": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -406,6 +408,7 @@
     "Type": "ControlInfo"
   },
   "DataCardKey4": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -679,6 +682,7 @@
     "Type": "ControlInfo"
   },
   "DataCardValue3": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -998,6 +1002,7 @@
     "Type": "ControlInfo"
   },
   "DataCardValue4": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1272,6 +1277,7 @@
     "Type": "ControlInfo"
   },
   "EditForm1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1384,6 +1390,7 @@
     "Type": "ControlInfo"
   },
   "EditScreen1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       "Fill",
       "ImagePosition",
@@ -1451,6 +1458,7 @@
     "Type": "ControlInfo"
   },
   "ErrorMessage1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1731,6 +1739,7 @@
     "Type": "ControlInfo"
   },
   "IconAccept1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1945,6 +1954,7 @@
     "Type": "ControlInfo"
   },
   "IconCancel1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -2153,6 +2163,7 @@
     "Type": "ControlInfo"
   },
   "LblAppName3": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -2360,6 +2371,7 @@
     "Type": "ControlInfo"
   },
   "Name_DataCard2": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -2519,6 +2531,7 @@
     "Type": "ControlInfo"
   },
   "RectQuickActionBar3": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       "Fill",
       "DisabledFill",
@@ -2617,6 +2630,7 @@
     "Type": "ControlInfo"
   },
   "StarVisible1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",

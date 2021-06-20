@@ -5,9 +5,7 @@
       "columnKind": "utf16CodeUnits",
       "invocations": [
         {
-          "endTimeUtc": "2020-11-04T01:39:56.461Z",
-          "executionSuccessful": true,
-          "startTimeUtc": "2020-11-04T01:39:56.354Z"
+          "executionSuccessful": true
         }
       ],
       "results": [
@@ -46,19 +44,19 @@
             {
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "BrowseScreen1.BrowseGallery1.AccessibleLabel"
+                  "fullyQualifiedName": "BrowseScreen1.Gallery_Demonstrations.AccessibleLabel"
                 }
               ],
               "physicalLocation": {
                 "address": {
-                  "fullyQualifiedName": "BrowseScreen1.BrowseGallery1.AccessibleLabel",
+                  "fullyQualifiedName": "BrowseScreen1.Gallery_Demonstrations.AccessibleLabel",
                   "relativeAddress": 0
                 }
               },
               "properties": {
                 "member": "AccessibleLabel",
                 "module": "BrowseScreen1",
-                "type": "BrowseScreen1.BrowseGallery1"
+                "type": "BrowseScreen1.Gallery_Demonstrations"
               }
             }
           ],
@@ -76,19 +74,19 @@
             {
               "logicalLocations": [
                 {
-                  "fullyQualifiedName": "BrowseScreen1.BrowseGallery1.TabIndex"
+                  "fullyQualifiedName": "BrowseScreen1.Gallery_Demonstrations.TabIndex"
                 }
               ],
               "physicalLocation": {
                 "address": {
-                  "fullyQualifiedName": "BrowseScreen1.BrowseGallery1.TabIndex",
+                  "fullyQualifiedName": "BrowseScreen1.Gallery_Demonstrations.TabIndex",
                   "relativeAddress": 0
                 }
               },
               "properties": {
                 "member": "TabIndex",
                 "module": "BrowseScreen1",
-                "type": "BrowseScreen1.BrowseGallery1"
+                "type": "BrowseScreen1.Gallery_Demonstrations"
               }
             }
           ],
@@ -172,7 +170,7 @@
               }
             }
           ],
-          "version": "1.296"
+          "version": "1.313"
         }
       }
     }

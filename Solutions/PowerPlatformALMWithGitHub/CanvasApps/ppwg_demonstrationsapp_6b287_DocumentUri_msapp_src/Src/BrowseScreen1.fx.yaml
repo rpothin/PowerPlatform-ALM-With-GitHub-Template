@@ -98,7 +98,7 @@
         Y: =TextSearchBox1.Y + TextSearchBox1.Height
         ZIndex: =8
 
-    "BrowseGallery1 As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
+    "Gallery_Demonstrations As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
         Height: =Parent.Height - Self.Y
         Items: =SortByColumns(Search([@Demonstrations], TextSearchBox1.Text, "ppwg_name"), "ppwg_name", If(SortDescending1, Descending, Ascending))
         Layout: =Layout.Vertical
