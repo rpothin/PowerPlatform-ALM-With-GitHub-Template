@@ -111,7 +111,7 @@ jobs:
           $solutionsExist = 'false'
         }
         
-        echo "SolutionsExist='$solutionsExist'" >> $Env:GITHUB_ENV
+        echo "SolutionsExist=$solutionsExist" >> $Env:GITHUB_ENV
       shell: pwsh
 
     # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
