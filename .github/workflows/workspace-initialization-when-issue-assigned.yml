@@ -100,11 +100,8 @@ jobs:
           $folderChildItems = Get-ChildItem 'Solutions/' | Measure-Object
           $folderChildItemsCount = $folderChildItems.count
 
-          Write-Host "Nb of items under 'Solutions/': $folderChildItemsCount"
-
           if ($folderChildItemsCount -gt 0) {
             $solutionsExist = 'true'
-            Write-Host "Solutions exist: $solutionsExist"
           }
           else {
             $solutionsExist = 'false'
@@ -121,7 +118,7 @@ jobs:
     # Flatten all the json files for packing
     #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
     - name: Flatten JSON files
-      if: env.SolutionsExist == 'true'
+      if: ${{ env.SolutionsExist == 'true' }}
       run: |
         Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *.json |
         ForEach-Object {(Get-Content $_.FullName) -join ' ' | Set-Content $_.FullName}
@@ -131,7 +128,7 @@ jobs:
     # Use temp exe from PowerShell to pack source files into msapp
     #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
     - name: Pack msapp files
-      if: env.SolutionsExist == 'true'
+      if: ${{ env.SolutionsExist == 'true' }}
       run: |
         Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
         ForEach-Object {     
@@ -145,7 +142,7 @@ jobs:
     # Pack the solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
-      if: env.SolutionsExist == 'true'
+      if: ${{ env.SolutionsExist == 'true' }}
       uses: microsoft/powerplatform-actions/pack-solution@main
       with:
         solution-folder: Solutions/${{ env.solution_name }}
@@ -155,7 +152,7 @@ jobs:
     # Import the solution as unmanaged to the new Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to Dev
-      if: env.SolutionsExist == 'true'
+      if: ${{ env.SolutionsExist == 'true' }}
       uses: microsoft/powerplatform-actions/import-solution@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
@@ -169,7 +166,7 @@ jobs:
 
     # Add "Solution imported" comment to the issue
     - name: Solution imported comment on issue
-      if: env.SolutionsExist == 'true'
+      if: ${{ env.SolutionsExist == 'true' }}
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.issue.number }}
