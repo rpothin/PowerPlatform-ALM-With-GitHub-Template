@@ -37,10 +37,10 @@
 
     IconDelete1 As icon.Trash:
         AccessibleLabel: =Self.Tooltip
-        DisplayMode: =If(!IsBlank(BrowseGallery1.Selected) && DataSourceInfo([@Demonstrations], DataSourceInfo.DeletePermission), DisplayMode.Edit, DisplayMode.Disabled)
+        DisplayMode: =If(!IsBlank(Gallery_Demonstrations.Selected) && DataSourceInfo([@Demonstrations], DataSourceInfo.DeletePermission), DisplayMode.Edit, DisplayMode.Disabled)
         Height: =88
         Icon: =Icon.Trash
-        OnSelect: =Remove([@Demonstrations], BrowseGallery1.Selected); If (IsEmpty(Errors([@Demonstrations], BrowseGallery1.Selected)), Back())
+        OnSelect: =Remove([@Demonstrations], Gallery_Demonstrations.Selected); If (IsEmpty(Errors([@Demonstrations], Gallery_Demonstrations.Selected)), Back())
         PaddingBottom: =24
         PaddingLeft: =24
         PaddingRight: =24
@@ -63,7 +63,7 @@
     DetailForm1 As formViewer:
         DataSource: =[@Demonstrations]
         Height: =Parent.Height - DetailForm1.Y
-        Item: =BrowseGallery1.Selected
+        Item: =Gallery_Demonstrations.Selected
         Width: =Parent.Width
         Y: =RectQuickActionBar2.Y + RectQuickActionBar2.Height
         ZIndex: =6

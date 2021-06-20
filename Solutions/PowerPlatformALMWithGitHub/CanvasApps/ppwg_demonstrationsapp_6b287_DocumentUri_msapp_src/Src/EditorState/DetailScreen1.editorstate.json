@@ -1,5 +1,6 @@
 {
   "Created On_DataCard1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -133,6 +134,7 @@
     "Type": "ControlInfo"
   },
   "DataCardKey1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -406,6 +408,7 @@
     "Type": "ControlInfo"
   },
   "DataCardKey2": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -679,6 +682,7 @@
     "Type": "ControlInfo"
   },
   "DataCardValue1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -953,6 +957,7 @@
     "Type": "ControlInfo"
   },
   "DataCardValue2": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1227,6 +1232,7 @@
     "Type": "ControlInfo"
   },
   "DetailForm1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1321,6 +1327,7 @@
     "Type": "ControlInfo"
   },
   "DetailScreen1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       "Fill",
       "ImagePosition",
@@ -1388,6 +1395,7 @@
     "Type": "ControlInfo"
   },
   "IconBackarrow1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1603,6 +1611,7 @@
     "Type": "ControlInfo"
   },
   "IconDelete1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -1732,11 +1741,6 @@
       },
       {
         "Category": "Design",
-        "PropertyName": "DisplayMode",
-        "RuleProviderType": "Unknown"
-      },
-      {
-        "Category": "Design",
         "PropertyName": "X",
         "RuleProviderType": "Unknown"
       },
@@ -1816,6 +1820,11 @@
         "RuleProviderType": "Unknown"
       },
       {
+        "Category": "Design",
+        "PropertyName": "DisplayMode",
+        "RuleProviderType": "Unknown"
+      },
+      {
         "Category": "Behavior",
         "PropertyName": "OnSelect",
         "RuleProviderType": "Unknown"
@@ -1825,6 +1834,7 @@
     "Type": "ControlInfo"
   },
   "IconEdit1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -2047,6 +2057,7 @@
     "Type": "ControlInfo"
   },
   "LblAppName2": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -2254,6 +2265,7 @@
     "Type": "ControlInfo"
   },
   "Name_DataCard1": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       {
         "AFDDataSourceName": "",
@@ -2387,6 +2399,7 @@
     "Type": "ControlInfo"
   },
   "RectQuickActionBar2": {
+    "AllowAccessToGlobals": true,
     "ControlPropertyState": [
       "Fill",
       "DisabledFill",
