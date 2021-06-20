@@ -100,8 +100,11 @@ jobs:
           $folderChildItems = Get-ChildItem 'Solutions/' | Measure-Object
           $folderChildItemsCount = $folderChildItems.count
 
+          Write-Host "Nb of items under 'Solutions/': $folderChildItemsCount"
+
           if ($folderChildItemsCount -gt 0) {
             $solutionsExist = 'true'
+            Write-Host "Solutions exist: $solutionsExist"
           }
           else {
             $solutionsExist = 'false'
@@ -118,6 +121,7 @@ jobs:
     # Flatten all the json files for packing
     #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
     - name: Flatten JSON files
+      if: env.SolutionsExist == 'true'
       run: |
         Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *.json |
         ForEach-Object {(Get-Content $_.FullName) -join ' ' | Set-Content $_.FullName}
@@ -127,6 +131,7 @@ jobs:
     # Use temp exe from PowerShell to pack source files into msapp
     #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
     - name: Pack msapp files
+      if: env.SolutionsExist == 'true'
       run: |
         Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
         ForEach-Object {     
