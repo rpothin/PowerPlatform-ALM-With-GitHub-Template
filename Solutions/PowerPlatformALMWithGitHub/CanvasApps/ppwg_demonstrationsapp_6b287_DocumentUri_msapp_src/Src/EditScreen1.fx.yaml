@@ -47,7 +47,7 @@
     EditForm1 As form:
         DataSource: =[@Demonstrations]
         Height: =Parent.Height - EditForm1.Y
-        Item: =BrowseGallery1.Selected
+        Item: =Gallery_Demonstrations.Selected
         OnSuccess: =Back()
         Width: =Parent.Width
         Y: =RectQuickActionBar3.Height

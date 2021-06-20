@@ -6,6 +6,7 @@
     "IsSampleData": false,
     "IsWritable": true,
     "LogicalName": "ppwg_demonstration",
+    "MaxGetRowsCount": 500,
     "Name": "Demonstrations",
     "NativeCDSDataSourceInfoNameMapping": {
       "_ownerid_value": "Owner",
@@ -20,6 +21,7 @@
       "owningbusinessunit": "Owning Business Unit",
       "owningteam": "Owning Team",
       "owninguser": "Owning User",
+      "ppwg_date": "Date",
       "ppwg_demonstration_AsyncOperations": "System Jobs",
       "ppwg_demonstration_BulkDeleteFailures": "Bulk Delete Failures",
       "ppwg_demonstration_DuplicateBaseRecord": "Duplicate Records (ppwg_demonstration_DuplicateBaseRecord)",
@@ -29,7 +31,13 @@
       "ppwg_demonstration_ProcessSession": "Process Sessions",
       "ppwg_demonstration_SyncErrors": "Sync Errors",
       "ppwg_demonstrationid": "Demonstration",
+      "ppwg_description": "Description",
+      "ppwg_eventname": "Event Name",
+      "ppwg_level": "Level",
       "ppwg_name": "Name",
+      "ppwg_type": "Type",
+      "ppwg_virtual": "Virtual",
+      "ppwg_visible": "Visible",
       "statecode": "Status",
       "statuscode": "Status Reason",
       "timezoneruleversionnumber": "Time Zone Rule Version Number",
@@ -90,6 +98,91 @@
     },
     "OptionSetTypeKey": "StatusType",
     "RelatedColumnInvariantName": "statuscode",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Level",
+    "Name": "ppwg_level",
+    "OptionSetInfoNameMapping": {
+      "112920000": "100",
+      "112920001": "200",
+      "112920002": "300",
+      "112920003": "400"
+    },
+    "OptionSetIsBooleanValued": false,
+    "OptionSetIsGlobal": true,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_level",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "PicklistType",
+    "RelatedColumnInvariantName": "ppwg_level",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Virtual (Demonstrations)",
+    "Name": "ppwg_ppwg_demonstration_virtual",
+    "OptionSetInfoNameMapping": {
+      "0": "No",
+      "1": "Yes"
+    },
+    "OptionSetIsBooleanValued": true,
+    "OptionSetIsGlobal": false,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_virtual",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "BooleanType",
+    "RelatedColumnInvariantName": "ppwg_virtual",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Visible (Demonstrations)",
+    "Name": "ppwg_ppwg_demonstration_visible",
+    "OptionSetInfoNameMapping": {
+      "0": "No",
+      "1": "Yes"
+    },
+    "OptionSetIsBooleanValued": true,
+    "OptionSetIsGlobal": false,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_visible",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "BooleanType",
+    "RelatedColumnInvariantName": "ppwg_visible",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Type",
+    "Name": "ppwg_type",
+    "OptionSetInfoNameMapping": {
+      "112920000": "Technical",
+      "112920001": "Functional",
+      "112920002": "Security",
+      "112920003": "Governance",
+      "112920004": "Community"
+    },
+    "OptionSetIsBooleanValued": false,
+    "OptionSetIsGlobal": true,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_type",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "PicklistType",
+    "RelatedColumnInvariantName": "ppwg_type",
     "RelatedEntityName": "Demonstrations",
     "Type": "OptionSetInfo"
   }
