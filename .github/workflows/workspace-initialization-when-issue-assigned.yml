@@ -114,6 +114,29 @@ jobs:
         echo "SolutionsExist='$solutionsExist'" >> $Env:GITHUB_ENV
       shell: pwsh
 
+    # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
+    # Flatten all the json files for packing
+    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
+    - name: Flatten JSON files
+      run: |
+        Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *.json |
+        ForEach-Object {(Get-Content $_.FullName) -join ' ' | Set-Content $_.FullName}
+      shell: pwsh
+
+    # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
+    # Use temp exe from PowerShell to pack source files into msapp
+    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
+    - name: Pack msapp files
+      run: |
+        Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
+        ForEach-Object {     
+          $unpackedPath = $_.FullName
+          $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
+          Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
+          Remove-Item -Path $unpackedPath -Recurse
+        }
+      shell: pwsh
+
     # Pack the solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
     - name: Pack solution
