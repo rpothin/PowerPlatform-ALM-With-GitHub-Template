@@ -1,5 +1,5 @@
 name: Bug Report
-description: File a bug report
+description: Create a bug report to help us improve the quality this repository template
 title: "[Bug] <Title>"
 labels: [bug, triage]
 assignees:
@@ -22,9 +22,9 @@ body:
     validations:
       required: true
   - type: textarea
-    id: expected-behaviour
+    id: expected-behavior
     attributes:
-      label: Expected Behaviour
+      label: Expected Behavior
       description: Please, tell us what you would expect to happen in this situation.
       placeholder: "ex: When I click on Button A it calls the service without error..."
     validations:
