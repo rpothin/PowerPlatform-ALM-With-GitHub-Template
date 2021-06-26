@@ -5,13 +5,7 @@
       "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
       "actions": {
         "Scope": {
-          "actions": {
-            "Compose": {
-              "inputs": "Demonstration",
-              "runAfter": {},
-              "type": "Compose"
-            }
-          },
+          "actions": {},
           "runAfter": {},
           "type": "Scope"
         }
