@@ -22,8 +22,7 @@ jobs:
     steps:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
     # Delete the Dev branch if exists
     - name: Delete Dev branch if exists
