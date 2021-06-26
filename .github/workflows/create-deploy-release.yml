@@ -1,0 +1,253 @@
+name: 6-create-deploy-release
+# Generate a GitHub release for the considered solution with a just-in-time Dataverse Build environment
+# Then deploy this solution to the Dataverse Production environment
+
+# Workflow triggered manually providing the mandatory information described below
+on:
+  workflow_dispatch:
+    inputs:
+      solution_base_version:
+        description: 'Base of the version of the solution to deploy'
+        required: true
+        default: '1_2'
+      github_release_body:
+        description: 'Text for the body of the GitHub release'
+        required: true
+
+env:
+  solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
+  dataverse_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Dataverse Build environment
+  
+jobs:
+  # Job for the creation of the release branch
+  create-release-branch:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Create the new dev branch
+    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-branch
+    - uses: peterjgrainger/action-create-branch@v2.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        branch: release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
+
+  # Job for the creation of a just in time Dataverse Build environment
+  create-build-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      dataverse_build_environment_domain_name: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
+    env:
+      dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
+    - name: Set current date as env variable
+      id: current_date
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
+      shell: pwsh
+
+    # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
+    - name: Set dataverse_build_environment_display_name as env variable
+      run: echo "dataverse_build_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+      shell: pwsh
+    
+    # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
+    - name: Set dataverse_build_environment_domain_name as env variable
+      id: dataverse_build_environment_domain_name
+      run: |
+        $dataverseBuildEnvironmentDomainName='gh-build-${{ env.NOW }}-${{ github.run_id }}'
+        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
+        echo "::set-output name=dataverse_build_environment_domain_name::$dataverseBuildEnvironmentDomainName"
+      shell: pwsh
+
+    # Create the just in time Dataverse Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
+    - name: Create environment
+      uses: microsoft/powerplatform-actions/create-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        name: ${{ env.dataverse_build_environment_display_name }}
+        region: ${{ secrets.DATAVERSE_ENVIRONMENT_REGION }}
+        type: ${{ env.dataverse_environment_sku }}
+        currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
+        language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
+        domain: ${{ env.dataverse_build_environment_domain_name }}
+  
+  # Job to build a managed solution in the just in time Power Apps Build environment
+  build-managed-solution:
+    needs: create-build-environment
+    environment:
+      name: build_environment
+      url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
+    - name: Set path_to_solution_zip_file as env variable
+      run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
+
+    # Action used to checkout the repository the release branch
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout branch release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
+      uses: actions/checkout@v2
+      with:
+        ref: release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
+
+    # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
+    # Flatten all the json files for packing
+    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
+    - name: Flatten JSON files
+      run: |
+        Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *.json |
+        ForEach-Object {(Get-Content $_.FullName) -join ' ' | Set-Content $_.FullName}
+      shell: pwsh
+
+    # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
+    # Use temp exe from PowerShell to pack source files into msapp
+    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
+    - name: Pack msapp files
+      run: |
+        Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
+        ForEach-Object {     
+          $unpackedPath = $_.FullName
+          $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
+          Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
+          Remove-Item -Path $unpackedPath -Recurse
+        }
+      shell: pwsh
+
+    # Pack the considered solution as unmanaged
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
+    - name: Pack solution
+      uses: microsoft/powerplatform-actions/pack-solution@main
+      with:
+        solution-folder: Solutions/${{ env.solution_name }}
+        solution-file: ${{ env.path_to_solution_zip_file }}
+        solution-type: Unmanaged
+
+    # Import the considered solution unmanaged package to the just in time Dataverse Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
+    - name: Import solution as unmanaged to build env
+      uses: microsoft/powerplatform-actions/import-solution@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: "https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+        solution-file: ${{ env.path_to_solution_zip_file }}
+        force-overwrite: true
+        publish-changes: true
+        skip-dependency-check: false
+
+    # Export solution as managed from the just in time Dataverse Build environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
+    - name: Export solution as managed
+      uses: microsoft/powerplatform-actions/export-solution@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        solution-name: ${{ env.solution_name }}
+        solution-output-file: out/ship/${{ env.solution_name }}.zip
+        managed: true
+
+    # Upload the managed solution we got in the previous step to the GitHub artifact store
+    #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
+    - name: Upload the ready to ship solution to GH artifact store
+      uses: actions/upload-artifact@v2
+      with:
+        name: managedSolutions
+        path: out/ship/${{ env.solution_name }}.zip
+
+  # Job to create a GitHub release from the managed solution generate in the previous job
+  create-github-release:
+    needs: build-managed-solution
+    runs-on: ubuntu-latest
+    steps:
+      # Set a current date environment variable in the following format: YYYYMMDD
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      # Action used to checkout the repository the release branch
+      #   Community action: https://github.com/actions/checkout
+      - name: Checkout branch release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
+        uses: actions/checkout@v2
+        with:
+          ref: release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
+
+      # Get the content of the GitHub artifact store we got in the previous job
+      #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
+      - name: Fetch the ready to ship solution from GH artifact store
+        uses: actions/download-artifact@v2
+        with:
+          name: managedSolutions
+          path: out/release/
+
+      # Create a GitHub release
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-a-release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.solution_name }}_${{ env.NOW }}_${{ github.run_id }}
+          release_name: ${{ env.solution_name }} Release - ${{ env.NOW }} - ${{ github.run_id }}
+          body: |
+            ${{ github.event.inputs.github_release_body }}
+          draft: false
+          prerelease: false
+
+      # Upload the managed solution as asset to the GitHub release created in the previous step
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
+      - name: Upload Release Asset - Solution
+        id: upload-release-asset-solution
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: out/release/${{ env.solution_name }}.zip
+          asset_name: ${{ env.solution_name }}.zip
+          asset_content_type: application/zip
+
+      # Upload the README.md file as asset to the GitHub release created in a previous step
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
+      - name: Upload Release Asset - README
+        id: upload-release-asset-readme
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: README.md
+          asset_name: README.md
+          asset_content_type: application/md
+
+  # Job to delete the just in time Power Apps Build environment
+  delete-build-environment:
+    needs: [create-build-environment, create-github-release]
+    if: always()
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Delete the just in time Dataverse Build environment associated to the issue
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
+    - name: Delete environment
+      uses: microsoft/powerplatform-actions/delete-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
