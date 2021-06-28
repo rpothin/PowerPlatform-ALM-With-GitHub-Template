@@ -199,6 +199,8 @@ jobs:
   create-github-release:
     needs: build-managed-solution
     runs-on: ubuntu-latest
+    outputs:
+      create_release_id: ${{ steps.create_release.outputs.id }}
     steps:
       # Action used to checkout the repository the release branch
       #   Community action: https://github.com/actions/checkout
@@ -276,3 +278,52 @@ jobs:
           asset_path: README.md
           asset_name: README.md
           asset_content_type: application/md
+
+  # Job to import the managed solution generated in the previous job to the Dataverse Production environment
+  import-solution-to-production:
+    needs: build-managed-solution
+    environment:
+      name: production
+      url: ${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_URL }}
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Get the content of the GitHub artifact store we got in the previous job
+    #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
+    - name: Fetch the ready to ship solution from GH artifact store
+      uses: actions/download-artifact@v2
+      with:
+        name: managedSolutions
+        path: out/release/
+
+    # Import the considered solution managed package to the Dataverse Production environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
+    - name: Import solution to Production
+      uses: microsoft/powerplatform-actions/import-solution@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: ${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_URL }}
+        solution-file: out/release/${{ env.solution_name }}_managed.zip
+        force-overwrite: true
+        publish-changes: true
+        skip-dependency-check: true
+
+  # Job to publish the GitHub release created earlier in the workflow
+  publish-release:
+    needs: [create-github-release, import-solution-to-production]
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Publish the GitHub release created in the create-github-release job
+    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/publish-release
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ needs.create-github-release.outputs.create_release_id }}
