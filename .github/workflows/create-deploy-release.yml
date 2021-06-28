@@ -222,7 +222,7 @@ jobs:
       # Upload the unmanaged solution as asset to the GitHub release created in the previous step
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
       - name: Upload Release Asset - Unmanaged Solution
-        id: upload-release-asset-solution
+        id: upload-release-asset-unmanaged-solution
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -235,7 +235,7 @@ jobs:
       # Upload the managed solution as asset to the GitHub release created in the previous step
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
       - name: Upload Release Asset - Managed Solution
-        id: upload-release-asset-solution
+        id: upload-release-asset-managed-solution
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
