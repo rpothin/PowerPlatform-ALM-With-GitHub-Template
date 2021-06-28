@@ -177,8 +177,8 @@ jobs:
         path: out/Solutions/${{ env.solution_name }}_managed.zip
 
   # Job to delete the just in time Dataverse Build environment
-  delete-build-environment:
-    needs: [create-build-environment, build-managed-solution]
+  delete-release-branch:
+    needs: [create-release-branch, build-managed-solution]
     if: always()
     runs-on: ubuntu-latest
     env:
@@ -194,6 +194,35 @@ jobs:
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
         environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+
+  # Job to delete the release branch if solution deployment to Dataverse Build environment fails
+  delete-build-environment:
+    needs: [create-build-environment, build-managed-solution]
+    if: failure()
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Action used to checkout the repository
+    #   Community action: https://github.com/actions/checkout
+    - uses: actions/checkout@v2
+
+    # Delete the Release branch if exists
+    - name: Delete Release branch if exists
+      run: |
+        git config --global user.name 'action@github.com'
+        git config --global user.email 'GitHub Action'
+
+        if (git ls-remote origin release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}) {
+          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
+
+          Write-Host "release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }} branch deleted."
+        }
+        else {
+          Write-Host "release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }} branch not found."
+        }
+      shell: pwsh
 
   # Job to create a GitHub release from the managed solution generate in the previous job
   create-github-release:
