@@ -155,7 +155,6 @@ jobs:
     needs: build-managed-solution
     environment:
       name: validation
-      url: ${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1

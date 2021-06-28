@@ -284,7 +284,6 @@ jobs:
     needs: build-managed-solution
     environment:
       name: production
-      url: ${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_URL }}
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
