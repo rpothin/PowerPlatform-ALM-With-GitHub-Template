@@ -81,7 +81,7 @@ jobs:
   
   # Job to build a managed solution in the just in time Dataverse Build environment
   build-managed-solution:
-    needs: create-build-environment
+    needs: [create-release-branch, create-build-environment]
     environment:
       name: build_environment
       url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
