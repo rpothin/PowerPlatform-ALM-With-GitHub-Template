@@ -177,8 +177,8 @@ jobs:
         path: out/Solutions/${{ env.solution_name }}_managed.zip
 
   # Job to delete the just in time Dataverse Build environment
-  delete-release-branch:
-    needs: [create-release-branch, build-managed-solution]
+  delete-build-environment:
+    needs: [create-build-environment, build-managed-solution]
     if: always()
     runs-on: ubuntu-latest
     env:
@@ -196,8 +196,8 @@ jobs:
         environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
 
   # Job to delete the release branch if solution deployment to Dataverse Build environment fails
-  delete-build-environment:
-    needs: [create-build-environment, build-managed-solution]
+  delete-release-branch:
+    needs: [create-release-branch, build-managed-solution]
     if: failure()
     runs-on: ubuntu-latest
     env:
