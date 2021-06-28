@@ -81,7 +81,7 @@ jobs:
   import-solution-to-dev-environment:
     needs: create-dataverse-dev-environment
     environment:
-      name: dev_environment
+      name: development
       url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:

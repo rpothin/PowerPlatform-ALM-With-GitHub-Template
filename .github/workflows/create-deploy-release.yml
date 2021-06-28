@@ -83,7 +83,7 @@ jobs:
   build-managed-solution:
     needs: [create-release-branch, create-build-environment]
     environment:
-      name: build_environment
+      name: build
       url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:

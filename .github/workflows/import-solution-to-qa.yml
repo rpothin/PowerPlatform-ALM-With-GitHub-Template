@@ -68,7 +68,7 @@ jobs:
   build-managed-solution:
     needs: create-build-environment
     environment:
-      name: build_environment
+      name: build
       url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
@@ -154,7 +154,7 @@ jobs:
   import-solution-to-qa:
     needs: build-managed-solution
     environment:
-      name: qa_environment
+      name: validation
       url: https://rpothin-qa.crm3.dynamics.com/
     runs-on: ubuntu-latest
     env:
@@ -181,7 +181,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ secrets.DATAVERSE_QA_ENVIRONMENT_URL }}
+        environment-url: ${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}
         solution-file: out/release/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
