@@ -1,6 +1,7 @@
 name: 6-create-deploy-release
+# Create a new release branch
 # Generate a GitHub release for the considered solution with a just-in-time Dataverse Build environment
-# Then deploy this solution to the Dataverse Production environment
+# Deploy this solution to the Dataverse Production environment
 
 # Workflow triggered manually providing the mandatory information described below
 on:
@@ -9,7 +10,6 @@ on:
       solution_base_version:
         description: 'Base of the version of the solution to deploy'
         required: true
-        default: '1_2'
       github_release_body:
         description: 'Text for the body of the GitHub release'
         required: true
@@ -26,7 +26,7 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Create the new dev branch
+    # Create the new release branch
     #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-branch
     - uses: peterjgrainger/action-create-branch@v2.0.1
       env:
@@ -79,7 +79,7 @@ jobs:
         language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
         domain: ${{ env.dataverse_build_environment_domain_name }}
   
-  # Job to build a managed solution in the just in time Power Apps Build environment
+  # Job to build a managed solution in the just in time Dataverse Build environment
   build-managed-solution:
     needs: create-build-environment
     environment:
@@ -94,7 +94,7 @@ jobs:
     - name: Set path_to_solution_zip_file as env variable
       run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
 
-    # Action used to checkout the repository the release branch
+    # Action used to checkout the considered release branch in the current respository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
       uses: actions/checkout@v2
@@ -133,6 +133,14 @@ jobs:
         solution-file: ${{ env.path_to_solution_zip_file }}
         solution-type: Unmanaged
 
+    # Upload the unmanaged solution we packed in the previous step to the GitHub artifact store
+    #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
+    - name: Upload the unmanaged solution to GH artifact store
+      uses: actions/upload-artifact@v2
+      with:
+        name: unmanagedSolutions
+        path: ${{ env.path_to_solution_zip_file }}
+
     # Import the considered solution unmanaged package to the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
@@ -157,7 +165,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         solution-name: ${{ env.solution_name }}
-        solution-output-file: out/ship/${{ env.solution_name }}.zip
+        solution-output-file: out/Solutions/${{ env.solution_name }}_managed.zip
         managed: true
 
     # Upload the managed solution we got in the previous step to the GitHub artifact store
@@ -166,17 +174,13 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
-        path: out/ship/${{ env.solution_name }}.zip
+        path: out/Solutions/${{ env.solution_name }}_managed.zip
 
   # Job to create a GitHub release from the managed solution generate in the previous job
   create-github-release:
     needs: build-managed-solution
     runs-on: ubuntu-latest
     steps:
-      # Set a current date environment variable in the following format: YYYYMMDD
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
-
       # Action used to checkout the repository the release branch
       #   Community action: https://github.com/actions/checkout
       - name: Checkout branch release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
@@ -184,15 +188,23 @@ jobs:
         with:
           ref: release/${{ env.solution_name }}/${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
 
-      # Get the content of the GitHub artifact store we got in the previous job
+      # Get the unmanaged solutions from the GitHub artifact store
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
-      - name: Fetch the ready to ship solution from GH artifact store
+      - name: Fetch the unmanaged solutions from GH artifact store
+        uses: actions/download-artifact@v2
+        with:
+          name: unmanagedSolutions
+          path: out/unmanagedSolutions/
+
+      # Get the managed solutions from the GitHub artifact store
+      #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
+      - name: Fetch the managed solutions from GH artifact store
         uses: actions/download-artifact@v2
         with:
           name: managedSolutions
-          path: out/release/
+          path: out/managedSolutions/
 
-      # Create a GitHub release
+      # Create a GitHub release as draft
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-a-release
       - name: Create Release
         id: create_release
@@ -200,24 +212,37 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.solution_name }}_${{ env.NOW }}_${{ github.run_id }}
-          release_name: ${{ env.solution_name }} Release - ${{ env.NOW }} - ${{ github.run_id }}
+          tag_name: ${{ env.solution_name }}_${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
+          release_name: ${{ env.solution_name }} - ${{ github.event.inputs.solution_base_version }}_${{ github.run_id }}
           body: |
             ${{ github.event.inputs.github_release_body }}
-          draft: false
+          draft: true
           prerelease: false
 
-      # Upload the managed solution as asset to the GitHub release created in the previous step
+      # Upload the unmanaged solution as asset to the GitHub release created in the previous step
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
-      - name: Upload Release Asset - Solution
+      - name: Upload Release Asset - Unmanaged Solution
         id: upload-release-asset-solution
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: out/release/${{ env.solution_name }}.zip
+          asset_path: out/unmanagedSolutions/${{ env.solution_name }}.zip
           asset_name: ${{ env.solution_name }}.zip
+          asset_content_type: application/zip
+
+      # Upload the managed solution as asset to the GitHub release created in the previous step
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/upload-assets-to-a-release
+      - name: Upload Release Asset - Managed Solution
+        id: upload-release-asset-solution
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: out/managedSolutions/${{ env.solution_name }}_managed.zip
+          asset_name: ${{ env.solution_name }}_managed.zip
           asset_content_type: application/zip
 
       # Upload the README.md file as asset to the GitHub release created in a previous step
@@ -233,9 +258,9 @@ jobs:
           asset_name: README.md
           asset_content_type: application/md
 
-  # Job to delete the just in time Power Apps Build environment
+  # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
-    needs: [create-build-environment, create-github-release]
+    needs: [create-build-environment, build-managed-solution]
     if: always()
     runs-on: ubuntu-latest
     env:
