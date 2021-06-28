@@ -1,5 +1,5 @@
-name: 5-import-solution-to-qa
-# Upload the solutions to the GitHub workflow run artifacts and deploy them to the Power Apps QA environment
+name: 5-import-solution-to-validation
+# Upload the solutions to the GitHub workflow run artifacts and deploy them to the Dataverse Validation environment
 
 # Workflow that is triggered by a push of updates in the "Solutions/" folder on the main branch
 on:
@@ -150,12 +150,12 @@ jobs:
         name: managedSolutions
         path: out/ship/${{ env.solution_name }}.zip
 
-  # Job to import the managed solution generated in the previous job to the Power Apps QA environment
-  import-solution-to-qa:
+  # Job to import the managed solution generated in the previous job to the Dataverse Validation environment
+  import-solution-to-validation:
     needs: build-managed-solution
     environment:
       name: validation
-      url: https://rpothin-qa.crm3.dynamics.com/
+      url: ${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -173,9 +173,9 @@ jobs:
         name: managedSolutions
         path: out/release/
 
-    # Import the considered solution managed package to the Power Apps QA environment
+    # Import the considered solution managed package to the Dataverse Validation environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
-    - name: Import solution to qa env
+    - name: Import solution to Validation
       uses: microsoft/powerplatform-actions/import-solution@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
@@ -189,7 +189,7 @@ jobs:
 
   # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
-    needs: [create-build-environment, import-solution-to-qa]
+    needs: [create-build-environment, import-solution-to-validation]
     if: always()
     runs-on: ubuntu-latest
     env:
