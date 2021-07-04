@@ -32,8 +32,8 @@ jobs:
     - name: Set release version
       id: release_version
       run: |
-        $currentDate = Get-Date -Format "yyyyMMdd"
-        $releaseVersion = "${{ github.event.inputs.solution_base_version }}_$currentDate_${{ github.run_id }}"
+        echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
+        $releaseVersion = '${{ github.event.inputs.solution_base_version }}_${{ env.NOW }}_${{ github.run_id }}'
         echo "::set-output name=release_version::$releaseVersion"
       shell: pwsh
 
