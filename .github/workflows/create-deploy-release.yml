@@ -28,11 +28,16 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
+    - name: Set current date as env variable
+      id: current_date
+      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
+      shell: pwsh
+
     # Initialize the release version
     - name: Set release version
       id: release_version
       run: |
-        echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
         $releaseVersion = '${{ github.event.inputs.solution_base_version }}_${{ env.NOW }}_${{ github.run_id }}'
         echo "::set-output name=release_version::$releaseVersion"
       shell: pwsh
