@@ -28,8 +28,11 @@ All notable changes to this repository will be documented in this file.
 
 - ...
 
-## [1.0] - 2020-12-22
+## 1.0 - 2020-12-22
 
 ### 🚀 Added
 
 - ...
+
+[unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v2.0...HEAD
+[2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v2.0
