@@ -184,7 +184,7 @@ jobs:
 
   # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
-    needs: [create-build-environment, import-solution-to-validation]
+    needs: [create-build-environment, build-managed-solution]
     if: always()
     runs-on: ubuntu-latest
     env:
