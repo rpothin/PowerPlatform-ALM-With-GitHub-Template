@@ -99,7 +99,7 @@
         ZIndex: =8
 
     "Gallery_Demonstrations As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
-        Height: =Parent.Height - Self.Y
+        Height: =708
         Items: =SortByColumns(Search([@Demonstrations], TextSearchBox1.Text, "ppwg_name"), "ppwg_name", If(SortDescending1, Descending, Ascending))
         Layout: =Layout.Vertical
         OnSelect: =Navigate(DetailScreen1, ScreenTransition.None)
@@ -146,4 +146,10 @@
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
             ZIndex: =3
+
+    Icon1 As icon.CheckBadge:
+        Icon: =Icon.CheckBadge
+        X: =288
+        Y: =1014
+        ZIndex: =10
 

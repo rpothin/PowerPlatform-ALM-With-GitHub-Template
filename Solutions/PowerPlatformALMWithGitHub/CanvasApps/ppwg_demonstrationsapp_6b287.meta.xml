@@ -1,26 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>ppwg_demonstrationsapp_6b287</Name>
-  <AppVersion>2021-06-26T02:09:45Z</AppVersion>
+  <AppVersion>2021-07-04T01:50:32Z</AppVersion>
   <Status>Ready</Status>
-  <CreatedByClientVersion>3.21061.19.0</CreatedByClientVersion>
-  <MinClientVersion>3.21061.19.0</MinClientVersion>
-  <Tags>{"primaryDeviceWidth":"640","primaryDeviceHeight":"1136","sienaVersion":"62789cb4-673b-4fb9-be73-444da04551c6","deviceCapabilities":"","supportsPortrait":"true","supportsLandscape":"false","primaryFormFactor":"Phone","publisherVersion":"3.21061.19","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
+  <CreatedByClientVersion>3.21063.34.0</CreatedByClientVersion>
+  <MinClientVersion>3.21063.34.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"640","primaryDeviceHeight":"1136","sienaVersion":"8d9236a9-db8b-458b-a029-b469c3990054","deviceCapabilities":"","supportsPortrait":"true","supportsLandscape":"false","primaryFormFactor":"Phone","publisherVersion":"3.21063.34","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
   <IsCdsUpgraded>0</IsCdsUpgraded>
   <GalleryItemId xsi:nil="true"></GalleryItemId>
   <BackgroundColor>rgba(37, 62, 143, 1)</BackgroundColor>
   <DisplayName>Demonstrations App</DisplayName>
-  <Description></Description>
-  <CommitMessage></CommitMessage>
+  <Description xsi:nil="true"></Description>
+  <CommitMessage xsi:nil="true"></CommitMessage>
   <Publisher></Publisher>
   <AuthorizationReferences>[]</AuthorizationReferences>
   <ConnectionReferences>{}</ConnectionReferences>
   <DatabaseReferences>{"default.cds":{"databaseDetails":{"referenceType":"Environmental","environmentName":"default.cds","overrideValues":{"status":"NotSpecified"}},"dataSources":{"Demonstrations":{"entitySetName":"ppwg_demonstrations","logicalName":"ppwg_demonstration"}}}}</DatabaseReferences>
+  <AppComponents>[]</AppComponents>
+  <AppComponentDependencies>[]</AppComponentDependencies>
   <CanvasAppType>0</CanvasAppType>
   <BypassConsent>0</BypassConsent>
+  <AdminControlBypassConsent>0</AdminControlBypassConsent>
   <EmbeddedApp xsi:nil="true"></EmbeddedApp>
   <IntroducedVersion>1.0</IntroducedVersion>
-  <CdsDependencies xsi:nil="true"></CdsDependencies>
+  <CdsDependencies>{"cdsdependencies":[{"logicalname":"ppwg_demonstration","componenttype":1}]}</CdsDependencies>
   <IsCustomizable>1</IsCustomizable>
   <BackgroundImageUri>/CanvasApps/ppwg_demonstrationsapp_6b287_BackgroundImageUri</BackgroundImageUri>
   <DocumentUri>/CanvasApps/ppwg_demonstrationsapp_6b287_DocumentUri.msapp</DocumentUri>

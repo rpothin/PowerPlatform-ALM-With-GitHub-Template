@@ -1,7 +1,7 @@
 {
   "FormatVersion": "0.20",
   "Header": {
-    "DocVersion": "1.313",
+    "DocVersion": "1.314",
     "MinVersionToLoad": "1.313",
     "MSAppStructureVersion": "2.0"
   },
@@ -34,12 +34,13 @@
       "enhancedgalleryinitialization": true,
       "enhancedgroupcontrol": true,
       "errorhandling": false,
+      "exportimportcomponents": false,
       "externalmessage": false,
       "formuladataprefetch": false,
       "generatedebugpublishedapp": false,
+      "herocontrols": false,
       "improvedmediacapture": false,
       "keeprecentscreensloaded": false,
-      "korenderingstack": false,
       "longlivingcache": false,
       "nativecdsexperimental": true,
       "optimizedforteamsmeeting": false,
