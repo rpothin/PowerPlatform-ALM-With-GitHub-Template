@@ -34,5 +34,5 @@ All notable changes to this repository will be documented in this file.
 
 - ...
 
-[unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v2.0...HEAD
+[⚒ Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v2.0...HEAD
 [2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v2.0
