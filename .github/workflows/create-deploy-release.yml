@@ -53,7 +53,7 @@ jobs:
       run: |
         $solutionBaseVersion = "${{ github.event.inputs.solution_base_version }}"
         $solutionBaseVersion = $solutionBaseVersion.replace("_", ".")
-        $solutionVersion = "$solutionBaseVersion.${{ env.NOW }}.${{ github.run_id }}"
+        $solutionVersion = $solutionBaseVersion + ".${{ env.NOW }}.${{ github.run_id }}"
         echo "::set-output name=solution_version::$solutionVersion"
       shell: pwsh
     
