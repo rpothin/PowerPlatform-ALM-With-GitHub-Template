@@ -156,7 +156,7 @@ jobs:
     # Set the solution version in the Solution.xml file
     #   Community action: https://github.com/marketplace/actions/file-regex-replace
     - name: Set solution version
-      uses: mingjun97/file-regex-replace
+      uses: mingjun97/file-regex-replace@v1
       with:
         regex: '<Version>[\s\S]*?<\/Version>'
         replacement: '<Version>${{ needs.create-release-branch.outputs.solution_version }}</Version>'
