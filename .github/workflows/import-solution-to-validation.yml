@@ -123,13 +123,12 @@ jobs:
       shell: pwsh
 
     # Set the solution version in the Solution.xml file
-    #   Community action: https://github.com/marketplace/actions/file-regex-replace
     - name: Set solution version
-      uses: mingjun97/file-regex-replace@v1
-      with:
-        regex: '<Version>[\s\S]*?<\/Version>'
-        replacement: '<Version>1.${{ env.SOLUTION_VERSION }}</Version>'
-        include: 'Solutions\${{ env.solution_name }}\**\Solution.xml'
+      run: |
+        $file = 'Solutions\${{ env.solution_name }}\Other\Solution.xml'
+        $regex = '<Version>[\s\S]*?<\/Version>'
+        (Get-Content $file) -replace $regex, '<Version>1.${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
+      shell: pwsh
 
     # Pack the considered solution as unmanaged
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml

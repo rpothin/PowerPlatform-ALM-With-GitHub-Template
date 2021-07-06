@@ -161,20 +161,9 @@ jobs:
     # Set the solution version in the Solution.xml file
     - name: Set solution version
       run: |
-        $file = 'Solutions\${{ env.solution_name }}\**\Solution.xml'
+        $file = 'Solutions\${{ env.solution_name }}\Other\Solution.xml'
         $regex = '<Version>[\s\S]*?<\/Version>'
         (Get-Content $file) -replace $regex, '<Version>1.${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
-      shell: pwsh
-    
-    # Push update of solution version to Dev branch
-    - name: Push changes to Dev branch
-      run: |
-        git config --global user.name 'action@github.com'
-        git config --global user.email 'GitHub Action'
-
-        git add --all
-        git commit -m "Update version of ${{ env.solution_name }} solution to 1.${{ env.SOLUTION_VERSION }}"
-        git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin ${{ env.branch_name }}
       shell: pwsh
 
     # Pack the solution as unmanaged

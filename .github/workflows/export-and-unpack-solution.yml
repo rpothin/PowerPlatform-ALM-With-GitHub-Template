@@ -70,13 +70,12 @@ jobs:
         overwrite-files: true
 
     # Reset the solution version in the Solution.xml file
-    #   Community action: https://github.com/marketplace/actions/file-regex-replace
-    - name: Reset solution version
-      uses: mingjun97/file-regex-replace@v1
-      with:
-        regex: '<Version>[\s\S]*?<\/Version>'
-        replacement: '<Version>1.0.0</Version>'
-        include: 'Solutions\${{ github.event.inputs.solution_name }}\**\Solution.xml'
+    - name: Set solution version
+      run: |
+        $file = 'Solutions\${{ github.event.inputs.solution_name }}\Other\Solution.xml'
+        $regex = '<Version>[\s\S]*?<\/Version>'
+        (Get-Content $file) -replace $regex, '<Version>1.0.0</Version>' | Set-Content $file
+      shell: pwsh
 
     # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
     # Use temp exe from PowerShell to unpack canvas app source files into a folder

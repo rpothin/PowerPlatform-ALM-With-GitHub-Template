@@ -154,13 +154,12 @@ jobs:
       shell: pwsh
 
     # Set the solution version in the Solution.xml file
-    #   Community action: https://github.com/marketplace/actions/file-regex-replace
     - name: Set solution version
-      uses: mingjun97/file-regex-replace@v1
-      with:
-        regex: '<Version>[\s\S]*?<\/Version>'
-        replacement: '<Version>${{ needs.create-release-branch.outputs.solution_version }}</Version>'
-        include: 'Solutions\${{ env.solution_name }}\**\Solution.xml'
+      run: |
+        $file = 'Solutions\${{ env.solution_name }}\Other\Solution.xml'
+        $regex = '<Version>[\s\S]*?<\/Version>'
+        (Get-Content $file) -replace $regex, '<Version>${{ needs.create-release-branch.outputs.solution_version }}</Version>' | Set-Content $file
+      shell: pwsh
 
     # Push update of solution version to Release branch
     - name: Push changes to Release branch
@@ -253,9 +252,12 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Action used to checkout the repository
+    # Action used to checkout the considered release branch in the current repository
     #   Community action: https://github.com/actions/checkout
-    - uses: actions/checkout@v2
+    - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+      uses: actions/checkout@v2
+      with:
+        ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
     # Delete the Release branch if exists
     - name: Delete Release branch if exists

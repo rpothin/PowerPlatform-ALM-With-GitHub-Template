@@ -25,7 +25,10 @@ jobs:
     steps:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
-    - uses: actions/checkout@v2
+    - name: Checkout branch ${{ env.branch_name }}
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ env.branch_name }}
 
     # Delete the Dev branch if exists
     - name: Delete Dev branch if exists
