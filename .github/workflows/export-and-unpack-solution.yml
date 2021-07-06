@@ -69,6 +69,15 @@ jobs:
         solution-type: 'Unmanaged'
         overwrite-files: true
 
+    # Reset the solution version in the Solution.xml file
+    #   Community action: https://github.com/marketplace/actions/file-regex-replace
+    - name: Reset solution version
+      uses: mingjun97/file-regex-replace
+      with:
+        regex: '<Version>[\s\S]*?<\/Version>'
+        replacement: '<Version>1.0.0</Version>'
+        include: 'Solutions\${{ github.event.inputs.solution_name }}\**\Solution.xml'
+
     # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
     # Use temp exe from PowerShell to unpack canvas app source files into a folder
     #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml

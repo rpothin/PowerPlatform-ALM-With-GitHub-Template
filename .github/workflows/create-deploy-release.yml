@@ -22,11 +22,12 @@ env:
   dataverse_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Dataverse Build environment
   
 jobs:
-  # Job for the initialization of the release version
-  init-release-version:
+  # Job for the creation of the release branch
+  create-release-branch:
     runs-on: ubuntu-latest
     outputs:
       release_version: ${{ steps.release_version.outputs.release_version }}
+      solution_version: ${{ steps.release_version.outputs.solution_version }}
     env:
       RUNNER_DEBUG: 1
 
@@ -42,24 +43,25 @@ jobs:
       id: release_version
       run: |
         $releaseVersion = '${{ github.event.inputs.solution_base_version }}_${{ env.NOW }}_${{ github.run_id }}'
+        echo "RELEASE_VERSION=$releaseVersion" >> $Env:GITHUB_ENV
         echo "::set-output name=release_version::$releaseVersion"
       shell: pwsh
 
-  # Job for the creation of the release branch
-  create-release-branch:
-    needs: init-release-version
-    runs-on: ubuntu-latest
-    env:
-      RUNNER_DEBUG: 1
-
-    steps:
+    # Initialize the solution version
+    - name: Set solution version
+      id: solution_version
+      run: |
+        $solutionVersion = '${{ github.event.inputs.solution_base_version }}.${{ env.NOW }}.${{ github.run_id }}'
+        echo "::set-output name=solution_version::$solutionVersion"
+      shell: pwsh
+    
     # Create the new release branch
     #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-branch
     - uses: peterjgrainger/action-create-branch@v2.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }}
+        branch: release/${{ env.solution_name }}/${{ env.RELEASE_VERSION }}
 
   # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
@@ -108,7 +110,7 @@ jobs:
   
   # Job to build a managed solution in the just in time Dataverse Build environment
   build-managed-solution:
-    needs: [init-release-version, create-release-branch, create-build-environment]
+    needs: [create-release-branch, create-build-environment]
     environment:
       name: build
       url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
@@ -123,10 +125,10 @@ jobs:
 
     # Action used to checkout the considered release branch in the current respository
     #   Community action: https://github.com/actions/checkout
-    - name: Checkout branch release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }}
+    - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
       uses: actions/checkout@v2
       with:
-        ref: release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }}
+        ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
     # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
     # Flatten all the json files for packing
@@ -149,6 +151,26 @@ jobs:
           Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
           Remove-Item -Path $unpackedPath -Recurse
         }
+      shell: pwsh
+
+    # Set the solution version in the Solution.xml file
+    #   Community action: https://github.com/marketplace/actions/file-regex-replace
+    - name: Set solution version
+      uses: mingjun97/file-regex-replace
+      with:
+        regex: '<Version>[\s\S]*?<\/Version>'
+        replacement: '<Version>${{ needs.create-release-branch.outputs.solution_version }}</Version>'
+        include: 'Solutions\${{ env.solution_name }}\**\Solution.xml'
+
+    # Push update of solution version to Release branch
+    - name: Push changes to Release branch
+      run: |
+        git config --global user.name 'action@github.com'
+        git config --global user.email 'GitHub Action'
+
+        git add --all
+        git commit -m "Update version of ${{ env.solution_name }} solution to ${{ needs.create-release-branch.outputs.solution_version }}"
+        git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
       shell: pwsh
 
     # Pack the considered solution as unmanaged
@@ -224,7 +246,7 @@ jobs:
 
   # Job to delete the release branch if solution deployment to Dataverse Build environment fails
   delete-release-branch:
-    needs: [init-release-version, create-release-branch, build-managed-solution]
+    needs: [create-release-branch, build-managed-solution]
     if: failure()
     runs-on: ubuntu-latest
     env:
@@ -241,29 +263,29 @@ jobs:
         git config --global user.name 'action@github.com'
         git config --global user.email 'GitHub Action'
 
-        if (git ls-remote origin release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }}) {
-          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }}
+        if (git ls-remote origin release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}) {
+          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
-          Write-Host "release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }} branch deleted."
+          Write-Host "release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }} branch deleted."
         }
         else {
-          Write-Host "release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }} branch not found."
+          Write-Host "release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }} branch not found."
         }
       shell: pwsh
 
   # Job to create a GitHub release from the managed solution generate in the previous job
   create-github-release:
-    needs: [init-release-version, build-managed-solution]
+    needs: [create-release-branch, build-managed-solution]
     runs-on: ubuntu-latest
     outputs:
       create_release_id: ${{ steps.create_release.outputs.id }}
     steps:
       # Action used to checkout the repository the release branch
       #   Community action: https://github.com/actions/checkout
-      - name: Checkout branch release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }}
+      - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
         uses: actions/checkout@v2
         with:
-          ref: release/${{ env.solution_name }}/${{ needs.init-release-version.outputs.release_version }}
+          ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
       # Get the unmanaged solutions from the GitHub artifact store
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
@@ -289,8 +311,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.solution_name }}_${{ needs.init-release-version.outputs.release_version }}
-          release_name: ${{ env.solution_name }} - ${{ needs.init-release-version.outputs.release_version }}
+          tag_name: ${{ env.solution_name }}_${{ needs.create-release-branch.outputs.release_version }}
+          release_name: ${{ env.solution_name }} - ${{ needs.create-release-branch.outputs.release_version }}
           body: |
             ${{ github.event.inputs.github_release_body }}
           draft: true
