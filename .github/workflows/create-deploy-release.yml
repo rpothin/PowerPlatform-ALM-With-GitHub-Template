@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_version: ${{ steps.release_version.outputs.release_version }}
-      solution_version: ${{ steps.release_version.outputs.solution_version }}
+      solution_version: ${{ steps.solution_version.outputs.solution_version }}
     env:
       RUNNER_DEBUG: 1
 
