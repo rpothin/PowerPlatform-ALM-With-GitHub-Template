@@ -1,3 +1,6 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
 name: 3-solution-quality-check-on-pr
 # Check the quality of a solution on a pull request targeting the main branch
 

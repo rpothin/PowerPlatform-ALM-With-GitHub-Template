@@ -1,3 +1,6 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
 name: 1-workspace-initialization-when-issue-assigned
 # Create a branch and generate a Dataverse Dev environment when an issue is assigned in GitHub
 

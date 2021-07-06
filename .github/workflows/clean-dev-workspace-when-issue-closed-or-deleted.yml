@@ -1,3 +1,6 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
 name: 4-clean-dev-workspace-when-issue-closed-or-deleted
 # Delete the Dataverse Dev environment created to work on the considered issue when it is closed
 

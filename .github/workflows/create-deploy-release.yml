@@ -1,3 +1,6 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
 name: 6-create-deploy-release
 # Create a new release branch
 # Generate a GitHub release for the considered solution with a just-in-time Dataverse Build environment
