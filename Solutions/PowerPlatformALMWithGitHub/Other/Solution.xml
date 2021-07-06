@@ -6,7 +6,7 @@
       <LocalizedName description="Power Platform ALM With GitHub" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.20210706.1002988798</Version>
+    <Version>1.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>powerplatformalmwithgithub</UniqueName>

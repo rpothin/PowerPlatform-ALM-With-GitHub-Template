@@ -1,0 +1,189 @@
+[
+  {
+    "CdsFCBContext": "{\"FileType\":true,\"ImageExternalStorage\":true}",
+    "EntitySetName": "ppwg_demonstrations",
+    "IsHidden": false,
+    "IsSampleData": false,
+    "IsWritable": true,
+    "LogicalName": "ppwg_demonstration",
+    "MaxGetRowsCount": 500,
+    "Name": "Demonstrations",
+    "NativeCDSDataSourceInfoNameMapping": {
+      "_ownerid_value": "Owner",
+      "createdby": "Created By",
+      "createdon": "Created On",
+      "createdonbehalfby": "Created By (Delegate)",
+      "importsequencenumber": "Import Sequence Number",
+      "modifiedby": "Modified By",
+      "modifiedon": "Modified On",
+      "modifiedonbehalfby": "Modified By (Delegate)",
+      "overriddencreatedon": "Record Created On",
+      "owningbusinessunit": "Owning Business Unit",
+      "owningteam": "Owning Team",
+      "owninguser": "Owning User",
+      "ppwg_date": "Date",
+      "ppwg_demonstration_AsyncOperations": "System Jobs",
+      "ppwg_demonstration_BulkDeleteFailures": "Bulk Delete Failures",
+      "ppwg_demonstration_DuplicateBaseRecord": "Duplicate Records (ppwg_demonstration_DuplicateBaseRecord)",
+      "ppwg_demonstration_DuplicateMatchingRecord": "Duplicate Records (ppwg_demonstration_DuplicateMatchingRecord)",
+      "ppwg_demonstration_MailboxTrackingFolders": "Mailbox Auto Tracking Folders",
+      "ppwg_demonstration_PrincipalObjectAttributeAccesses": "Field Sharing",
+      "ppwg_demonstration_ProcessSession": "Process Sessions",
+      "ppwg_demonstration_SyncErrors": "Sync Errors",
+      "ppwg_demonstrationid": "Demonstration",
+      "ppwg_description": "Description",
+      "ppwg_eventname": "Event Name",
+      "ppwg_level": "Level",
+      "ppwg_name": "Name",
+      "ppwg_type": "Type",
+      "ppwg_virtual": "Virtual",
+      "ppwg_visible": "Visible",
+      "statecode": "Status",
+      "statuscode": "Status Reason",
+      "timezoneruleversionnumber": "Time Zone Rule Version Number",
+      "utcconversiontimezonecode": "UTC Conversion Time Zone Code",
+      "versionnumber": "Version Number"
+    },
+    "PreferredName": "Demonstrations",
+    "Type": "NativeCDSDataSourceInfo"
+  },
+  {
+    "DisplayName": "Demonstrations (Views)",
+    "Name": "_ppwg_demonstration_views",
+    "RelatedEntityName": "Demonstrations",
+    "TrimmedViewName": true,
+    "Type": "ViewInfo",
+    "ViewInfoNameMapping": {
+      "2fe9d067-5fd9-419c-bf95-9ebec11d1ceb": "Demonstration Lookup View",
+      "5aecbc2a-5908-44ef-8cb9-0eebdcfd0088": "Demonstration Advanced Find View",
+      "6fd7b1d1-6458-4fe4-9fd0-7ebef3739298": "Inactive Demonstrations",
+      "969a018e-def1-491e-8a24-39f1e8f24f10": "Demonstration Associated View",
+      "e61925f5-0f4a-4ca5-a75d-a9bd0536737b": "Active Demonstrations"
+    }
+  },
+  {
+    "DisplayName": "Status (Demonstrations)",
+    "Name": "ppwg_demonstration_statecode",
+    "OptionSetInfoNameMapping": {
+      "0": "Active",
+      "1": "Inactive"
+    },
+    "OptionSetIsBooleanValued": false,
+    "OptionSetIsGlobal": false,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "statecode",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "StateType",
+    "RelatedColumnInvariantName": "statecode",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Status Reason (Demonstrations)",
+    "Name": "ppwg_demonstration_statuscode",
+    "OptionSetInfoNameMapping": {
+      "1": "Active",
+      "2": "Inactive"
+    },
+    "OptionSetIsBooleanValued": false,
+    "OptionSetIsGlobal": false,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "statuscode",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "StatusType",
+    "RelatedColumnInvariantName": "statuscode",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Level",
+    "Name": "ppwg_level",
+    "OptionSetInfoNameMapping": {
+      "112920000": "100",
+      "112920001": "200",
+      "112920002": "300",
+      "112920003": "400"
+    },
+    "OptionSetIsBooleanValued": false,
+    "OptionSetIsGlobal": true,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_level",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "PicklistType",
+    "RelatedColumnInvariantName": "ppwg_level",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Virtual (Demonstrations)",
+    "Name": "ppwg_ppwg_demonstration_virtual",
+    "OptionSetInfoNameMapping": {
+      "0": "No",
+      "1": "Yes"
+    },
+    "OptionSetIsBooleanValued": true,
+    "OptionSetIsGlobal": false,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_virtual",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "BooleanType",
+    "RelatedColumnInvariantName": "ppwg_virtual",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Visible (Demonstrations)",
+    "Name": "ppwg_ppwg_demonstration_visible",
+    "OptionSetInfoNameMapping": {
+      "0": "No",
+      "1": "Yes"
+    },
+    "OptionSetIsBooleanValued": true,
+    "OptionSetIsGlobal": false,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_visible",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "BooleanType",
+    "RelatedColumnInvariantName": "ppwg_visible",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  },
+  {
+    "DisplayName": "Type",
+    "Name": "ppwg_type",
+    "OptionSetInfoNameMapping": {
+      "112920000": "Technical",
+      "112920001": "Functional",
+      "112920002": "Security",
+      "112920003": "Governance",
+      "112920004": "Community"
+    },
+    "OptionSetIsBooleanValued": false,
+    "OptionSetIsGlobal": true,
+    "OptionSetReference": {
+      "OptionSetReferenceItem0": {
+        "OptionSetReferenceColumnName": "ppwg_type",
+        "OptionSetReferenceEntityName": "Demonstrations"
+      }
+    },
+    "OptionSetTypeKey": "PicklistType",
+    "RelatedColumnInvariantName": "ppwg_type",
+    "RelatedEntityName": "Demonstrations",
+    "Type": "OptionSetInfo"
+  }
+]
