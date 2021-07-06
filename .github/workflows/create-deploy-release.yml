@@ -123,7 +123,7 @@ jobs:
     - name: Set path_to_solution_zip_file as env variable
       run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
 
-    # Action used to checkout the considered release branch in the current respository
+    # Action used to checkout the considered release branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
       uses: actions/checkout@v2
