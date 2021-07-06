@@ -148,7 +148,7 @@
             ZIndex: =3
 
     Icon1 As icon.CheckBadge:
-        Icon: =Icon.CheckBadge
+        Icon: =Icon.Save
         X: =288
         Y: =1014
         ZIndex: =10
