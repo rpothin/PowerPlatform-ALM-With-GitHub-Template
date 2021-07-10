@@ -36,7 +36,7 @@ All notable changes to this repository will be documented in this file.
 ### ❌ Deleted
 
 - Issue templates (replaced by issue form)
-- Sample of Power Plaform solution to make the repository cleaner
+- Sample of Power Platform solution to make the repository cleaner
 
 ## [1.0] - 2020-12-22
 
