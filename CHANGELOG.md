@@ -18,15 +18,25 @@ All notable changes to this repository will be documented in this file.
 
 - ...
 
+### ❌ Deleted
+
+- ...
+
 ## [2.0] - 2021-07-??
 
 ### 🚀 Added
 
-- ...
+- Issue form for bugs
+- Template chooser for issues
 
 ### 🤖 Changed
 
-- ...
+- README.md: updates to reflect all the updates in this version
+
+### ❌ Deleted
+
+- Issue templates (replaced by issue form)
+- Sample of Power Plaform solution to make the repository cleaner
 
 ## [1.0] - 2020-12-22
 
