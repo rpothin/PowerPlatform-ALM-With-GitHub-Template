@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>ppwg_demonstrationsapp_6b287</Name>
-  <AppVersion>2021-07-06T03:14:07Z</AppVersion>
+  <AppVersion>2021-07-12T03:32:03Z</AppVersion>
   <Status>Ready</Status>
-  <CreatedByClientVersion>3.21063.34.0</CreatedByClientVersion>
-  <MinClientVersion>3.21063.34.0</MinClientVersion>
-  <Tags>{"primaryDeviceWidth":"640","primaryDeviceHeight":"1136","sienaVersion":"eb963281-4334-4028-a686-0b83a7857cd6","deviceCapabilities":"","supportsPortrait":"true","supportsLandscape":"false","primaryFormFactor":"Phone","publisherVersion":"3.21063.34","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
+  <CreatedByClientVersion>3.21064.25.0</CreatedByClientVersion>
+  <MinClientVersion>3.21064.25.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"640","primaryDeviceHeight":"1136","sienaVersion":"ff1743df-672e-4c08-96e6-92c7c1518990","deviceCapabilities":"","supportsPortrait":"true","supportsLandscape":"false","primaryFormFactor":"Phone","publisherVersion":"3.21064.25","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false"}</Tags>
   <IsCdsUpgraded>0</IsCdsUpgraded>
   <GalleryItemId xsi:nil="true"></GalleryItemId>
   <BackgroundColor>rgba(37, 62, 143, 1)</BackgroundColor>
