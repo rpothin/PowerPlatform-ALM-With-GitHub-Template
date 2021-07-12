@@ -32,7 +32,7 @@ All notable changes to this repository will be documented in this file.
 - Issue form for bugs
 - Template chooser for issues
 - Copyright and MIT license at the top of each YAML file built in the repository
-- Management of the version of the solution (*export --> 1.0.0 / import to dev or validation --> 1.0.<YYYYMMDD>.<GitHub workflow run id> / ...*)
+- Management of the version of the solution (*export --> 1.0.0 / import to dev or validation --> 1.0.<YYYYMMDD>.<GitHub workflow run id> / release --> <base version (ex: 1.2)>.<YYYYMMDD>.<GitHub workflow run id>*)
 - Canvas app (*%.msapp files*) unpack on solution export and pack for import using a static built version of the [microsoft/PowerApps-Language-Tooling](https://github.com/microsoft/PowerApps-Language-Tooling) solution stored in the repository
 - JSON files formatting on solution export to make them more readable (*ex: cloud flows*) and change back the format for import
 - More comments added to the issue in the GitHub workflow for the initialization of a workspace for Power Platform development
