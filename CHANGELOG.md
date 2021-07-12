@@ -40,7 +40,7 @@ All notable changes to this repository will be documented in this file.
 
 ## [1.0] - 2020-12-22
 
-> **Goal**: Initialize a repository template to make the Power Platform ALM with GitHub journey a little bit easier 😊
+> Initialize a repository template to make Power Platform ALM with GitHub a little bit easier 😊
 
 ### 🚀 Added
 
