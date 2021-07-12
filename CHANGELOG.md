@@ -24,7 +24,7 @@ All notable changes to this repository will be documented in this file.
 
 ## [2.0] - 2021-07-??
 
-> Improve the GitHub workflows by mainly replacing PowerShell scripts by existing Power Platform actions 🤩
+> Improve the GitHub workflows by mainly replacing PowerShell scripts by existing [Power Platform actions](https://github.com/microsoft/powerplatform-actions) 🤩
 
 ### 🚀 Added
 
