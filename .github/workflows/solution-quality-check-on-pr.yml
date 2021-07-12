@@ -131,6 +131,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
         path: ${{ env.path_to_solution_zip_file }}
         geo: ${{ env.solution_checker_geography }}
         checker-logs-artifact-name: ${{ env.solution_checker_result_output_directory }}
