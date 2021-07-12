@@ -54,5 +54,5 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the creation of a GitHub release for a Power Platform solution (*build with a JIT environment*)
 
 [⚒ Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v2.0...HEAD
-[2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v2.0
-[1.0]: https://twitter.com/RaphaelPothin/status/1341398312314925057
+[2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v1.0...v2.0
+[1.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v1.0
