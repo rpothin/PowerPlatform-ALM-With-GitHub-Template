@@ -26,6 +26,8 @@ All notable changes to this repository will be documented in this file.
 
 > Improve the GitHub workflows by mainly replacing PowerShell scripts by existing [Power Platform actions](https://github.com/microsoft/powerplatform-actions) 🤩
 
+> *Note: This version has been built entirely using [GitHub Codespaces](https://github.com/features/codespaces).*
+
 ### 🚀 Added
 
 - This Changelog 😋
