@@ -18,7 +18,7 @@ env:
 jobs:
   # Job for test
   test:
-    if: github.event.issue.assignees[0] != null
+    if: github.event.issue.assignees[0] != null || contains(github.event.issue.labels.*.name, 'work in progress')
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
