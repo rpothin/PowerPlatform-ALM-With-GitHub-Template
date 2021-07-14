@@ -16,24 +16,9 @@ env:
   dataverse_environment_url_base: .crm3.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
-  # Job for test
-  test:
-    if: github.event.issue.assignees[0] != null && contains(github.event.issue.labels.*.name, 'in progress')
-    runs-on: ubuntu-latest
-    env:
-      RUNNER_DEBUG: 1
-
-    steps:
-    - name: Test
-      run: |
-        Write-Host "$GITHUB_CONTEXT"
-      shell: pwsh
-      env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-
   # Job for the creation of the new dev branch
   create-issue-development-branch:
-    if: contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
+    if: github.event.issue.assignees[0] != null && contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -57,7 +42,7 @@ jobs:
 
   # Job for the creation of the new Dataverse Dev environment
   create-dataverse-dev-environment:
-    if: contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
+    if: github.event.issue.assignees[0] != null && contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: ubuntu-latest
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
