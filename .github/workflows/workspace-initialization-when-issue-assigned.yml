@@ -18,6 +18,7 @@ env:
 jobs:
   # Job for test
   test:
+    if: github.event.issue.assignees[0] != null
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
