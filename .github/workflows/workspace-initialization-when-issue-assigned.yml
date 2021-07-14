@@ -2,12 +2,12 @@
 # Licensed under the MIT License.
 
 name: 1-workspace-initialization-when-issue-assigned
-# Create a branch and generate a Dataverse Dev environment when an issue is assigned in GitHub
+# Create a branch and generate a Dataverse Dev environment when an issue assigned or labeled with a specific label
 
-# Workflow triggered when an issue is labeled is a specific label (in our case 'work in progress')
+# Workflow triggered when an issue is assigned or labeled with a specific label (in our case 'work in progress')
 on:
   issues:
-    types: [labeled]
+    types: [assigned, labeled]
 
 env:
   branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
@@ -16,6 +16,20 @@ env:
   dataverse_environment_url_base: .crm3.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
+  # Job for test
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Test
+      run: |
+        Write-Host "$GITHUB_CONTEXT"
+      shell: pwsh
+      env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+
   # Job for the creation of the new dev branch
   create-issue-development-branch:
     if: contains(github.event.issue.labels.*.name, 'work in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
