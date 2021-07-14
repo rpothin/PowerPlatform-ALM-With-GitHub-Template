@@ -19,6 +19,9 @@ Function Enable-CloudFlows {
         .PARAMETER DataverseEnvironmentUrl
             URL of the targeted Dataverse environment.
 
+        .PARAMETER SolutionName
+            Name of the considered solution in the targeted Dataverse environment.
+
         .PARAMETER ConnectionReferencesConfigurationFilePath
             Path to the configuration file to use for the configuration of the connection references.
 
@@ -72,6 +75,11 @@ Function Enable-CloudFlows {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$DataverseEnvironmentUrl,
+
+        # Name of the considered solution in the targeted Dataverse environment
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String]$SolutionName,
         
         # Path to the configuration file to use for the configuration of the connection references
         [Parameter(Mandatory = $true)]
@@ -82,15 +90,16 @@ Function Enable-CloudFlows {
     Begin{}
 
     Process{
-        Add-PowerAppsAccount -TenantID $(TenantId) -ApplicationId $(ClientId) -ClientSecret $(ClientSecret)
-        $conn = Get-CrmConnection -ConnectionString "$(CdsBaseConnectionString)${{parameters.serviceConnection}}"
-        $impersonationConn = Get-CrmConnection -ConnectionString "$(CdsBaseConnectionString)${{parameters.serviceConnection}}"
+        $dataverseBaseConnectionString = "AuthType=ClientSecret;ClientId=$ClientId;ClientSecret=$ClientSecret;Url="
+
+        Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
+        $conn = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
+        $impersonationConn = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
         
         # Get the EnvironmentName (which is a GUID) of the environment based on the orgid in Dataverse
-        $orgId = (Get-CrmRecords -conn $conn -EntityLogicalName organization).CrmRecords[0].organizationid
-        $environmentName = "$(EnvironmentId)"
+        $environmentName = (Get-CrmRecords -conn $conn -EntityLogicalName organization).CrmRecords[0].organizationid
             
-        $config = ConvertFrom-Json '${{parameters.connectionReferences}}'
+        $config = ConvertFrom-Json '${{parameters.connectionReferences}}' # Update with the configuration file with path provided as parameter
         $connRefOwnerCollection = New-Object -TypeName System.Collections.Specialized.NameValueCollection
         foreach ($c in $config) {
             # Get the connection reference to update
@@ -111,7 +120,7 @@ Function Enable-CloudFlows {
             Set-CrmRecord -conn $impersonationConn -EntityLogicalName connectionreference -Id $connRef.connectionreferenceid -Fields @{"connectionid" = $c[1] }
         }
 
-        $solutions = Get-CrmRecords -conn $conn -EntityLogicalName solution -FilterAttribute "uniquename" -FilterOperator "eq" -FilterValue "$(SolutionName)"
+        $solutions = Get-CrmRecords -conn $conn -EntityLogicalName solution -FilterAttribute "uniquename" -FilterOperator "eq" -FilterValue "$SolutionName"
         $solutionId = $solutions.CrmRecords[0].solutionid
         $result = Get-CrmRecords -conn $conn -EntityLogicalName solutioncomponent -FilterAttribute "solutionid" -FilterOperator "eq" -FilterValue $solutionId -Fields objectid,componenttype
         $solutionComponents = $result.CrmRecords
