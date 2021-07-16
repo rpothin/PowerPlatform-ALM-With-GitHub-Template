@@ -27,13 +27,20 @@ jobs:
 
       - name: Unpack canvas app source files
         run: |
+          $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
           Get-ChildItem -Path "Solutions/PowerPlatformALMWithGitHub" -Recurse -Filter *.msapp | 
           ForEach-Object {
             $unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
-            $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
             pac canvas unpack --msapp $_.FullName --sources $unpackedPath
             del $_.FullName
           }
+        shell: pwsh
+
+      - name: test
+        run: |
+          $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
+
+          pac help
         shell: pwsh
 
       - name: Pack msapp files
