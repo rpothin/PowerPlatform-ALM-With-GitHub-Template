@@ -17,27 +17,33 @@ jobs:
 
       - name: Get Power Apps CLI
         run: |
-          $nugetPackage = "Microsoft.PowerApps.CLI"
-          $nugetPackageVersion = "1.7.4"
-          $outFolder = "pac"
-          
-          nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+          nuget install "Microsoft.PowerApps.CLI" -Version  "1.7.4" -OutputDirectory "pac"
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
           $pacPath = $pacNugetFolder.FullName + "/tools"
-          
-          Write-Host "$pacPath"
           
           echo "pacPath=$pacPath" >> $Env:GITHUB_ENV
         shell: pwsh
 
       - name: Unpack canvas app source files
         run: |
+          $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
           Get-ChildItem -Path "Solutions/PowerPlatformALMWithGitHub" -Recurse -Filter *.msapp | 
           ForEach-Object {
               $unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
-              $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
               pac canvas unpack --msapp $_.FullName --sources $unpackedPath
               del $_.FullName
+          }
+        shell: pwsh
+
+      - name: Pack msapp files
+        run: |
+          $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
+          Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
+          ForEach-Object {     
+            $unpackedPath = $_.FullName
+            $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
+            pac canvas pack --sources $unpackedPath --msapp $packedFileName
+            Remove-Item -Path $unpackedPath -Recurse
           }
         shell: pwsh
