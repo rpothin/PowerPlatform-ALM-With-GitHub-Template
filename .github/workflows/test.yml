@@ -39,6 +39,9 @@ jobs:
       - name: Pack msapp files
         run: |
           $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
+
+          pac help
+
           Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
           ForEach-Object {     
             $unpackedPath = $_.FullName
