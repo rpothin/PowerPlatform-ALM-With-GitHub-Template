@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
 
@@ -20,7 +20,7 @@ jobs:
           nuget install "Microsoft.PowerApps.CLI" -Version  "1.7.4" -OutputDirectory "pac"
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
-          $pacPath = $pacNugetFolder.FullName + "/tools"
+          $pacPath = $pacNugetFolder.FullName + "\tools"
           
           echo "pacPath=$pacPath" >> $Env:GITHUB_ENV
         shell: pwsh
