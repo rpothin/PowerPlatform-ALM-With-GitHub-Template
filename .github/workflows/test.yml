@@ -1,0 +1,25 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: 0-Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+      - name: Test
+        run: |
+          $nugetPackage = "Microsoft.PowerApps.CLI"
+          $nugetPackageVersion = "1.7.4"
+          $outFolder = "pac"
+          nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+          $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
+          $pacPath = $pacNugetFolder.FullName + "\tools"
+          Write-Host "$pacPath"
+        shell: pwsh
