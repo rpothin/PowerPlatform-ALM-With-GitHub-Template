@@ -21,6 +21,8 @@ jobs:
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
           
+          ls $pacNugetFolder
+
           ls ./pac
           
           $pacPath = $pacNugetFolder.FullName + "/tools"
