@@ -28,39 +28,32 @@ jobs:
           echo "pacPath=$pacPath" >> $Env:GITHUB_ENV
         shell: pwsh
 
-      - name: Unpack canvas app source files
-        run: |
-          $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
+      #- name: Unpack canvas app source files
+        #run: |
+          #$env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
 
-          pac help
+          #pac help
 
-          Get-ChildItem -Path "Solutions/PowerPlatformALMWithGitHub" -Recurse -Filter *.msapp | 
-          ForEach-Object {
-            $unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
-            pac canvas unpack --msapp $_.FullName --sources $unpackedPath
-            del $_.FullName
-          }
-        shell: pwsh
+          #Get-ChildItem -Path "Solutions/PowerPlatformALMWithGitHub" -Recurse -Filter *.msapp | 
+          #ForEach-Object {
+            #$unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
+            #pac canvas unpack --msapp $_.FullName --sources $unpackedPath
+            #del $_.FullName
+          #}
+        #shell: pwsh
 
-      - name: test
-        run: |
-          $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
+      #- name: Pack msapp files
+        #run: |
+          #$env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
 
-          pac help
-        shell: pwsh
+          #pac help
 
-      - name: Pack msapp files
-        run: |
-          $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
-
-          pac help
-
-          Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
-          ForEach-Object {     
-            $unpackedPath = $_.FullName
-            $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
-            $env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
-            pac canvas pack --sources $unpackedPath --msapp $packedFileName
-            Remove-Item -Path $unpackedPath -Recurse
-          }
-        shell: pwsh
+          #Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
+          #ForEach-Object {     
+            #$unpackedPath = $_.FullName
+            #$packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
+            #$env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
+            #pac canvas pack --sources $unpackedPath --msapp $packedFileName
+            #Remove-Item -Path $unpackedPath -Recurse
+          #}
+        #shell: pwsh
