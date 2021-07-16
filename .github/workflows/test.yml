@@ -13,6 +13,8 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Get Power Apps CLI
         run: |
           $nugetPackage = "Microsoft.PowerApps.CLI"
