@@ -17,7 +17,9 @@ jobs:
 
       - name: Get Power Apps CLI
         run: |
-          nuget install "Microsoft.PowerApps.CLI" -Version  "1.7.4" -OutputDirectory "pac"
+          $outFolder = "pac"
+
+          nuget install "Microsoft.PowerApps.CLI" -Version  "1.7.4" -OutputDirectory $outFolder
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
           
