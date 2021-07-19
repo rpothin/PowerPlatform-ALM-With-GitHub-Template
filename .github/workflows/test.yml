@@ -26,9 +26,9 @@ jobs:
 
           $pacPath = $pacNugetFolder.FullName + "/tools"
           
-          Write-Host "TEST"
+          $env:PATH = $env:PATH + ";" + "$pacPath"
 
-          ls $pacPath
+          pac help
           
           echo "pacPath=$pacPath" >> $Env:GITHUB_ENV
         shell: pwsh
