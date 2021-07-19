@@ -21,11 +21,11 @@ jobs:
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
           
-          Write-Host "$pacNugetFolder - Start"
+          Write-Host "Test 1 - Start"
 
           ls $pacNugetFolder
           
-          Write-Host "ls ./pac - Start"
+          Write-Host "Test 2 - Start"
 
           ls ./pac
           
