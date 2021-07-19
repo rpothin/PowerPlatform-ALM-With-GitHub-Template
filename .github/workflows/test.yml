@@ -21,7 +21,11 @@ jobs:
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
           
+          Write-Host "$pacNugetFolder - Start"
+
           ls $pacNugetFolder
+          
+          Write-Host "ls ./pac - Start"
 
           ls ./pac
           
@@ -29,20 +33,6 @@ jobs:
           
           echo "pacPath=$pacPath" >> $Env:GITHUB_ENV
         shell: pwsh
-
-      #- name: Unpack canvas app source files
-        #run: |
-          #$env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
-
-          #pac help
-
-          #Get-ChildItem -Path "Solutions/PowerPlatformALMWithGitHub" -Recurse -Filter *.msapp | 
-          #ForEach-Object {
-            #$unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
-            #pac canvas unpack --msapp $_.FullName --sources $unpackedPath
-            #del $_.FullName
-          #}
-        #shell: pwsh
 
       #- name: Pack msapp files
         #run: |
@@ -57,5 +47,19 @@ jobs:
             #$env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
             #pac canvas pack --sources $unpackedPath --msapp $packedFileName
             #Remove-Item -Path $unpackedPath -Recurse
+          #}
+        #shell: pwsh
+
+      #- name: Unpack canvas app source files
+        #run: |
+          #$env:PATH = $env:PATH + ";" + "${{ env.pacPath }}"
+
+          #pac help
+
+          #Get-ChildItem -Path "Solutions/PowerPlatformALMWithGitHub" -Recurse -Filter *.msapp | 
+          #ForEach-Object {
+            #$unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
+            #pac canvas unpack --msapp $_.FullName --sources $unpackedPath
+            #del $_.FullName
           #}
         #shell: pwsh
