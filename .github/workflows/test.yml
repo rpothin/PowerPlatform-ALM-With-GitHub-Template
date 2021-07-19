@@ -21,13 +21,7 @@ jobs:
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
           
-          Write-Host "Test 1 - Start"
-
-          ls $pacNugetFolder
-          
-          Write-Host "Test 2 - Start"
-
-          ls ./pac
+          Write-Host "pacNugetFolder: $pacNugetFolder"
           
           $pacPath = $pacNugetFolder.FullName + "/tools"
           
