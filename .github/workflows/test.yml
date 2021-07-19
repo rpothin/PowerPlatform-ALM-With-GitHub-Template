@@ -24,6 +24,10 @@ jobs:
           
           $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
           
+          Write-Host "pacNugetFolder: $pacNugetFolder"
+
+          ls $outFolder
+
           $pacPath = $pacNugetFolder.FullName + "/tools"
           
           echo "pacPath=$pacPath" >> $Env:GITHUB_ENV
