@@ -16,9 +16,29 @@ env:
   dataverse_environment_url_base: .crm3.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
+  # Job to check for a duplicate run of this workflow
+  pre_job:
+    if: github.event.issue.assignees[0] != null && contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    env:
+      RUNNER_DEBUG: 1
+      
+    steps:
+    # Skip run if duplicate found
+    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/skip-duplicate-actions
+    - name: Skip run if duplicate found
+      uses: fkirc/skip-duplicate-actions@master
+      id: skip_check
+      with:
+        concurrent_skipping: 'always' # Always skip: This is useful if you have a workflow that you never want to run twice at the same time.
+        skip_after_successful_duplicate: 'false' # If true, skip if an already finished duplicate run can be found.
+
   # Job for the creation of the new dev branch
   create-issue-development-branch:
-    if: github.event.issue.assignees[0] != null && contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -42,7 +62,8 @@ jobs:
 
   # Job for the creation of the new Dataverse Dev environment
   create-dataverse-dev-environment:
-    if: github.event.issue.assignees[0] != null && contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
