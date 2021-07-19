@@ -32,7 +32,7 @@ jobs:
       uses: fkirc/skip-duplicate-actions@master
       id: skip_check
       with:
-        concurrent_skipping: 'always' # Always skip: This is useful if you have a workflow that you never want to run twice at the same time.
+        concurrent_skipping: 'same_content_newer' # Only skip newer runs with the same content: If the same workflow is running on the exact same content, skip newer runs of it. same_content_newer ensures that at least one of those workflows will run, while same_content may skip all of them.
         skip_after_successful_duplicate: 'false' # If true, skip if an already finished duplicate run can be found.
 
   # Job for the creation of the new dev branch
