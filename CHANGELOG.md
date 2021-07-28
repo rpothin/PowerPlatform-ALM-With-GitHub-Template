@@ -22,7 +22,7 @@ All notable changes to this repository will be documented in this file.
 
 - ...
 
-## [2.0] - 2021-07-??
+## [0.2] - 2021-07-??
 
 > Improve the GitHub workflows by mainly replacing PowerShell scripts by existing [Power Platform actions](https://github.com/microsoft/powerplatform-actions) 🤩
 
@@ -58,7 +58,7 @@ All notable changes to this repository will be documented in this file.
 - Issue template for bugs (replaced by issue form)
 - Sample of Power Platform solution to make the repository cleaner
 
-## [1.0] - 2020-12-22
+## [0.1] - 2020-12-22
 
 > Initialize a repository template to make Power Platform ALM with GitHub a little bit easier 😊
 
@@ -75,6 +75,6 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the deployment of a Power Platform solution to a QA environment after a build with a JIT environment on a push to the main branch
 - GitHub workflow for the creation of a GitHub release for a Power Platform solution (*build with a JIT environment*)
 
-[⚒ Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v2.0...HEAD
-[2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v1.0...HEAD
-[1.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v1.0
+[⚒ Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2...HEAD
+[0.2]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.1...HEAD
+[0.1]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v0.1
