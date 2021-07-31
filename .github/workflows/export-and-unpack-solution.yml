@@ -140,5 +140,5 @@ jobs:
 
         git add --all
         git commit -m "Update of ${{ github.event.inputs.solution_name }} solution - Run ${{ github.run_id }}"
-        git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin ${{ env.branch_name }}
+        git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin ${{ env.branch_name }}
       shell: pwsh
