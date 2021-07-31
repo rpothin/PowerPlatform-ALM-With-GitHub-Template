@@ -167,8 +167,6 @@ jobs:
           pac canvas pack --msapp $_.FullName --sources $unpackedPath
           Remove-Item -Path $unpackedPath -Recurse
         }
-
-        Remove-Item -Path $outFolder -Recurse
       shell: pwsh
 
     # Set the solution version in the Solution.xml file
