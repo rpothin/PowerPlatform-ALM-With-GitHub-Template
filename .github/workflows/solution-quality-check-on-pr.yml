@@ -117,6 +117,12 @@ jobs:
           # Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
 
           $env:PATH = $env:PATH + ";" + "$pacPath"
+
+          $msapp = $_.FullName
+
+          Write-Host "$msapp"
+          Write-Host "$unpackedPath"
+
           pac canvas pack --msapp $_.FullName --sources $unpackedPath
           Remove-Item -Path $unpackedPath -Recurse
         }
