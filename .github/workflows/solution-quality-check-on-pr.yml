@@ -139,7 +139,7 @@ jobs:
 
     # Invoke the solution checker
     - name: Invoke solution checker
-      uses: microsoft/powerplatform-actions/check-solution@
+      uses: microsoft/powerplatform-actions/check-solution@main
       id: solution-checker-result
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
