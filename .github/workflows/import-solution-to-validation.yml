@@ -100,11 +100,25 @@ jobs:
     #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
     - name: Pack msapp files
       run: |
+        $nugetPackage = "Microsoft.PowerApps.CLI"
+        $nugetPackageVersion = "${{ secrets.PAC_CLI_VERSION }}" # 1.8.6
+        $outFolder = "pac"
+
+        nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+          
+        $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
+
+        $pacPath = $pacNugetFolder.FullName + "/tools"
+
         Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
         ForEach-Object {     
           $unpackedPath = $_.FullName
           $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
-          Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
+
+          # Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
+
+          $env:PATH = $env:PATH + ";" + "$pacPath"
+          pac canvas pack --msapp $_.FullName --sources $unpackedPath
           Remove-Item -Path $unpackedPath -Recurse
         }
       shell: pwsh

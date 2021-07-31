@@ -83,7 +83,7 @@ jobs:
     - name: Unpack canvas app source files
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "1.7.4"
+        $nugetPackageVersion = "${{ secrets.PAC_CLI_VERSION }}" # 1.8.6
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
