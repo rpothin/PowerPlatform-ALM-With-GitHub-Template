@@ -149,6 +149,8 @@ jobs:
 
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
         
+        Get-PowerAppsCheckerRulesets -Geography ${{ env.solution_checker_geography }}
+
         $rulesets = Get-PowerAppsCheckerRulesets -Geography ${{ env.solution_checker_geography }}
         $rulesetToUse = $rulesets | where Name -NE 'AppSource Certification'
         
