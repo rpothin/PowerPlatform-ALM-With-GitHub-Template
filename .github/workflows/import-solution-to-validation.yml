@@ -121,6 +121,8 @@ jobs:
           pac canvas pack --msapp $_.FullName --sources $unpackedPath
           Remove-Item -Path $unpackedPath -Recurse
         }
+
+        Remove-Item -Path $outFolder -Recurse
       shell: pwsh
 
     # Set a current date environment variable in the following format: YYYYMMDD
