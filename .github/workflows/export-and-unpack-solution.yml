@@ -102,6 +102,8 @@ jobs:
             pac canvas unpack --msapp $_.FullName --sources $unpackedPath
             del $_.FullName
         }
+
+        Remove-Item -Path $outFolder -Recurse
       shell: pwsh
 
     # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
