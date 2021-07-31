@@ -136,7 +136,6 @@ jobs:
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
-        # Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
       shell: powershell
 
     # Create the output folder for the results of the solution checker execution
@@ -149,6 +148,8 @@ jobs:
 
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
         
+        $env:PATH = $env:PATH + ";" + "C:\Users\runneradmin\Documents\WindowsPowerShell\Modules\Microsoft.PowerApps.PowerShell\"
+
         Get-PowerAppsCheckerRulesets -Geography ${{ env.solution_checker_geography }}
 
         $rulesets = Get-PowerAppsCheckerRulesets -Geography ${{ env.solution_checker_geography }}
