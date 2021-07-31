@@ -121,7 +121,7 @@ jobs:
           Remove-Item -Path $unpackedPath -Recurse
         }
 
-        Remove-Item -Path $outFolder -Recurse
+        Remove-Item -Path $outFolder -Recurse -Force
       shell: pwsh
 
     # Pack the considered solution as unmanaged
