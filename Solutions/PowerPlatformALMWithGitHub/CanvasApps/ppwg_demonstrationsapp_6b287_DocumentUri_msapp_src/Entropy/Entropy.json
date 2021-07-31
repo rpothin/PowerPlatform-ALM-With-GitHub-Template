@@ -45,8 +45,10 @@
     "TextSearchBox1": 9,
     "Title1": 15
   },
+  "FunctionParamsInvariantScripts": {},
   "HeaderLastSavedDateTimeUTC": "07/06/2021 03:14:05",
   "LocalDatabaseReferencesAsEmpty": false,
+  "LocalResourceFileNames": {},
   "LocalResourceRootPaths": {},
   "OldLogoFileName": "iro4hf5a.jpg",
   "OrderComponentMetadata": {},
@@ -118,6 +120,7 @@
     "TextSearchBox1": 5,
     "Title1": 11
   },
+  "ResourcesJsonIndices": {},
   "TemplateVersions": {},
   "VolatileProperties": {
     "AnalysisLoadTime": 0.29005730000000002,
@@ -133,6 +136,7 @@
       "text": 2,
       "typedDataCard": 4
     },
-    "DeserializationLoadTime": 1.5977494999999999
+    "DeserializationLoadTime": 1.5977494999999999,
+    "ErrorCount": 0
   }
 }
