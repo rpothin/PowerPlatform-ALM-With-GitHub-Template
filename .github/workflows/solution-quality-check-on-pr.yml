@@ -137,10 +137,6 @@ jobs:
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
-        
-        Write-Host "Test - Start"
-        Get-Command -Module Microsoft.PowerApps.Checker.PowerShell
-        Write-Host "Test - End"
       shell: powershell
 
     # Create the output folder for the results of the solution checker execution
@@ -149,10 +145,6 @@ jobs:
     # Invoke the solution checker
     - name: Invoke solution checker
       run: |
-        Write-Host "Test - Start"
-        Get-Command -Module Microsoft.PowerApps.Checker.PowerShell
-        Write-Host "Test - End"
-        
         New-Item -ItemType Directory -Force -Path ${{ env.solution_checker_result_output_directory }}
 
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
