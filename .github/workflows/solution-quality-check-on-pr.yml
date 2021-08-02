@@ -117,7 +117,7 @@ jobs:
           # Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
 
           $env:PATH = $env:PATH + ";" + "$pacPath"
-          pac canvas pack --msapp $_.FullName --sources $unpackedPath
+          pac canvas pack --msapp $packedFileName --sources $unpackedPath
           Remove-Item -Path $unpackedPath -Recurse
         }
       shell: pwsh
