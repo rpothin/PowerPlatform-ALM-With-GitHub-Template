@@ -145,6 +145,11 @@ jobs:
     # Invoke the solution checker
     - name: Invoke solution checker
       run: |
+        # Tests
+        Get-InstalledModule
+
+        Get-Command -Module Microsoft.PowerApps.Checker.PowerShell
+        
         New-Item -ItemType Directory -Force -Path ${{ env.solution_checker_result_output_directory }}
 
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
