@@ -193,6 +193,9 @@ jobs:
           }
         })
 
+        Write-Host "Nb of Medium severity points: $nbOfMediumSeverityPoints"
+        Write-Host "Nb of High severity points: $nbOfHighSeverityPoints"
+
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
       shell: powershell
