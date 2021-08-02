@@ -136,6 +136,11 @@ jobs:
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+        
+        Write-Host "Test - Start"
+        Get-Command -Module Microsoft.PowerApps.Checker.PowerShell
+        Write-Host "Test - End"
+        
         # Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
       shell: powershell
 
@@ -145,8 +150,9 @@ jobs:
     # Invoke the solution checker
     - name: Invoke solution checker
       run: |
-        # Tests
+        Write-Host "Test - Start"
         Get-Command -Module Microsoft.PowerApps.Checker.PowerShell
+        Write-Host "Test - End"
         
         New-Item -ItemType Directory -Force -Path ${{ env.solution_checker_result_output_directory }}
 
