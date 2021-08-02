@@ -1,5 +1,5 @@
 {
-  "FormatVersion": "0.20",
+  "FormatVersion": "0.24",
   "Header": {
     "DocVersion": "1.314",
     "MinVersionToLoad": "1.313",
@@ -68,7 +68,6 @@
     "DocumentLayoutWidth": 640,
     "DocumentType": "App",
     "EnableInstrumentation": false,
-    "ErrorCount": 0,
     "FileID": "f372d5d0-0a7d-4b50-afa0-1ab2a2a656b9",
     "Id": "f372d5d0-0a7d-4b50-afa0-1ab2a2a656b9",
     "InstrumentationKey": "",

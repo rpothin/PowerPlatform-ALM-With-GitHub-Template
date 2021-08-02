@@ -117,7 +117,7 @@ jobs:
           # Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
 
           $env:PATH = $env:PATH + ";" + "$pacPath"
-          pac canvas pack --msapp $_.FullName --sources $unpackedPath
+          pac canvas pack --msapp $packedFileName --sources $unpackedPath
           Remove-Item -Path $unpackedPath -Recurse
         }
       shell: pwsh
@@ -136,7 +136,7 @@ jobs:
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
-        # Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
+        Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
       shell: powershell
 
     # Create the output folder for the results of the solution checker execution
@@ -192,6 +192,9 @@ jobs:
             $nbOfHighSeverityPoints++
           }
         })
+
+        Write-Host "Nb of Medium severity points: $nbOfMediumSeverityPoints"
+        Write-Host "Nb of High severity points: $nbOfHighSeverityPoints"
 
         echo "NB_OF_MEDIUM_SEVERITY_POINTS=$nbOfMediumSeverityPoints" >> $Env:GITHUB_ENV
         echo "NB_OF_HIGH_SEVERITY_POINTS=$nbOfHighSeverityPoints" >> $Env:GITHUB_ENV
