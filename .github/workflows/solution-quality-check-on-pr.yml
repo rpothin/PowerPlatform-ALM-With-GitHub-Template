@@ -136,12 +136,11 @@ jobs:
       run: |
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
         Install-Module -Name Microsoft.PowerApps.PowerShell -AllowClobber -Force -Verbose -Scope CurrentUser
+        Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
         
         Write-Host "Test - Start"
         Get-Command -Module Microsoft.PowerApps.Checker.PowerShell
         Write-Host "Test - End"
-        
-        # Install-Module -Name Microsoft.PowerApps.Checker.PowerShell -Force -Verbose -Scope CurrentUser
       shell: powershell
 
     # Create the output folder for the results of the solution checker execution
