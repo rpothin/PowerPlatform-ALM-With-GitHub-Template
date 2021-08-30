@@ -22,8 +22,8 @@ Function Enable-CloudFlows {
         .PARAMETER SolutionName
             Name of the considered solution in the targeted Dataverse environment.
 
-        .PARAMETER ConnectionReferencesConfigurationFilePath
-            Path to the configuration file to use for the configuration of the connection references.
+        .PARAMETER ConfigurationFilePath
+            Path to the configuration file to use to enable the cloud flows.
 
         .INPUTS
             None. You cannot pipe objects to Enable-CloudFlows.
@@ -81,10 +81,10 @@ Function Enable-CloudFlows {
         [ValidateNotNullOrEmpty()]
         [String]$SolutionName,
         
-        # Path to the configuration file to use for the configuration of the connection references
+        # Path to the configuration file to use to enable the cloud flows
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [String]$ConnectionReferencesConfigurationFilePath
+        [String]$ConfigurationFilePath
     )
 
     Begin{}
