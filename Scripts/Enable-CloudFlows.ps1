@@ -90,15 +90,51 @@ Function Enable-CloudFlows {
     Begin{}
 
     Process{
-        $dataverseBaseConnectionString = "AuthType=ClientSecret;ClientId=$ClientId;ClientSecret=$ClientSecret;Url="
+        # Test the path provided to the file with the configuration
+        Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
+        if(Test-Path $ConfigurationFilePath) {
+            $configurationFilePathValidated = $true
+        }
+        else {
+            Write-Verbose "Error in the path provided for the configuration: $ConfigurationFilePath"
+            $configurationFilePathValidated = $false
+        }
 
+        # Continue only if the path provided for the file with the configuration is correct
+        if ($configurationFilePathValidated) {
+            # Extract configuration from the file
+            Write-Verbose "Get content from file with the configuration in following location: $ConfigurationFilePath"
+            try {
+                Write-Verbose "Try to call the Get-Content command."
+                Write-Debug "Before the call to the Get-Content command..."
+                $configuration = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+            }
+            catch {
+                Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
+            }
+        }
+
+        # Set variables
+        Write-Verbose "Set variables."
+        $dataverseBaseConnectionString = "AuthType=ClientSecret;ClientId=$ClientId;ClientSecret=$ClientSecret;Url="
+        
+        # Set generic connection (with service principal)
+        Write-Verbose "Set generic connection (with service principal)."
+        $connection = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
+        
+        # Set impersonation connection
+        Write-Verbose "Set impersonation connection."
+        $impersonationConnection = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
+        $systemUser = Get-CrmRecords -conn $connection -EntityLogicalName systemuser -FilterAttribute "domainname" -FilterOperator "eq" -FilterValue $configuration.activateAsUser
+        $systemUserId = $systemUser.CrmRecords[0].systemuserid
+        $impersonationConnection.OrganizationWebProxyClient.CallerId = $systemUserId
+
+        # Analysis to continue...
         Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
-        $conn = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
-        $impersonationConn = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
         
         # Get the EnvironmentName (which is a GUID) of the environment based on the orgid in Dataverse
         $environmentName = (Get-CrmRecords -conn $conn -EntityLogicalName organization).CrmRecords[0].organizationid
-            
+
         $config = ConvertFrom-Json '${{parameters.connectionReferences}}' # Update with the configuration file with path provided as parameter
         $connRefOwnerCollection = New-Object -TypeName System.Collections.Specialized.NameValueCollection
         foreach ($c in $config) {
