@@ -1,11 +1,10 @@
 Function Enable-CloudFlows {
     <#
         .SYNOPSIS
-            Enable the Cloud Flows in a targeted Dataverse environment.
+            Turn on the Cloud Flows in a specific solution in a targeted Dataverse environment.
 
         .DESCRIPTION
-            Link connections references to existing connections in the targeted Dataverse environment using impersonation with the user who created the connection.
-            Turn on the Cloud Flows using the identity of the connection for the first connection reference found.
+            Turn on the Cloud Flows in a specific solution in a targeted Dataverse environment using an impersonation of the provided user
 
         .PARAMETER TenantId
             ID of the tenant where the targeted Dataverse environment is.
@@ -22,8 +21,8 @@ Function Enable-CloudFlows {
         .PARAMETER SolutionName
             Name of the considered solution in the targeted Dataverse environment.
 
-        .PARAMETER ConfigurationFilePath
-            Path to the configuration file to use to enable the cloud flows.
+        .PARAMETER SolutionComponentsOwnerEmail
+            Email of the user who will be set as owner of the components of the solution.
 
         .INPUTS
             None. You cannot pipe objects to Enable-CloudFlows.
@@ -32,20 +31,14 @@ Function Enable-CloudFlows {
             Object. Enable-CloudFlows returns the result of the operation of enabling Cloud Flows in the targeted Dataverse environment.
 
         .EXAMPLE
-            PS> Enable-CloudFlows -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -ConnectionReferencesConfigurationFilePath ".\ConnectionReferencesConfiguration.json"
-            Result                            : OK
-
-        .EXAMPLE
-            PS> Enable-CloudFlows -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -ConnectionReferencesConfigurationFilePath ".\ConnectionReferencesConfiguration.json"
-            Result                            : KO
+            PS> Enable-CloudFlows -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
-            microsoft/coe-alm-accelerator-templates/Pipelines/Templates/update-connection-references.yml: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/update-connection-references.yml
 
         .NOTES
-            * This function does not work for now whith PowerShell 7
-            * You need to have the following PowerShell modules installed to be able to use this function:Microsoft.PowerApps.Administration.PowerShell, Microsoft.Xrm.Data.PowerShell
+            * This function does not work for now whith PowerShell 7 / Core
+            * You need to have the following PowerShell modules installed to be able to use this function: Microsoft.Xrm.Data.PowerShell
             * Do not forget to register the considered Azure AD application registration using the "New-PowerAppManagementApp" (Microsoft.PowerApps.Administration.PowerShell)
     #>
 
@@ -80,40 +73,16 @@ Function Enable-CloudFlows {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$SolutionName,
-        
-        # Path to the configuration file to use to enable the cloud flows
+
+        # Email of the user who will be set as owner of the components of the solution
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [String]$ConfigurationFilePath
+        [String]$SolutionComponentsOwnerEmail
     )
 
     Begin{}
 
     Process{
-        # Test the path provided to the file with the configuration
-        Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
-        if(Test-Path $ConfigurationFilePath) {
-            $configurationFilePathValidated = $true
-        }
-        else {
-            Write-Verbose "Error in the path provided for the configuration: $ConfigurationFilePath"
-            $configurationFilePathValidated = $false
-        }
-
-        # Continue only if the path provided for the file with the configuration is correct
-        if ($configurationFilePathValidated) {
-            # Extract configuration from the file
-            Write-Verbose "Get content from file with the configuration in following location: $ConfigurationFilePath"
-            try {
-                Write-Verbose "Try to call the Get-Content command."
-                Write-Debug "Before the call to the Get-Content command..."
-                $configuration = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
-            }
-            catch {
-                Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
-            }
-        }
-
         # Set variables
         Write-Verbose "Set variables."
         $dataverseBaseConnectionString = "AuthType=ClientSecret;ClientId=$ClientId;ClientSecret=$ClientSecret;Url="
@@ -125,67 +94,39 @@ Function Enable-CloudFlows {
         # Set impersonation connection
         Write-Verbose "Set impersonation connection."
         $impersonationConnection = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
-        $systemUser = Get-CrmRecords -conn $connection -EntityLogicalName systemuser -FilterAttribute "domainname" -FilterOperator "eq" -FilterValue $configuration.activateAsUser
+        $systemUser = Get-CrmRecords -conn $connection -EntityLogicalName systemuser -FilterAttribute "domainname" -FilterOperator "eq" -FilterValue $SolutionComponentsOwnerEmail
         $systemUserId = $systemUser.CrmRecords[0].systemuserid
         $impersonationConnection.OrganizationWebProxyClient.CallerId = $systemUserId
 
-        # Analysis to continue...
-        Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
+        # List cloud (modern) flows in "Draft" state in the considered solution
+        #       * category = 5 ==> Modern Flow
+        #       * statecode = 0 ==> Draft
+        $fetchDraftCloudFlows = @"
+<fetch>
+    <entity name='workflow'>
+    <attribute name='category' />
+    <attribute name='name' />
+    <attribute name='statecode' />
+    <filter>
+        <condition attribute='category' operator='eq' value='5' />
+        <condition attribute='statecode' operator='eq' value='0' />
+    </filter>
+    <link-entity name='solutioncomponent' from='objectid' to='workflowid'>
+        <link-entity name='solution' from='solutionid' to='solutionid'>
+        <filter>
+            <condition attribute='uniquename' operator='eq' value='$SolutionName' />
+        </filter>
+        </link-entity>
+    </link-entity>
+    </entity>
+</fetch>
+"@;
+        $draftCloudFlows = (Get-CrmRecordsByFetch -conn $connection -Fetch $fetchDraftCloudFlows -Verbose).CrmRecords
         
-        # Get the EnvironmentName (which is a GUID) of the environment based on the orgid in Dataverse
-        $environmentName = (Get-CrmRecords -conn $conn -EntityLogicalName organization).CrmRecords[0].organizationid
-
-        $config = ConvertFrom-Json '${{parameters.connectionReferences}}' # Update with the configuration file with path provided as parameter
-        $connRefOwnerCollection = New-Object -TypeName System.Collections.Specialized.NameValueCollection
-        foreach ($c in $config) {
-            # Get the connection reference to update
-            $connRefs = Get-CrmRecords -conn $conn -EntityLogicalName connectionreference -FilterAttribute "connectionreferencelogicalname" -FilterOperator "eq" -FilterValue $c[0]
-            $connRef = $connRefs.CrmRecords[0]
-            # Connection References can only be updated by an identity that has permissions to the connection it references
-            # As of authoring this script, Service Principals (SPN) cannot update connection references
-            # The temporary workaround is to impersonate the user that created the connection
-            
-            # Get connection
-            $connections = Get-AdminPowerAppConnection -EnvironmentName $environmentName -Filter $c[1]
-            # Get Dataverse systemuserid for the system user that maps to the aad user guid that created the connection 
-            $systemusers = Get-CrmRecords -conn $conn -EntityLogicalName systemuser -FilterAttribute "azureactivedirectoryobjectid" -FilterOperator "eq" -FilterValue $connections[0].CreatedBy.id
-            # Impersonate the Dataverse systemuser that created the connection when updating the connection reference
-            $impersonationCallerId = $systemusers.CrmRecords[0].systemuserid
-            $impersonationConn.OrganizationWebProxyClient.CallerId = $impersonationCallerId 
-            $connRefOwnerCollection.Add($c[0],$impersonationCallerId)
-            if('${{parameters.updateConnectionReferences}}' -ne "false") {
-                Set-CrmRecord -conn $impersonationConn -EntityLogicalName connectionreference -Id $connRef.connectionreferenceid -Fields @{"connectionid" = $c[1] }
-            }
-        }
-        if('${{parameters.enableFlows}}' -ne "false") {
-            $solutions = Get-CrmRecords -conn $conn -EntityLogicalName solution -FilterAttribute "uniquename" -FilterOperator "eq" -FilterValue "$(SolutionName)"
-            $solutionId = $solutions.CrmRecords[0].solutionid
-            $result = Get-CrmRecords -conn $conn -EntityLogicalName solutioncomponent -FilterAttribute "solutionid" -FilterOperator "eq" -FilterValue $solutionId -Fields objectid,componenttype
-            $solutionComponents = $result.CrmRecords
-            foreach ($c in $solutionComponents){
-                if ($c.componenttype -eq "Workflow"){
-                    # Flows can only be turned on if the user turning them on has permissions to connections being referenced by the connection reference
-                    # As of authoring this script, the Service Principal (SPN) we use to connect to the Dataverse API cannot turn on the Flow
-                    # The temporary workaround is use a brute force approach for now.  We use the identity of the connection for the first connection
-                    # reference we find to turn on the Flow.  This may have side effects or unintended consequences we haven't fully tested.
-                    # Need a better long term solution.  Will replace when we find one.
-                    $wf = Get-CrmRecord -conn $conn -EntityLogicalName workflow -Id $c.objectid -Fields clientdata,category
-                    if ($wf.category -eq "Modern Flow"){
-                        $impersonationCallerId = ""
-                        foreach ($key in $connRefOwnerCollection.AllKeys){
-                            if($wf.clientdata.Contains($key)){
-                            $impersonationCallerId = $connRefOwnerCollection[$key]
-                            break
-                            }
-                        }
-                        if ($impersonationCallerId -ne "") {
-                            Write-Host "Enabling Flows"
-                            $impersonationConn.OrganizationWebProxyClient.CallerId = $impersonationCallerId 
-                            Set-CrmRecordState -conn $impersonationConn -EntityLogicalName workflow -Id $c.objectid -StateCode Activated -StatusCode Activated
-                        }
-                    }            
-                }
-            }
+        # For each cloud flow in the considered solution
+        foreach ($draftCloudFlow in $draftCloudFlows) {
+            # Turn on the cloud flow using the impersonation connection (automatically set the provided user as owner)
+            Set-CrmRecordState -conn $impersonationConnection -EntityLogicalName workflow -Id $draftCloudFlow.workflowid -StateCode Activated -StatusCode Activated
         }
     }
 
