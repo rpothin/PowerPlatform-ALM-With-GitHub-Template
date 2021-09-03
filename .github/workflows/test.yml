@@ -17,7 +17,7 @@ jobs:
 
       - name: Test
         run: |
-          Write-Verbos "Hello world!"
+          Write-Verbose "Hello world!"
         
           Set-ExecutionPolicy –ExecutionPolicy RemoteSigned –Scope CurrentUser
           Import-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force -ArgumentList @{ NonInteractive = $true }
