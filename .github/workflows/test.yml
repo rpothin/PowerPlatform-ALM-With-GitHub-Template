@@ -17,7 +17,8 @@ jobs:
 
       - name: Test
         run: |
-          Import-Module Microsoft.Xrm.Data.PowerShell -Force -ArgumentList @{ NonInteractive = $true }
+          Set-ExecutionPolicy –ExecutionPolicy RemoteSigned –Scope CurrentUser
+          Import-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force -ArgumentList @{ NonInteractive = $true }
 
           Import-Module Scripts/Update-ConnectionReferences.ps1 -Force
 
