@@ -26,7 +26,7 @@ jobs:
             ClientId = "${{ secrets.APPLICATION_ID }}"
             ClientSecret = "${{ secrets.CLIENT_SECRET }}"
             DataverseEnvironmentUrl = "https://bafc-rpo-gh-qa.crm3.dynamics.com/"
-            SolutionName = "${{ secrets.TENANT_ID }}"
+            SolutionName = "PowerPlatformALMWithGitHub"
             SolutionComponentsOwnerEmail = "raphael.pothin@bizappsfrenchcommunity.com"
           }
 
