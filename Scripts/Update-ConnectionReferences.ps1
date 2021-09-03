@@ -133,6 +133,7 @@ Function Update-ConnectionReferences {
         $impersonationConnection.OrganizationWebProxyClient.CallerId = $systemUserId
 
         # List connection references in the considered solution
+        Write-Verbose "List connection references in the considered solution."
         $fetchConnectionReferences = @"
 <fetch>
     <entity name='connectionreference' >
@@ -152,13 +153,18 @@ Function Update-ConnectionReferences {
         $connectionReferences = (Get-CrmRecordsByFetch -conn $connection -Fetch $fetchConnectionReferences -Verbose).CrmRecords
         
         # For each connection reference in the considered solution
+        Write-Verbose "For each connection reference in the considered solution..."
         foreach ($connectionReference in $connectionReferences) {
+            $connectionReferenceId = $connectionReference.connectionid
+
             # Get the correponding connection for the current connection reference from the configuration file
-            $connectionReferenceMapping = $configuration | ?{ $_.connectionReferenceId -eq $connectionReference.connectionid }
+            Write-Verbose "Get the connection for the following connection reference: $connectionReferenceId"
+            $connectionReferenceMapping = $configuration | ?{ $_.connectionReferenceId -eq $connectionReferenceId }
             $connectionId = $connectionReferenceMapping.connectionId
 
             # Link the connection to the connection reference based on the mapping in the configuration file
-            Set-CrmRecord -conn $impersonationConnection -EntityLogicalName connectionreference -Id $connectionReference.connectionid -Fields @{"connectionid" = $connectionId }
+            Write-Verbose "Link the conenction reference '$connectionReferenceId' to the connction '$connectionId'"
+            Set-CrmRecord -conn $impersonationConnection -EntityLogicalName connectionreference -Id $connectionReferenceId -Fields @{"connectionid" = $connectionId }
         }
     }
 
