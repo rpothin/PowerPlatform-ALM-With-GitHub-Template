@@ -101,6 +101,7 @@ Function Enable-CloudFlows {
         # List cloud (modern) flows in "Draft" state in the considered solution
         #       * category = 5 ==> Modern Flow
         #       * statecode = 0 ==> Draft
+        Write-Verbose "List cloud (modern) flows in 'Draft' state in the considered solution."
         $fetchDraftCloudFlows = @"
 <fetch>
     <entity name='workflow'>
@@ -124,9 +125,13 @@ Function Enable-CloudFlows {
         $draftCloudFlows = (Get-CrmRecordsByFetch -conn $connection -Fetch $fetchDraftCloudFlows -Verbose).CrmRecords
         
         # For each cloud flow in the considered solution
+        Write-Verbose "For each cloud flow in the considered solution..."
         foreach ($draftCloudFlow in $draftCloudFlows) {
+            $cloudFlowId = $draftCloudFlow.workflowid
+
             # Turn on the cloud flow using the impersonation connection (automatically set the provided user as owner)
-            Set-CrmRecordState -conn $impersonationConnection -EntityLogicalName workflow -Id $draftCloudFlow.workflowid -StateCode Activated -StatusCode Activated
+            Write-Verbose "Turn on the following cloud flow: $cloudFlowId"
+            Set-CrmRecordState -conn $impersonationConnection -EntityLogicalName workflow -Id $cloudFlowId -StateCode Activated -StatusCode Activated
         }
     }
 
