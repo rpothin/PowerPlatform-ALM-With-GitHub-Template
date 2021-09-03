@@ -22,7 +22,7 @@ jobs:
 
       - name: Test
         run: |
-          Import-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force -ArgumentList @{ NonInteractive = $true }
+          Import-Module Microsoft.Xrm.Data.PowerShell -Force -ArgumentList @{ NonInteractive = $true }
 
           Import-Module Scripts/Update-ConnectionReferences.ps1 -Force
 
