@@ -32,4 +32,4 @@ jobs:
           }
 
           Update-ConnectionReferences @ConnectionReferencesUdpateParams -verbose
-        shell: pwsh
+        shell: powershell
