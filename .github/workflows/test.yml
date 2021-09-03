@@ -19,7 +19,7 @@ jobs:
         run: |
           Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
 
-          Import-Module Scripts/Update-ConnectionReferences.ps1 -Force
+          Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
 
           $ConnectionReferencesUdpateParams = @{
             TenantId = "${{ secrets.TENANT_ID }}"
