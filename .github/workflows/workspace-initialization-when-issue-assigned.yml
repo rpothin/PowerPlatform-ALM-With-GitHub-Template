@@ -247,6 +247,7 @@ jobs:
         Write-Verbose "==========  Update-ConnectionReferences =========="
         Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
 
+        $ConnectionReferencesUpdateParams = $Params
         $ConnectionReferencesUpdateParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping.json"}
 
         Update-ConnectionReferences @ConnectionReferencesUpdateParams -verbose
