@@ -17,12 +17,7 @@ jobs:
 
       - name: Test
         run: |
-          $PSVersionTable.PSVersion
-        shell: powershell
-
-      - name: Test
-        run: |
-          Import-Module Microsoft.Xrm.Data.PowerShell -Force -ArgumentList @{ NonInteractive = $true }
+          Install-Module Microsoft.Xrm.Data.PowerShell -Force -ArgumentList @{ NonInteractive = $true }
 
           Import-Module Scripts/Update-ConnectionReferences.ps1 -Force
 
