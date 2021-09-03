@@ -35,7 +35,7 @@ Function Update-ConnectionReferences {
             Object. Update-ConnectionReferences returns the result of the operation of enabling Cloud Flows in the targeted Dataverse environment.
 
         .EXAMPLE
-            PS> Update-ConnectionReferences -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com"
+            PS> Update-ConnectionReferences -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com" -ConfigurationFilePath ".\ConnectionsMapping.json"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
@@ -84,7 +84,7 @@ Function Update-ConnectionReferences {
         [ValidateNotNullOrEmpty()]
         [String]$SolutionComponentsOwnerEmail,
         
-        # Path to the configuration file to use to enable the cloud flows
+        # Path to the configuration file with the mapping between connection references and connections
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$ConfigurationFilePath
