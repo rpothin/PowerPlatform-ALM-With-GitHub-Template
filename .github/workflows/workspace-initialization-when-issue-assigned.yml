@@ -230,32 +230,32 @@ jobs:
     #   - Link connection references to connections
     #   - Turn on cloud flows
     - name: Steps post solution import
-        run: |
-          Write-Verbose "========== Install Microsoft.Xrm.Data.PowerShell module =========="
-          Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
+      run: |
+        Write-Verbose "========== Install Microsoft.Xrm.Data.PowerShell module =========="
+        Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
 
-          Write-Verbose "==========  Set params =========="
-          $Params = @{
-            TenantId = "${{ secrets.TENANT_ID }}"
-            ClientId = "${{ secrets.APPLICATION_ID }}"
-            ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-            DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
-            SolutionName = "${{ env.solution_name }}"
-            SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
-          }
+        Write-Verbose "==========  Set params =========="
+        $Params = @{
+          TenantId = "${{ secrets.TENANT_ID }}"
+          ClientId = "${{ secrets.APPLICATION_ID }}"
+          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+          DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+          SolutionName = "${{ env.solution_name }}"
+          SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
+        }
 
-          Write-Verbose "==========  Update-ConnectionReferences =========="
-          Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
+        Write-Verbose "==========  Update-ConnectionReferences =========="
+        Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
 
-          $ConnectionReferencesUpdateParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping.json"}
+        $ConnectionReferencesUpdateParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping.json"}
 
-          Update-ConnectionReferences @ConnectionReferencesUpdateParams -verbose
+        Update-ConnectionReferences @ConnectionReferencesUpdateParams -verbose
 
-          Write-Verbose "==========  Enable-CloudFlows =========="
-          Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
+        Write-Verbose "==========  Enable-CloudFlows =========="
+        Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
 
-          Enable-CloudFlows @Params -verbose
-        shell: powershell
+        Enable-CloudFlows @Params -verbose
+      shell: powershell
 
     # Add "Solution imported" comment to the issue
     - name: Solution imported comment on issue
