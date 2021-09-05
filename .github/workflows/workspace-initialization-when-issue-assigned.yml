@@ -118,7 +118,7 @@ jobs:
         Write-Verbose "========== Add user to environment =========="
         $devEnvironmentName = $dataverseEnvironments[0].EnvironmentName
 
-        Add-AdminPowerAppsSyncUser -EnvironmentName "$devEnvironmentName" -PrincipalObjectId "6aff7b21-6f87-4796-aa7e-2b8c6fec6607"
+        Add-AdminPowerAppsSyncUser -EnvironmentName "$devEnvironmentName" -PrincipalObjectId ${{ secrets.DEVELOPER_OBJECT_ID }}
       shell: powershell
 
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
