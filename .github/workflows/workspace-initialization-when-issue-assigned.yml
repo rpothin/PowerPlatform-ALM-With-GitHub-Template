@@ -103,19 +103,19 @@ jobs:
     # Add developer as user to environment
     - name: Add developer as user to environment
       run: |
-        Write-Verbose "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
+        # ========== Install Microsoft.PowerApps.Administration.PowerShel module ==========
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
 
-        Write-Verbose "========== Connect with service principal =========="
+        # ========== Connect with service principal ==========
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
 
-        Write-Verbose "========== Search environments based on display name =========="
+        # ========== Search environments based on display name ==========
         $devEnvrionmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
         $devEnvrionmentDisplayNameForSearch = $devEnvrionmentDisplayName.Replace(" ", "*")
 
         $dataverseEnvironments = Get-AdminPowerAppEnvironment *$devEnvrionmentDisplayNameForSearch*
 
-        Write-Verbose "========== Add user to environment =========="
+        # ========== Add user to environment ==========
         $devEnvironmentName = $dataverseEnvironments[0].EnvironmentName
 
         Add-AdminPowerAppsSyncUser -EnvironmentName "$devEnvironmentName" -PrincipalObjectId ${{ secrets.DEVELOPER_OBJECT_ID }}
@@ -252,10 +252,10 @@ jobs:
     #   - Turn on cloud flows
     - name: Steps post solution import
       run: |
-        Write-Verbose "========== Install Microsoft.Xrm.Data.PowerShell module =========="
+        # ========== Install Microsoft.Xrm.Data.PowerShell module ==========
         Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
 
-        Write-Verbose "==========  Set params =========="
+        # ==========  Set params ==========
         $Params = @{
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
@@ -265,7 +265,7 @@ jobs:
           SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
         }
 
-        Write-Verbose "==========  Update-ConnectionReferences =========="
+        # ==========  Update-ConnectionReferences ==========
         Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
 
         $ConnectionReferencesUpdateParams = $Params
@@ -273,7 +273,7 @@ jobs:
 
         Update-ConnectionReferences @ConnectionReferencesUpdateParams -verbose
 
-        Write-Verbose "==========  Enable-CloudFlows =========="
+        # ==========  Enable-CloudFlows ==========
         Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
 
         Enable-CloudFlows @Params -verbose
