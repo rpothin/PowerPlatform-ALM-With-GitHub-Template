@@ -226,6 +226,23 @@ jobs:
         publish-changes: true
         skip-dependency-check: false
 
+    # Add developer as user to environment
+    - name: Add developer as user to environment
+      run: |
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
+
+        Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId $(ApplicationId)${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
+
+        $devEnvrionmentDisplayName = ${{ env.dataverse_dev_environment_display_name }}  
+        $devEnvrionmentDisplayNameForSearch = $devEnvrionmentDisplayName.Replace(" ", "*")
+
+        $dataverseEnvironments = Get-AdminPowerAppEnvironment *$devEnvrionmentDisplayNameForSearch*
+
+        $devEnvironmentName = $dataverseEnvironments[0].EnvironmentName
+
+        Add-AdminPowerAppsSyncUser -EnvironmentName $devEnvironmentName -PrincipalObjectId "6aff7b21-6f87-4796-aa7e-2b8c6fec6607"
+      shell: powershell
+
     # Complementary steps after solution import
     #   - Link connection references to connections
     #   - Turn on cloud flows
