@@ -88,18 +88,26 @@ jobs:
     # Add developer as user to environment
     - name: Add developer as user to environment
       run: |
+        Write-Verbose "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
 
+        Write-Verbose "========== Connect with service principal =========="
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
 
+        Write-Verbose "========== Search environments based on display name =========="
         $devEnvrionmentDisplayName = ${{ env.dataverse_dev_environment_display_name }}  
         $devEnvrionmentDisplayNameForSearch = $devEnvrionmentDisplayName.Replace(" ", "*")
 
         $dataverseEnvironments = Get-AdminPowerAppEnvironment *$devEnvrionmentDisplayNameForSearch*
 
+        $dataverseEnvironments
+
+        Write-Verbose "========== Add user to environment =========="
         $devEnvironmentName = $dataverseEnvironments[0].EnvironmentName
 
-        Add-AdminPowerAppsSyncUser -EnvironmentName $devEnvironmentName -PrincipalObjectId "6aff7b21-6f87-4796-aa7e-2b8c6fec6607"
+        $devEnvironmentName
+
+        Add-AdminPowerAppsSyncUser -EnvironmentName "$devEnvironmentName" -PrincipalObjectId "6aff7b21-6f87-4796-aa7e-2b8c6fec6607"
       shell: powershell
 
     # Add the 'dev env created' label to the current issue
