@@ -48,7 +48,9 @@ jobs:
 
   # Job to delete the Dataverse Dev environment associated to the issue
   delete-dataverse-dev-environment:
-    if: (github.event_name == 'issues' && github.event.action == 'deleted') || contains(github.event.issue.labels.*.name, 'dev env created')
+    if: |
+      contains(github.event.issue.labels.*.name, 'dev env created') ||
+      (github.event_name == 'issues' && github.event.action == 'deleted')
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
