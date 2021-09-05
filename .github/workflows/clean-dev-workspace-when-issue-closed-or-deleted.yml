@@ -23,11 +23,6 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: echo "$GITHUB_CONTEXT"
-    
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch ${{ env.branch_name }}
@@ -53,7 +48,7 @@ jobs:
 
   # Job to delete the Dataverse Dev environment associated to the issue
   delete-dataverse-dev-environment:
-    if: (github.event_name == 'issue' && github.event.action == 'deleted') || contains(github.event.issue.labels.*.name, 'dev env created')
+    if: (github.event_name == 'issues' && github.event.action == 'deleted') || contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
