@@ -115,12 +115,8 @@ jobs:
 
         $dataverseEnvironments = Get-AdminPowerAppEnvironment *$devEnvrionmentDisplayNameForSearch*
 
-        $dataverseEnvironments
-
         Write-Verbose "========== Add user to environment =========="
         $devEnvironmentName = $dataverseEnvironments[0].EnvironmentName
-
-        $devEnvironmentName
 
         Add-AdminPowerAppsSyncUser -EnvironmentName "$devEnvironmentName" -PrincipalObjectId "6aff7b21-6f87-4796-aa7e-2b8c6fec6607"
       shell: powershell
