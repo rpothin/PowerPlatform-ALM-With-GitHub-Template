@@ -24,9 +24,9 @@ jobs:
 
     steps:
     - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
     
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
