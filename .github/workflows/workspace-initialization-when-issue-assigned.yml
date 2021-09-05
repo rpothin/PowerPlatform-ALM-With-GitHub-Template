@@ -64,7 +64,7 @@ jobs:
   create-dataverse-dev-environment:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
@@ -84,6 +84,21 @@ jobs:
         currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
         language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
         domain: ${{ env.dataverse_dev_environment_domain_name }}
+
+    # Add the 'dev env created' label to the current issue
+    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
+    - name: Add 'dev env created' label
+      uses: andymckay/labeler@master
+      with:
+        add-labels: 'dev env created'
+
+    # Add "Environment created" comment to the issue
+    - name: Environment created comment on issue
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          🎉 Environment created!
 
     # Add developer as user to environment
     - name: Add developer as user to environment
@@ -109,21 +124,6 @@ jobs:
 
         Add-AdminPowerAppsSyncUser -EnvironmentName "$devEnvironmentName" -PrincipalObjectId "6aff7b21-6f87-4796-aa7e-2b8c6fec6607"
       shell: powershell
-
-    # Add the 'dev env created' label to the current issue
-    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
-    - name: Add 'dev env created' label
-      uses: andymckay/labeler@master
-      with:
-        add-labels: 'dev env created'
-
-    # Add "Environment created" comment to the issue
-    - name: Environment created comment on issue
-      uses: peter-evans/create-or-update-comment@v1
-      with:
-        issue-number: ${{ github.event.issue.number }}
-        body: |
-          🎉 Environment created!
 
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   #   Enable this job only after the initialization of the solution in the repository
