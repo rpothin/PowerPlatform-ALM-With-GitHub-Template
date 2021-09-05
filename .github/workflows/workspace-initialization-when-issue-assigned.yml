@@ -104,13 +104,13 @@ jobs:
     - name: Add developer as user to environment
       run: |
         Write-Verbose "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Force -Verbose -Scope CurrentUser
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
 
         Write-Verbose "========== Connect with service principal =========="
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
 
         Write-Verbose "========== Search environments based on display name =========="
-        $devEnvrionmentDisplayName = ${{ env.dataverse_dev_environment_display_name }}  
+        $devEnvrionmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
         $devEnvrionmentDisplayNameForSearch = $devEnvrionmentDisplayName.Replace(" ", "*")
 
         $dataverseEnvironments = Get-AdminPowerAppEnvironment *$devEnvrionmentDisplayNameForSearch*
