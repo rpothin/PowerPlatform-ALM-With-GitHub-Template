@@ -102,7 +102,7 @@ jobs:
 
   # Job to add the developer to the new Developer Dataverse environment
   add-user-to-dev-environment:
-    needs: [create-issue-development-branch, import-solution-to-dev-environment]
+    needs: [create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
       url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
