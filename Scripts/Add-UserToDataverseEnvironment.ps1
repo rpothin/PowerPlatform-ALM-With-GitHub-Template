@@ -173,6 +173,7 @@ Function Add-UserToDataverseEnvironment {
                     Write-Verbose "Set variable for the 'id' of the security role we found."
                     $securityRoleId = $securityRoles.CrmRecords[0].roleid.Guid
 
+                    Write-Verbose "Assign security role to the user."
                     Add-CrmSecurityRoleToUser -UserId $userId -SecurityRoleId $securityRoleId
                 }
                 else {
