@@ -99,10 +99,54 @@ jobs:
         issue-number: ${{ github.event.issue.number }}
         body: |
           🎉 Environment created!
+
+  # Job to add the developer to the new Developer Dataverse environment
+  add-user-to-dev-environment:
+    needs: [create-issue-development-branch, import-solution-to-dev-environment]
+    environment:
+      name: development
+      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Action used to checkout the new dev branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout branch ${{ env.branch_name }}
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ env.branch_name }}
+
+    # Add developer as user to environment
+    - name: Add developer as user to environment
+      run: |
+        echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
+
+        echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
+        Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
+
+        echo "==========  Set params =========="
+        $Params = @{
+          TenantId = "${{ secrets.TENANT_ID }}"
+          ClientId = "${{ secrets.APPLICATION_ID }}"
+          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+          DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+          DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
+          UserObjectId = "${{ secrets.DEVELOPER_OBJECT_ID }}"
+          UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
+        }
+
+        echo "==========  Add-UserToDataverseEnvironment =========="
+        Import-Module ./Scripts/Add-UserToDataverseEnvironment.ps1 -Force
+
+        Add-UserToDataverseEnvironment @Params -verbose
+      shell: powershell
   
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   import-solution-to-dev-environment:
-    needs: create-dataverse-dev-environment
+    needs: add-user-to-dev-environment
     environment:
       name: development
       url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
@@ -265,53 +309,9 @@ jobs:
         body: |
           🎊 Solution imported!
 
-  # Job to add the developer to the new Developer Dataverse environment
-  add-user-to-dev-environment:
-    needs: [create-issue-development-branch, import-solution-to-dev-environment]
-    environment:
-      name: development
-      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
-    runs-on: windows-latest
-    env:
-      RUNNER_DEBUG: 1
-
-    steps:
-    # Action used to checkout the new dev branch in the current repository
-    #   Community action: https://github.com/actions/checkout
-    - name: Checkout branch ${{ env.branch_name }}
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ env.branch_name }}
-
-    # Add developer as user to environment
-    - name: Add developer as user to environment
-      run: |
-        echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
-
-        echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
-        Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
-
-        echo "==========  Set params =========="
-        $Params = @{
-          TenantId = "${{ secrets.TENANT_ID }}"
-          ClientId = "${{ secrets.APPLICATION_ID }}"
-          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
-          DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
-          UserObjectId = "${{ secrets.DEVELOPER_OBJECT_ID }}"
-          UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
-        }
-
-        echo "==========  Add-UserToDataverseEnvironment =========="
-        Import-Module ./Scripts/Add-UserToDataverseEnvironment.ps1 -Force
-
-        Add-UserToDataverseEnvironment @Params -verbose
-      shell: powershell
-
   # Job to add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
-    needs: add-user-to-dev-environment
+    needs: import-solution-to-dev-environment
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
