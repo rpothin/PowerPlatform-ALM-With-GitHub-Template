@@ -17,18 +17,5 @@ jobs:
 
       - name: Test
         run: |
-          echo "Test echo"
-
-          Write-Host "Test write-host"
-
-          Write-Verbose "Test write-verbose"
+          ls
         shell: powershell
-
-      - name: Test
-        run: |
-          echo "Test echo"
-
-          Write-Host "Test write-host"
-
-          Write-Verbose "Test write-verbose"
-        shell: pwsh
