@@ -17,18 +17,18 @@ jobs:
 
       - name: Test
         run: |
-          Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
+          echo "Test echo"
 
-          Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
+          Write-Host "Test write-host"
 
-          $CloudFlowsActivationParams = @{
-            TenantId = "${{ secrets.TENANT_ID }}"
-            ClientId = "${{ secrets.APPLICATION_ID }}"
-            ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-            DataverseEnvironmentUrl = "https://bafc-rpo-gh-qa.crm3.dynamics.com/"
-            SolutionName = "PowerPlatformALMWithGitHub"
-            SolutionComponentsOwnerEmail = "raphael.pothin@bizappsfrenchcommunity.com"
-          }
-
-          Enable-CloudFlows @CloudFlowsActivationParams -verbose
+          Write-Verbose "Test write-verbose"
         shell: powershell
+
+      - name: Test
+        run: |
+          echo "Test echo"
+
+          Write-Host "Test write-host"
+
+          Write-Verbose "Test write-verbose"
+        shell: pwsh
