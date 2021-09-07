@@ -103,22 +103,27 @@ jobs:
     # Add developer as user to environment
     - name: Add developer as user to environment
       run: |
-        # ========== Install Microsoft.PowerApps.Administration.PowerShel module ==========
+        echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
         Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
 
-        # ========== Connect with service principal ==========
-        Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
+        echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
+        Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
 
-        # ========== Search environments based on display name ==========
-        $devEnvrionmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
-        $devEnvrionmentDisplayNameForSearch = $devEnvrionmentDisplayName.Replace(" ", "*")
+        echo "==========  Set params =========="
+        $Params = @{
+          TenantId = "${{ secrets.TENANT_ID }}"
+          ClientId = "${{ secrets.APPLICATION_ID }}"
+          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+          DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+          DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
+          UserObjectId = "${{ secrets.DEVELOPER_OBJECT_ID }}"
+          UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
+        }
 
-        $dataverseEnvironments = Get-AdminPowerAppEnvironment *$devEnvrionmentDisplayNameForSearch*
+        echo "==========  Add-UserToDataverseEnvironment =========="
+        Import-Module ./Scripts/Add-UserToDataverseEnvironment.ps1 -Force
 
-        # ========== Add user to environment ==========
-        $devEnvironmentName = $dataverseEnvironments[0].EnvironmentName
-
-        Add-AdminPowerAppsSyncUser -EnvironmentName "$devEnvironmentName" -PrincipalObjectId ${{ secrets.DEVELOPER_OBJECT_ID }}
+        Add-UserToDataverseEnvironment @Params -verbose
       shell: powershell
 
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
@@ -252,10 +257,10 @@ jobs:
     #   - Turn on cloud flows
     - name: Steps post solution import
       run: |
-        # ========== Install Microsoft.Xrm.Data.PowerShell module ==========
+        echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
         Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
 
-        # ==========  Set params ==========
+        echo "==========  Set params =========="
         $Params = @{
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
@@ -264,7 +269,7 @@ jobs:
           SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
         }
 
-        # ==========  Update-ConnectionReferences ==========
+        echo "==========  Update-ConnectionReferences =========="
         Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
 
         $ConnectionReferencesUpdateParams = $Params
@@ -272,7 +277,7 @@ jobs:
 
         Update-ConnectionReferences @ConnectionReferencesUpdateParams -verbose
 
-        # ==========  Enable-CloudFlows ==========
+        echo "==========  Enable-CloudFlows =========="
         Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
 
         Enable-CloudFlows @Params -verbose
