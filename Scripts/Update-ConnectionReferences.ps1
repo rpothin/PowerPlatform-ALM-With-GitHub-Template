@@ -109,17 +109,13 @@ Function Update-ConnectionReferences {
             }
         }
 
-        # Set variables
-        Write-Verbose "Set variables."
-        $dataverseBaseConnectionString = "AuthType=ClientSecret;ClientId=$ClientId;ClientSecret=$ClientSecret;Url="
-        
         # Set generic connection (with service principal)
         Write-Verbose "Set generic connection (with service principal)."
-        $connection = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
+        $connection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
         
         # Set impersonation connection
         Write-Verbose "Set impersonation connection."
-        $impersonationConnection = Get-CrmConnection -ConnectionString "$dataverseBaseConnectionString$DataverseEnvironmentUrl"
+        $impersonationConnection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
         $systemUser = Get-CrmRecords -conn $connection -EntityLogicalName systemuser -FilterAttribute "domainname" -FilterOperator "eq" -FilterValue $SolutionComponentsOwnerEmail
         $systemUserId = $systemUser.CrmRecords[0].systemuserid
         $impersonationConnection.OrganizationWebProxyClient.CallerId = $systemUserId
