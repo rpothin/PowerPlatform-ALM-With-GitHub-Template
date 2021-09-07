@@ -7,9 +7,6 @@ Function Update-ConnectionReferences {
             Get the mapping between connection references and connections from a configuration file.
             Link connections references of the specified solution to corresponding connections in the targeted Dataverse environment using impersonation of the provided user.
 
-        .PARAMETER TenantId
-            ID of the tenant where the targeted Dataverse environment is.
-
         .PARAMETER ClientId
             Client ID of the Azure AD application registration associated to the application user with the System Administrator security role in the targeted Dataverse environment.
 
@@ -35,7 +32,7 @@ Function Update-ConnectionReferences {
             Object. Update-ConnectionReferences returns the result of the operation of enabling Cloud Flows in the targeted Dataverse environment.
 
         .EXAMPLE
-            PS> Update-ConnectionReferences -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com" -ConfigurationFilePath ".\ConnectionsMapping.json"
+            PS> Update-ConnectionReferences -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com" -ConfigurationFilePath ".\ConnectionsMapping.json"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
@@ -50,11 +47,6 @@ Function Update-ConnectionReferences {
     [CmdletBinding()]
     [OutputType([psobject])]
     Param (
-        # ID of the tenant where the targeted Dataverse environment is
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [String]$TenantId,
-
         # Client ID of the Azure AD application registration
         # associated to the application user with the System Administrator security role
         # in the targeted Dataverse environment

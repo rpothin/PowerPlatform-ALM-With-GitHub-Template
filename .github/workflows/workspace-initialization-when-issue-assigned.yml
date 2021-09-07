@@ -257,7 +257,6 @@ jobs:
 
         # ==========  Set params ==========
         $Params = @{
-          TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
           DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"

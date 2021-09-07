@@ -6,9 +6,6 @@ Function Enable-CloudFlows {
         .DESCRIPTION
             Turn on the Cloud Flows in a specific solution in a targeted Dataverse environment using an impersonation of the provided user
 
-        .PARAMETER TenantId
-            ID of the tenant where the targeted Dataverse environment is.
-
         .PARAMETER ClientId
             Client ID of the Azure AD application registration associated to the application user with the System Administrator security role in the targeted Dataverse environment.
 
@@ -31,7 +28,7 @@ Function Enable-CloudFlows {
             Object. Enable-CloudFlows returns the result of the operation of enabling Cloud Flows in the targeted Dataverse environment.
 
         .EXAMPLE
-            PS> Enable-CloudFlows -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com"
+            PS> Enable-CloudFlows -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
@@ -45,11 +42,6 @@ Function Enable-CloudFlows {
     [CmdletBinding()]
     [OutputType([psobject])]
     Param (
-        # ID of the tenant where the targeted Dataverse environment is
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [String]$TenantId,
-
         # Client ID of the Azure AD application registration
         # associated to the application user with the System Administrator security role
         # in the targeted Dataverse environment
