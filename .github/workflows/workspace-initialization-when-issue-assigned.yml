@@ -121,6 +121,8 @@ jobs:
         }
 
         echo "==========  Add-UserToDataverseEnvironment =========="
+        ls
+        ls Scripts
         Import-Module ./Scripts/Add-UserToDataverseEnvironment.ps1 -Force
 
         Add-UserToDataverseEnvironment @Params -verbose
