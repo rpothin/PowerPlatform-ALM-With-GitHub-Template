@@ -102,7 +102,7 @@ Function Update-ConnectionReferences {
             try {
                 Write-Verbose "Try to call the Get-Content command."
                 Write-Debug "Before the call to the Get-Content command..."
-                $configuration = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+                $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
             }
             catch {
                 Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
@@ -147,7 +147,7 @@ Function Update-ConnectionReferences {
 
             # Get the correponding connection for the current connection reference from the configuration file
             Write-Verbose "Get the connection for the following connection reference: $connectionReferenceId"
-            $connectionReferenceMapping = $configuration | ?{ $_.connectionReferenceId -eq $connectionReferenceId }
+            $connectionReferenceMapping = $configurations | ?{ $_.connectionReferenceId -eq $connectionReferenceId }
             $connectionId = $connectionReferenceMapping.connectionId
 
             # Link the connection to the connection reference based on the mapping in the configuration file
