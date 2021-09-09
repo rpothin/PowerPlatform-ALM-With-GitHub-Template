@@ -102,7 +102,7 @@ Function Add-UserToDataverseEnvironment {
         $user = az ad user show --id $UserInternalEmail | ConvertFrom-Json
         
         # If user found, we continue
-        Write-Verbose "If user found, we continue..."
+        Write-Verbose "If user found, we continue."
         if ($user -ne $null) {
             # Get the Object ID of the considered user
             Write-Verbose "Get user Object ID from the provided principal name."
