@@ -15,6 +15,9 @@ Function Grant-GroupsAccessToCanvasApps{
         .PARAMETER DataverseEnvironmentUrl
             URL of the targeted Dataverse environment.
 
+        .PARAMETER DataverseEnvironmentDisplayName
+            Display name of the targeted Dataverse environment.
+
         .PARAMETER ConfigurationFilePath
             Path to the configuration file with the mapping between canvas apps and Azure AD groups.
 
@@ -25,7 +28,7 @@ Function Grant-GroupsAccessToCanvasApps{
             Object. Grant-GroupsAccessToCanvasApps returns the result of the operation of giving access to canvas apps to Azure AD groups in the targeted Dataverse environment.
 
         .EXAMPLE
-            PS> Grant-GroupsAccessToCanvasApps -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/"  -ConfigurationFilePath ".\CanvasAppsGroupsAccessMapping.json"
+            PS> Grant-GroupsAccessToCanvasApps -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -DataverseEnvironmentDisplayName "Demo" -ConfigurationFilePath ".\CanvasAppsGroupsAccessMapping.json"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
@@ -57,6 +60,11 @@ Function Grant-GroupsAccessToCanvasApps{
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$DataverseEnvironmentUrl,
+
+        # Display name of the targeted Dataverse environment
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String]$DataverseEnvironmentDisplayName,
         
         # Path to the configuration file with the mapping between canvas apps and Azure AD groups
         [Parameter(Mandatory = $true)]
@@ -67,6 +75,10 @@ Function Grant-GroupsAccessToCanvasApps{
     Begin{}
 
     Process{
+        # Set variables
+        Write-Verbose "Set variables."
+        $dataverseEnvironmentNameForSearch = $DataverseEnvironmentDisplayName.Replace(" ", "*")
+
         # Test the path provided to the file with the configuration
         Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
         if(Test-Path $ConfigurationFilePath) {
@@ -94,8 +106,44 @@ Function Grant-GroupsAccessToCanvasApps{
         # Set generic connection (with service principal)
         Write-Verbose "Set generic connection (with service principal)."
         $connection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
+
+        # Connect to Azure CLI with service principal
+        Write-Verbose "Connect to Azure CLI with service principal."
+        az login --service-principal -u $ClientId -p $ClientSecret --tenant $TenantId --allow-no-subscriptions
+            
+        # Connect to Power Apps with service principal
+        Write-Verbose "Connect to Power Apps with service principal."
+        Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
         
-        
+        # Search considered environment based on Display name
+        Write-Verbose "Search Dataverse environments with the following display name: $DataverseEnvironmentDisplayName"
+        $dataverseEnvironments = Get-AdminPowerAppEnvironment *$dataverseEnvironmentNameForSearch*
+
+        # Number of environments found
+        $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure
+        $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
+
+        # For each canvas app - Azure AD group mapping...
+        Write-Verbose "For each canvas app - Azure AD group mapping..."
+        foreach ($configuration in $configurations) {
+            # List canvas app based on the provided name
+            Write-Verbose "List canvas app based on the provided name: "
+            $canvasApps = Get-CrmRecords -conn $connection -EntityLogicalName canvasapp -FilterAttribute "name" -FilterOperator "eq" -FilterValue $configuration.canvasAppName -Fields canvasappid
+            $canvasAppId = $canvasApps.CrmRecords[0].canvasappid
+
+            # Get the Object ID of the considered group
+            Write-Verbose "Get group Object ID from the provided name."
+            $group = az ad group show --group $configuration.groupName | ConvertFrom-Json
+            
+            # If group found, we continue
+            Write-Verbose "If group found, we continue."
+            if ($group -ne $null) {
+                $groupObjectId = $group.objectId
+
+                # Get group Object ID
+                Set-AdminPowerAppRoleAssignment -PrincipalType Group -PrincipalObjectId $groupObjectId -RoleName $configuration.roleName -AppName $canvasAppId -EnvironmentName $environmentId
+            }
+        }
     }
 
     End{}
