@@ -97,25 +97,31 @@ Function Add-UserToDataverseEnvironment {
         Write-Verbose "Connect to Azure CLI with service principal."
         az login --service-principal -u $ClientId -p $ClientSecret --tenant $TenantId --allow-no-subscriptions
 
-        # Get the Object ID of the considered user
-        Write-Verbose "Get user Object ID from the provided principal name."
+        # Get the details of the considered user
+        Write-Verbose "Get user details from the provided principal name."
         $user = az ad user show --id $UserInternalEmail | ConvertFrom-Json
-        $userObjectId = $user.objectId
-
-        # Connect to Power Apps with service principal
-        Write-Verbose "Connect to Power Apps with service principal."
-        Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
         
-        # Set generic connection (with service principal)
-        Write-Verbose "Set generic connection (with service principal)."
-        $connection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
-        
-        # Get the business unit ID of the of the account we are connected with
-        Write-Verbose "Get the business unit ID of the of the account we are connected with."
-        $businessUnitId = (Invoke-CrmWhoAmI).BusinessUnitId
+        # If user found, we continue
+        Write-Verbose "If user found, we continue..."
+        if ($user -ne $null) {
+            # Get the Object ID of the considered user
+            Write-Verbose "Get user Object ID from the provided principal name."
+            $userObjectId = $user.objectId
+            
+            # Connect to Power Apps with service principal
+            Write-Verbose "Connect to Power Apps with service principal."
+            Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
+            
+            # Set generic connection (with service principal)
+            Write-Verbose "Set generic connection (with service principal)."
+            $connection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
+            
+            # Get the business unit ID of the of the account we are connected with
+            Write-Verbose "Get the business unit ID of the of the account we are connected with."
+            $businessUnitId = (Invoke-CrmWhoAmI).BusinessUnitId
 
-        # Set Fetch query variable for the search of an existing user
-        $fetchUsers = @"
+            # Set Fetch query variable for the search of an existing user
+            $fetchUsers = @"
 <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false" no-lock="true">
     <entity name="systemuser">
         <attribute name="systemuserid" />
@@ -125,10 +131,10 @@ Function Add-UserToDataverseEnvironment {
     </entity>
 </fetch>
 "@
-        $fetchUsers = $fetchUsers -F $UserInternalEmail
+            $fetchUsers = $fetchUsers -F $UserInternalEmail
 
-        # Set Fetch query variable for the search the security role details for the business unit of the account used to logged in
-        $fetchSecurityRoles = @"
+            # Set Fetch query variable for the search the security role details for the business unit of the account used to logged in
+            $fetchSecurityRoles = @"
 <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false" no-lock="true">
     <entity name="role">
         <attribute name="roleid" />
@@ -139,57 +145,58 @@ Function Add-UserToDataverseEnvironment {
     </entity>
 </fetch>
 "@
-        $fetchSecurityRoles = $fetchSecurityRoles -F $SecurityRoleName, $businessUnitId
-        
-        # Search considered environment based on Display name
-        Write-Verbose "Search Dataverse environments with the following display name: $DataverseEnvironmentDisplayName"
-        $dataverseEnvironments = Get-AdminPowerAppEnvironment *$dataverseEnvironmentNameForSearch*
+            $fetchSecurityRoles = $fetchSecurityRoles -F $SecurityRoleName, $businessUnitId
+            
+            # Search considered environment based on Display name
+            Write-Verbose "Search Dataverse environments with the following display name: $DataverseEnvironmentDisplayName"
+            $dataverseEnvironments = Get-AdminPowerAppEnvironment *$dataverseEnvironmentNameForSearch*
 
-        # Number of environments found
-        $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure
-        $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
+            # Number of environments found
+            $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure
+            $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
 
-        # If only 1 Dataverse environment found we continue, else there is an error
-        if($dataverseEnvironmentsCount -eq 1) {
-            Write-Verbose "Only one Dataverse environment found."
-            Write-Verbose "Set variable for the 'name' of the considered Dataverse environment."
-            $dataverseEnvironmentName = $dataverseEnvironments[0].EnvironmentName
+            # If only 1 Dataverse environment found we continue, else there is an error
+            if($dataverseEnvironmentsCount -eq 1) {
+                Write-Verbose "Only one Dataverse environment found."
+                Write-Verbose "Set variable for the 'name' of the considered Dataverse environment."
+                $dataverseEnvironmentName = $dataverseEnvironments[0].EnvironmentName
 
-            Write-Verbose "Add the considered to the Dataverse environment we found."
-            $addUserToEnvironment = Add-AdminPowerAppsSyncUser -EnvironmentName "$dataverseEnvironmentName" -PrincipalObjectId $userObjectId
+                Write-Verbose "Add the considered to the Dataverse environment we found."
+                $addUserToEnvironment = Add-AdminPowerAppsSyncUser -EnvironmentName "$dataverseEnvironmentName" -PrincipalObjectId $userObjectId
 
-            Write-Verbose "List users with the considered internal email."
-            $users = Get-CrmRecordsByFetch -Fetch $fetchUsers
+                Write-Verbose "List users with the considered internal email."
+                $users = Get-CrmRecordsByFetch -Fetch $fetchUsers
 
-            # If only 1 user found we continue, else there is an error
-            if ($users.Count -eq 1) {
-                Write-Verbose "Get the ID of the new user in the considered Dataverse environment."
-                $userId = $users.CrmRecords[0].systemuserid
+                # If only 1 user found we continue, else there is an error
+                if ($users.Count -eq 1) {
+                    Write-Verbose "Get the ID of the new user in the considered Dataverse environment."
+                    $userId = $users.CrmRecords[0].systemuserid
 
-                Write-Verbose "Search security roles with the following information: SecurityRoleName is $SecurityRoleName and BusinessUnitId is $businessUnitId"
-                $securityRoles = Get-CrmRecordsByFetch -Fetch $fetchSecurityRoles
+                    Write-Verbose "Search security roles with the following information: SecurityRoleName is $SecurityRoleName and BusinessUnitId is $businessUnitId"
+                    $securityRoles = Get-CrmRecordsByFetch -Fetch $fetchSecurityRoles
 
-                # If only 1 security role found we continue, else there is an error
-                if ($securityRoles.Count -eq 1) {
-                    Write-Verbose "Set variable for the 'id' of the security role we found."
-                    $securityRoleId = $securityRoles.CrmRecords[0].roleid.Guid
+                    # If only 1 security role found we continue, else there is an error
+                    if ($securityRoles.Count -eq 1) {
+                        Write-Verbose "Set variable for the 'id' of the security role we found."
+                        $securityRoleId = $securityRoles.CrmRecords[0].roleid.Guid
 
-                    Write-Verbose "Assign security role to the user."
-                    Add-CrmSecurityRoleToUser -UserId $userId -SecurityRoleId $securityRoleId
+                        Write-Verbose "Assign security role to the user."
+                        Add-CrmSecurityRoleToUser -UserId $userId -SecurityRoleId $securityRoleId
+                    }
+                    else {
+                        Write-Verbose "No or multiple security role(s) found - Error."
+                        Throw "No or multiple security role(s) found in the considered Dataverse environment."
+                    }
                 }
                 else {
-                    Write-Verbose "No or multiple security role(s) found - Error."
-                    Throw "No or multiple security role(s) found in the considered Dataverse environment."
+                    Write-Verbose "No or multiple user(s) found - Error."
+                    Throw "No or multiple user(s) found for the following display name in the considered Dataverse environment."
                 }
             }
             else {
-                Write-Verbose "No or multiple user(s) found - Error."
-                Throw "No or multiple user(s) found for the following display name in the considered Dataverse environment."
+                Write-Verbose "No or multiple Dataverse environment(s) found - Error."
+                Throw "No or multiple Dataverse environment(s) found for the following display name: $DataverseEnvironmentDisplayName"
             }
-        }
-        else {
-            Write-Verbose "No or multiple Dataverse environment(s) found - Error."
-            Throw "No or multiple Dataverse environment(s) found for the following display name: $DataverseEnvironmentDisplayName"
         }
     }
 
