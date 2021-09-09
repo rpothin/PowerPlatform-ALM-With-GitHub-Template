@@ -21,9 +21,6 @@ Function Add-UserToDataverseEnvironment {
         .PARAMETER DataverseEnvironmentDisplayName
             Display name of the targeted Dataverse environment.
 
-        .PARAMETER UserObjectId
-            Object ID (in Azure AD) of the user to add to the considered Dataverse environment.
-
         .PARAMETER UserInternalEmail
             Internal email of the user to add to the considered Dataverse environment.
 
@@ -37,7 +34,7 @@ Function Add-UserToDataverseEnvironment {
             Object. Add-UserToDataverseEnvironment returns the details of of the operation of adding the user to the targeted Dataverse environment.
 
         .EXAMPLE
-            PS> Add-UserToDataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -DataverseEnvironmentDisplayName "Demo" -UserObjectId "00000000-0000-0000-0000-000000000000" -UserObjectId "user.demo@demo.com"
+            PS> Add-UserToDataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -DataverseEnvironmentDisplayName "Demo" -UserInternalEmail "user.demo@demo.com"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
@@ -79,11 +76,6 @@ Function Add-UserToDataverseEnvironment {
         [ValidateNotNullOrEmpty()]
         [String]$DataverseEnvironmentDisplayName,
 
-        # Object ID of the user to add to the Dataverse environment
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [String]$UserObjectId,
-
         # Internal email of the user to add to the Dataverse environment
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -100,6 +92,15 @@ Function Add-UserToDataverseEnvironment {
         # Set variables
         Write-Verbose "Set variables."
         $dataverseEnvironmentNameForSearch = $DataverseEnvironmentDisplayName.Replace(" ", "*")
+
+        # Connect to Azure CLI with service principal
+        Write-Verbose "Connect to Azure CLI with service principal."
+        az login --service-principal -u $ClientId -p $ClientSecret --tenant $TenantId --allow-no-subscriptions
+
+        # Get the Object ID of the considered user
+        Write-Verbose "Get user Object ID from the provided principal name."
+        $user = az ad user show --id $UserInternalEmail | ConvertFrom-Json
+        $userObjectId = $user.objectId
 
         # Connect to Power Apps with service principal
         Write-Verbose "Connect to Power Apps with service principal."
@@ -155,7 +156,7 @@ Function Add-UserToDataverseEnvironment {
             $dataverseEnvironmentName = $dataverseEnvironments[0].EnvironmentName
 
             Write-Verbose "Add the considered to the Dataverse environment we found."
-            $addUserToEnvironment = Add-AdminPowerAppsSyncUser -EnvironmentName "$dataverseEnvironmentName" -PrincipalObjectId $UserObjectId
+            $addUserToEnvironment = Add-AdminPowerAppsSyncUser -EnvironmentName "$dataverseEnvironmentName" -PrincipalObjectId $userObjectId
 
             Write-Verbose "List users with the considered internal email."
             $users = Get-CrmRecordsByFetch -Fetch $fetchUsers

@@ -134,7 +134,6 @@ jobs:
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
           DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
           DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
-          UserObjectId = "${{ secrets.DEVELOPER_OBJECT_ID }}"
           UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
         }
 
