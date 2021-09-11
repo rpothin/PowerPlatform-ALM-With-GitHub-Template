@@ -6,6 +6,9 @@ Function Grant-GroupsAccessToCanvasApps{
         .DESCRIPTION
             Grant a permission to canvas apps to Azure AD groups based on a mapping in a configuration file.
 
+        .PARAMETER TenantId
+            ID of the tenant where the targeted Dataverse environment is.
+
         .PARAMETER ClientId
             Client ID of the Azure AD application registration associated to the application user with the System Administrator security role in the targeted Dataverse environment.
 
@@ -42,6 +45,11 @@ Function Grant-GroupsAccessToCanvasApps{
     [CmdletBinding()]
     [OutputType([psobject])]
     Param (
+        # ID of the tenant where the targeted Dataverse environment is
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String]$TenantId,
+
         # Client ID of the Azure AD application registration
         # associated to the application user with the System Administrator security role
         # in the targeted Dataverse environment
