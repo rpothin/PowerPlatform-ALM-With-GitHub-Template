@@ -273,6 +273,9 @@ jobs:
     #   - Turn on cloud flows
     - name: Steps post solution import
       run: |
+        echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
+
         echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
         Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
 
