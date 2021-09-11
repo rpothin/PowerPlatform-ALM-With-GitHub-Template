@@ -220,6 +220,54 @@ jobs:
         publish-changes: true
         skip-dependency-check: true
 
+    # Complementary steps after solution import
+    #   - Link connection references to connections
+    #   - Turn on cloud flows
+    - name: Steps post solution import
+      run: |
+        echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
+        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
+
+        echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
+        Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
+
+        echo "==========  Set params =========="
+        $Params = @{
+          ClientId = "${{ secrets.APPLICATION_ID }}"
+          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+          DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}"
+          SolutionName = "${{ env.solution_name }}"
+          SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
+        }
+
+        echo "==========  Update-ConnectionReferences =========="
+        Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
+
+        $ConnectionReferencesUpdateParams = $Params
+        $ConnectionReferencesUpdateParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping.json"}
+
+        Update-ConnectionReferences @ConnectionReferencesUpdateParams -verbose
+
+        echo "==========  Enable-CloudFlows =========="
+        Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
+
+        Enable-CloudFlows @Params -verbose
+
+        echo "==========  Grant-GroupsAccessToCanvasApps =========="
+        Import-Module ./Scripts/Grant-GroupsAccessToCanvasApps.ps1 -Force
+
+        $CanvasAppsAccessGrantParams = @{
+          TenantId = "${{ secrets.TENANT_ID }}"
+          ClientId = "${{ secrets.APPLICATION_ID }}"
+          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+          DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}"
+          DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_NAME }}"
+          ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/CanvasAppsGroupsAccessMapping.json"
+        }
+
+        Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
+      shell: powershell
+
   # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
     needs: [create-build-environment, build-managed-solution]
