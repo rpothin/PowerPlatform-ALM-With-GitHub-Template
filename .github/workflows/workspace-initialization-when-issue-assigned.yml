@@ -297,6 +297,15 @@ jobs:
         Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
 
         Enable-CloudFlows @Params -verbose
+
+        echo "==========  Grant-GroupsAccessToCanvasApps =========="
+        Import-Module ./Scripts/Grant-GroupsAccessToCanvasApps.ps1 -Force
+
+        $CanvasAppsAccessGrantParams = $Params
+        $CanvasAppsAccessGrantParams += @{DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"}
+        $CanvasAppsAccessGrantParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping.json"}
+
+        Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
       shell: powershell
 
     # Add "Solution imported" comment to the issue
