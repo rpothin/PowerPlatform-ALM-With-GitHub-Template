@@ -126,8 +126,7 @@ Function Update-ConnectionReferences {
 <fetch>
     <entity name='connectionreference' >
     <attribute name="connectionreferenceid" />
-    <attribute name="connectionid" />
-    <filter><condition attribute='connectionid' operator='not-null' /></filter>
+    <attribute name="connectionreferencelogicalname" />
     <link-entity name='solutioncomponent' from='objectid' to='connectionreferenceid' >
         <link-entity name='solution' from='solutionid' to='solutionid' >
         <filter>
@@ -143,15 +142,16 @@ Function Update-ConnectionReferences {
         # For each connection reference in the considered solution
         Write-Verbose "For each connection reference in the considered solution..."
         foreach ($connectionReference in $connectionReferences) {
-            $connectionReferenceId = $connectionReference.connectionid
+            $connectionReferenceLogicalName = $connectionReference.connectionreferenceid
+            $connectionReferenceLogicalName = $connectionReference.connectionreferencelogicalname
 
             # Get the correponding connection for the current connection reference from the configuration file
-            Write-Verbose "Get the connection for the following connection reference: $connectionReferenceId"
-            $connectionReferenceMapping = $configurations | ?{ $_.connectionReferenceId -eq $connectionReferenceId }
+            Write-Verbose "Get the connection for the following connection reference: $connectionReferenceLogicalName"
+            $connectionReferenceMapping = $configurations | ?{ $_.connectionReferenceLogicalName -eq $connectionReferenceLogicalName }
             $connectionId = $connectionReferenceMapping.connectionId
 
             # Link the connection to the connection reference based on the mapping in the configuration file
-            Write-Verbose "Link the conenction reference '$connectionReferenceId' to the connction '$connectionId'"
+            Write-Verbose "Link the conenction reference '$connectionReferenceLogicalName' to the connction '$connectionId'"
             Set-CrmRecord -conn $impersonationConnection -EntityLogicalName connectionreference -Id $connectionReferenceId -Fields @{"connectionid" = $connectionId }
         }
     }
