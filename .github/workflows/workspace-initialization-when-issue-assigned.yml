@@ -301,9 +301,13 @@ jobs:
         echo "==========  Grant-GroupsAccessToCanvasApps =========="
         Import-Module ./Scripts/Grant-GroupsAccessToCanvasApps.ps1 -Force
 
-        $CanvasAppsAccessGrantParams = $Params
-        $CanvasAppsAccessGrantParams += @{DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"}
-        $CanvasAppsAccessGrantParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping.json"}
+        $CanvasAppsAccessGrantParams = @{
+          ClientId = "${{ secrets.APPLICATION_ID }}"
+          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+          DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+          DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
+          ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/CanvasAppsGroupsAccessMapping.json"
+        }
 
         Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
       shell: powershell
