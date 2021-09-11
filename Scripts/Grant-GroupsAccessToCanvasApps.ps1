@@ -123,25 +123,34 @@ Function Grant-GroupsAccessToCanvasApps{
         $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure
         $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
 
-        # For each canvas app - Azure AD group mapping...
-        Write-Verbose "For each canvas app - Azure AD group mapping..."
-        foreach ($configuration in $configurations) {
-            # List canvas app based on the provided name
-            Write-Verbose "List canvas app based on the provided name: "
-            $canvasApps = Get-CrmRecords -conn $connection -EntityLogicalName canvasapp -FilterAttribute "name" -FilterOperator "eq" -FilterValue $configuration.canvasAppName -Fields canvasappid
-            $canvasAppId = $canvasApps.CrmRecords[0].canvasappid
+        # If only 1 Dataverse environment found we continue, else there is an error
+        if($dataverseEnvironmentsCount -eq 1) {
+            Write-Verbose "Only one Dataverse environment found."
+            Write-Verbose "Set variable for the 'name' of the considered Dataverse environment."
+            $dataverseEnvironmentName = $dataverseEnvironments[0].EnvironmentName
 
-            # Get the Object ID of the considered group
-            Write-Verbose "Get group Object ID from the provided name."
-            $group = az ad group show --group $configuration.groupName | ConvertFrom-Json
-            
-            # If group found, we continue
-            Write-Verbose "If group found, we continue."
-            if ($group -ne $null) {
-                $groupObjectId = $group.objectId
+            # For each canvas app - Azure AD group mapping...
+            Write-Verbose "For each canvas app - Azure AD group mapping..."
+            foreach ($configuration in $configurations) {
+                # List canvas app based on the provided name
+                Write-Verbose "List canvas app based on the provided name: "
+                $canvasApps = Get-CrmRecords -conn $connection -EntityLogicalName canvasapp -FilterAttribute "name" -FilterOperator "eq" -FilterValue $configuration.canvasAppName -Fields canvasappid
+                $canvasAppId = $canvasApps.CrmRecords[0].canvasappid
 
-                # Get group Object ID
-                Set-AdminPowerAppRoleAssignment -PrincipalType Group -PrincipalObjectId $groupObjectId -RoleName $configuration.roleName -AppName $canvasAppId -EnvironmentName $environmentId
+                # Get the details of the considered group
+                Write-Verbose "Get group details from the provided name."
+                $group = az ad group show --group $configuration.groupName | ConvertFrom-Json
+                
+                # If group found, we continue
+                Write-Verbose "If group found, we continue."
+                if ($group -ne $null) {
+                    # Get the Object ID of the considered group
+                    Write-Verbose "Get group Object ID from the provided name."
+                    $groupObjectId = $group.objectId
+
+                    # Get group Object ID
+                    Set-AdminPowerAppRoleAssignment -PrincipalType Group -PrincipalObjectId $groupObjectId -RoleName $configuration.roleName -AppName $canvasAppId -EnvironmentName $dataverseEnvironmentName
+                }
             }
         }
     }
