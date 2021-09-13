@@ -139,6 +139,6 @@ jobs:
         git config --global user.email 'GitHub Action'
 
         git add --all
-        git commit -m "Update of ${{ github.event.inputs.solution_name }} solution - Run ${{ github.run_id }}"
+        git commit -m "Update of ${{ github.event.inputs.solution_name }} solution - Run ${{ github.run_number }}"
         git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin ${{ env.branch_name }}
       shell: pwsh
