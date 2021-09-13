@@ -380,7 +380,7 @@ jobs:
     needs: [create-release-branch, build-managed-solution]
     environment:
       name: production
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
 

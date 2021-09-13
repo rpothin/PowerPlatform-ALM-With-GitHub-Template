@@ -193,7 +193,7 @@ jobs:
     needs: build-managed-solution
     environment:
       name: validation
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
 
