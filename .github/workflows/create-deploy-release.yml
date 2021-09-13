@@ -377,7 +377,7 @@ jobs:
 
   # Job to import the managed solution generated in the previous job to the Dataverse Production environment
   import-solution-to-production:
-    needs: build-managed-solution
+    needs: [create-release-branch, build-managed-solution]
     environment:
       name: production
     runs-on: ubuntu-latest
@@ -406,6 +406,13 @@ jobs:
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: true
+
+    # Action used to checkout the repository the release branch
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+      uses: actions/checkout@v2
+      with:
+        ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
     # Complementary steps after solution import
     #   - Link connection references to connections
