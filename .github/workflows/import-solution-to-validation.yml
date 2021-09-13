@@ -244,7 +244,7 @@ jobs:
         Import-Module ./Scripts/Update-ConnectionReferences.ps1 -Force
 
         $ConnectionReferencesUpdateParams = $Params
-        $ConnectionReferencesUpdateParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping.json"}
+        $ConnectionReferencesUpdateParams += @{ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/ConnectionsMapping-validation.json"}
 
         Update-ConnectionReferences @ConnectionReferencesUpdateParams -verbose
 
