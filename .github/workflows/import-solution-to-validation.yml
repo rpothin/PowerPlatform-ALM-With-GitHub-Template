@@ -40,14 +40,14 @@ jobs:
 
     # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
     - name: Set dataverse_build_environment_display_name as env variable
-      run: echo "dataverse_build_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_id }}" >> $Env:GITHUB_ENV
+      run: echo "dataverse_build_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_number }}" >> $Env:GITHUB_ENV
       shell: pwsh
     
     # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
     - name: Set dataverse_build_environment_domain_name as env variable
       id: dataverse_build_environment_domain_name
       run: |
-        $dataverseBuildEnvironmentDomainName='gh-build-${{ env.NOW }}-${{ github.run_id }}'
+        $dataverseBuildEnvironmentDomainName='gh-build-${{ env.NOW }}-${{ github.run_number }}'
         echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
         echo "::set-output name=dataverse_build_environment_domain_name::$dataverseBuildEnvironmentDomainName"
       shell: pwsh
@@ -132,7 +132,7 @@ jobs:
     # Initialize the solution version
     - name: Set solution version variable
       run: |
-        $solutionVersion = '${{ env.NOW }}.${{ github.run_id }}'
+        $solutionVersion = '${{ env.NOW }}.${{ github.run_number }}'
         echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
       shell: pwsh
 
