@@ -1,17 +1,7 @@
 [
     {
-        "canvasAppName": "",
-        "groupName": "",
+        "canvasAppName": "ppwg_demonstrationsapp_6b287",
+        "groupName": "sg-raphael-test-canvasapp-access",
         "roleName": "CanView"
-    },
-    {
-        "canvasAppName": "",
-        "groupName": "",
-        "roleName": "CanViewWithShare"
-    },
-    {
-        "canvasAppName": "",
-        "groupName": "",
-        "roleName": "CanEdit"
     }
 ]

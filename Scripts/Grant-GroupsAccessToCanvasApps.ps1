@@ -142,7 +142,7 @@ Function Grant-GroupsAccessToCanvasApps{
             foreach ($configuration in $configurations) {
                 # List canvas app based on the provided name
                 Write-Verbose "List canvas app based on the provided name: "
-                $canvasApps = Get-CrmRecords -conn $connection -EntityLogicalName canvasapp -FilterAttribute "name" -FilterOperator "eq" -FilterValue $configuration.canvasAppName -Fields canvasappid
+                $canvasApps = Get-CrmRecords -conn $connection -EntityLogicalName canvasapp -FilterAttribute "name" -FilterOperator "eq" -FilterValue $configuration.canvasAppName -Fields name
                 $canvasAppId = $canvasApps.CrmRecords[0].canvasappid
 
                 # Get the details of the considered group
