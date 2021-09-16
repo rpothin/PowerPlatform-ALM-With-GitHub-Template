@@ -24,9 +24,9 @@ All notable changes to this repository will be documented in this file.
 
 ## [0.2.0] - 2021-09-??
 
-> Improve the GitHub workflows by mainly replacing PowerShell scripts by existing [Power Platform actions](https://github.com/microsoft/powerplatform-actions) 🤩
+> Improve the GitHub workflows.
 
-> *Note: This version has been built entirely using [GitHub Codespaces](https://github.com/features/codespaces).*
+> *Note: This version has been built entirely using [GitHub Codespaces](https://github.com/features/codespaces).* 🤩
 
 ### 🚀 Added
 
@@ -73,7 +73,7 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the execution of the solution checker on a Power Platform solution and the build (*unmanaged to managed*) of the solution with a Just-In-Time (JIT) environment in the context of a pull request
 - GitHub workflow for the deletion of the development Power Platform environment when the associated issue is closed or deleted
 - GitHub workflow for the deployment of a Power Platform solution to a QA environment after a build with a JIT environment on a push to the main branch
-- GitHub workflow for the creation of a GitHub release for a Power Platform solution (*build with a JIT environment*)
+- GitHub workflow for the creation of a GitHub release for a Power Platform managed solution (*build with a JIT environment*)
 
 [⚒ Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.1.0...HEAD
