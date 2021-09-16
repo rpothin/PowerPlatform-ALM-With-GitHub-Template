@@ -24,9 +24,9 @@ All notable changes to this repository will be documented in this file.
 
 ## [0.2.0] - 2021-09-??
 
-> Improve the GitHub workflows.
+> Improve the GitHub workflows 🥳
 
-> *Note: This version has been built entirely using [GitHub Codespaces](https://github.com/features/codespaces).* 🤩
+> *Note: This version has been built entirely using [GitHub Codespaces](https://github.com/features/codespaces)* 🤩
 
 ### 🚀 Added
 
