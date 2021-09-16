@@ -148,7 +148,7 @@
             ZIndex: =3
 
     Icon1 As icon.CheckBadge:
-        Icon: =Icon.Enhance
+        Icon: =Icon.Transportation
         X: =288
         Y: =1014
         ZIndex: =10
