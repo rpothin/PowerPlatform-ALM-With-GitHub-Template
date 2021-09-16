@@ -24,7 +24,7 @@ All notable changes to this repository will be documented in this file.
 
 ## [0.2.0] - 2021-09-??
 
-> Improve the GitHub workflows 🥳
+> Improve the GitHub workflows proposed in this repository template 🥳
 
 > *Note: This version has been built entirely using [GitHub Codespaces](https://github.com/features/codespaces)* 🤩
 
@@ -60,7 +60,7 @@ All notable changes to this repository will be documented in this file.
 
 ## [0.1.0] - 2020-12-22
 
-> Initialize a repository template to make Power Platform ALM with GitHub a little bit easier 😊
+> Initialize this repository template to make Power Platform ALM with GitHub a little bit easier 😊
 
 ### 🚀 Added
 
