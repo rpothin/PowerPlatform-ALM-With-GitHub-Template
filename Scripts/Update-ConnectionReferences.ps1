@@ -142,7 +142,7 @@ Function Update-ConnectionReferences {
         # For each connection reference in the considered solution
         Write-Verbose "For each connection reference in the considered solution..."
         foreach ($connectionReference in $connectionReferences) {
-            $connectionReferenceLogicalName = $connectionReference.connectionreferenceid
+            $connectionReferenceId = $connectionReference.connectionreferenceid
             $connectionReferenceLogicalName = $connectionReference.connectionreferencelogicalname
 
             # Get the correponding connection for the current connection reference from the configuration file
