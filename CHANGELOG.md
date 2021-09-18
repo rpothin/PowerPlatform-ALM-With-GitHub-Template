@@ -34,7 +34,6 @@ All notable changes to this repository will be documented in this file.
 - Issue form for bugs
 - Template chooser for issues
 - Copyright and MIT license at the top of each GitHub workflow and each PowerShell script
-
 - Management of the version of the solution (*export --> `1.0.0` / import to dev or validation --> `1.0.<YYYYMMDD>.<GitHub workflow run id>` / release --> `<base version as workflow input (ex: 1.2)>.<YYYYMMDD>.<GitHub workflow run id>`*)
 - GitHub workflow for the initialization of a workspace for Power Platform development triggers only if issue is assigned and has a specific label (*by default "in progress"*)
 - Canvas app (*%.msapp files*) unpack on solution export and pack for import using a static built version of the [microsoft/PowerApps-Language-Tooling](https://github.com/microsoft/PowerApps-Language-Tooling) tool stored in the repository
@@ -45,6 +44,7 @@ All notable changes to this repository will be documented in this file.
 ### 🤖 Changed
 
 - Pull request template moved in ".github" folder
+- References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - README.md: updates to reflect all the updates in this version
 - Creation of Power Platform environments with the **create-environment** action available
 - Numbers as prefix for the name of the GitHub workflows to make it easier to follow the flow of work
@@ -58,7 +58,7 @@ All notable changes to this repository will be documented in this file.
 ### ❌ Deleted
 
 - Issue template for bugs (replaced by issue form)
-- Sample of Power Platform solution to make the repository cleaner
+- Solution used for the tests to make the repository a bit cleaner
 
 ## [0.1.0] - 2020-12-22
 
