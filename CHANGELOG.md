@@ -52,7 +52,7 @@ All notable changes to this repository will be documented in this file.
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
 - *export-and-unpack-solution.yml*
    - Publish of the considered solution before the export
-   - 
+   - Set solution version (*Other\Solution.xml*) to a default value (*1.0.0*)
 
 
 
