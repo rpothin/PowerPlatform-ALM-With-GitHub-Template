@@ -40,6 +40,8 @@ All notable changes to this repository will be documented in this file.
 - Pull request template moved in ".github" folder
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - GitHub hosted runner type update to **ubuntu-latest** for every job where it was possible to use it
+- Make some variables reusable in workflows to set them only once (*ex: NOW = $(date +'%Y%m%d')*)
+- Update of the version of the actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository `v0.1.8 --> main`
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
 - Creation of Power Platform environments using the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action
 - Power Platform environment configuration details (*location, sku, currency name and language code*) moved from variables to secret to centralize the information
@@ -56,9 +58,12 @@ All notable changes to this repository will be documented in this file.
    - Pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
    - Set solution version (*Other\Solution.xml*)
 - **import-solution-to-...** job in the following workflows: import-solution-to-validation.yml and create-deploy-release.yml
-    - Configure connection references with existing connections based on a mapping in a configuration file
-    - Enable cloud flows in the imported solution
-    - Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file
+   - Configure connection references with existing connections based on a mapping in a configuration file
+   - Enable cloud flows in the imported solution
+   - Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file
+- **solution-quality-check-on-pr.yml**
+   - Flatten JSON files (*cloud flows*) and pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
+   - Connection to use [Microsoft.PowerApps.Checker.PowerShell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell) PowerShell module using a service principal
 
 ### ❌ Deleted
 
