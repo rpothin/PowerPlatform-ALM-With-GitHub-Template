@@ -35,16 +35,6 @@ All notable changes to this repository will be documented in this file.
 - Template chooser for issues
 - Copyright and MIT license at the top of each GitHub workflow and each PowerShell script
 
-
-
-
-- Management of the version of the solution (*export --> `1.0.0` / import to dev or validation --> `1.0.<YYYYMMDD>.<GitHub workflow run id>` / release --> `<base version as workflow input (ex: 1.2)>.<YYYYMMDD>.<GitHub workflow run id>`*)
-- GitHub workflow for the initialization of a workspace for Power Platform development triggers only if issue is assigned and has a specific label (*by default "in progress"*)
-- Canvas app (*%.msapp files*) unpack on solution export and pack for import using a static built version of the [microsoft/PowerApps-Language-Tooling](https://github.com/microsoft/PowerApps-Language-Tooling) tool stored in the repository
-- JSON files formatting on solution export to make them more readable (*ex: cloud flows*) and change back the format for import
-- More comments added to the issue in the GitHub workflow for the initialization of a workspace for Power Platform development
-- Check in the GitHub workflow for the initialization of a workspace for Power Platform development to manage the situation you do not yet have a solution in the repository
-
 ### 🤖 Changed
 
 - Pull request template moved in ".github" folder
