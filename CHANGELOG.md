@@ -33,7 +33,8 @@ All notable changes to this repository will be documented in this file.
 - This Changelog 😋
 - Issue form for bugs
 - Template chooser for issues
-- Copyright and MIT license at the top of each YAML file built in the repository
+- Copyright and MIT license at the top of each GitHub workflow and each PowerShell script
+
 - Management of the version of the solution (*export --> `1.0.0` / import to dev or validation --> `1.0.<YYYYMMDD>.<GitHub workflow run id>` / release --> `<base version as workflow input (ex: 1.2)>.<YYYYMMDD>.<GitHub workflow run id>`*)
 - GitHub workflow for the initialization of a workspace for Power Platform development triggers only if issue is assigned and has a specific label (*by default "in progress"*)
 - Canvas app (*%.msapp files*) unpack on solution export and pack for import using a static built version of the [microsoft/PowerApps-Language-Tooling](https://github.com/microsoft/PowerApps-Language-Tooling) tool stored in the repository
@@ -43,15 +44,17 @@ All notable changes to this repository will be documented in this file.
 
 ### 🤖 Changed
 
+- Pull request template moved in ".github" folder
 - README.md: updates to reflect all the updates in this version
+
 - Creation of Power Platform environments with the **create-environment** action available
 - Numbers as prefix for the name of the GitHub workflows to make it easier to follow the flow of work
 - **powerapps** replaced by **dataverse** everywhere because it seems more inclusive when we talk about solutions
 - Run set to **ubuntu-latest** for every job where it was possible to use it
 - Label about the creation of the dev environment (*by default "dev env created"*) in the GitHub workflow for the initialization of a workspace for Power Platform development added to the issue as soon as it is created
 - GitHub workflow for the deployment of a Power Platform solution to a Validation environment after a build with a JIT environment on a push to the main branch - YAML file renamed(*import-solution-to-qa.yml --> import-solution-to-validation.yml*)
-- GitHub workflow for the cleaning of the development workspace (branch and Power Platform environment) when the associated issue is closed or deleted - YAML file renamed(*delete-powerapps-dev-environment-when-issue-closed.yml --> clean-dev-workspace-when-issue-closed-or-deleted.yml*)
-- GitHub workflow for the creation of a GitHub release for a Power Platform solution and the deployment to the production environment - YAML file renamed(*create-github-release.yml --> create-deploy-release.yml*)
+- GitHub workflow to delete development environment after work replaced by a new one for the cleaning of the development workspace (*branch and Power Platform environment*) when the associated issue is closed or deleted - *YAML file renamed(delete-powerapps-dev-environment-when-issue-closed.yml --> clean-dev-workspace-when-issue-closed-or-deleted.yml)*
+- GitHub workflow for the creation of a GitHub release replaced by another one that will also deploy the solution in the Github release to a production environment - *YAML file renamed(create-github-release.yml --> create-deploy-release.yml)*
 
 ### ❌ Deleted
 
@@ -68,6 +71,7 @@ All notable changes to this repository will be documented in this file.
 - [AllContributors](https://allcontributors.org/) GitHub app
 - Issue and pull request templates
 - Sample of Power Platform solution used for the tests
+
 - GitHub workflow for the initialization of a workspace for Power Platform development (*branch, environment and solution import*)
 - GitHub workflow for the export and unpack of a Power Platform solution in the context of Power Platform development
 - GitHub workflow for the execution of the solution checker on a Power Platform solution and the build (*unmanaged to managed*) of the solution with a Just-In-Time (JIT) environment in the context of a pull request
