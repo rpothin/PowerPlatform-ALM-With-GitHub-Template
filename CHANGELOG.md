@@ -51,8 +51,9 @@ All notable changes to this repository will be documented in this file.
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
 - *export-and-unpack-solution.yml*
-   - Publish of the considered solution before the export
+   - Publish of the solution before the export
    - Set solution version (*Other\Solution.xml*) to a default value (*1.0.0*)
+   - Unpack of canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas)
 
 
 
