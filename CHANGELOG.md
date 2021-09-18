@@ -50,6 +50,7 @@ All notable changes to this repository will be documented in this file.
 - Pull request template moved in ".github" folder
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
+- Creation of Power Platform environments with the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action available
 - **export-and-unpack-solution.yml**
    - Publish of the solution before the export
    - Set solution version (*Other\Solution.xml*) to a default value (*1.0.0*)
@@ -57,12 +58,12 @@ All notable changes to this repository will be documented in this file.
    - Format JSON files (*cloud flows*) so they are easier to read in source control
    - Delete exported solution in packed format
    - Commit and push to development branch not using the [branch-solution](https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml) action for a better flexibility
-
+- **import-solution-to-validation.yml** (*import-solution-to-qa.yml renamed*)
+   - 
 
 
 
 - README.md: updates to reflect all the updates in this version
-- Creation of Power Platform environments with the **create-environment** action available
 - Numbers as prefix for the name of the GitHub workflows to make it easier to follow the flow of work
 - **powerapps** replaced by **dataverse** everywhere because it seems more inclusive when we talk about solutions
 - Run set to **ubuntu-latest** for every job where it was possible to use it
