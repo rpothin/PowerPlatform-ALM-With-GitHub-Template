@@ -52,8 +52,8 @@ All notable changes to this repository will be documented in this file.
 - Run set to **ubuntu-latest** for every job where it was possible to use it
 - Label about the creation of the dev environment (*by default "dev env created"*) in the GitHub workflow for the initialization of a workspace for Power Platform development added to the issue as soon as it is created
 - GitHub workflow for the deployment of a Power Platform solution to a Validation environment after a build with a JIT environment on a push to the main branch - YAML file renamed(*import-solution-to-qa.yml --> import-solution-to-validation.yml*)
-- GitHub workflow to delete development environment after work replaced by a new one for the cleaning of the development workspace (*branch and Power Platform environment*) when the associated issue is closed or deleted - `YAML file renamed(delete-powerapps-dev-environment-when-issue-closed.yml --> clean-dev-workspace-when-issue-closed-or-deleted.yml)`
-- GitHub workflow for the creation of a GitHub release replaced by another one that will also deploy the solution in the Github release to a production environment - `YAML file renamed(create-github-release.yml --> create-deploy-release.yml)`
+- GitHub workflow to delete development environment after work replaced by a new one for the cleaning of the development workspace (*branch and Power Platform environment*) when the associated issue is closed or deleted - `YAML file renamed (delete-powerapps-dev-environment-when-issue-closed.yml --> clean-dev-workspace-when-issue-closed-or-deleted.yml)`
+- GitHub workflow for the creation of a GitHub release replaced by another one that will also deploy the solution in the Github release to a production environment - `YAML file renamed (create-github-release.yml --> create-deploy-release.yml)`
 
 ### ❌ Deleted
 
