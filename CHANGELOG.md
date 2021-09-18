@@ -50,7 +50,8 @@ All notable changes to this repository will be documented in this file.
 - Pull request template moved in ".github" folder
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
-- Creation of Power Platform environments with the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action available
+- Creation of Power Platform environments using the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action
+- Deletion of Power Platform environments using the [delete-environme](https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml) action
 - **export-and-unpack-solution.yml**
    - Publish of the solution before the export
    - Set solution version (*Other\Solution.xml*) to a default value (*1.0.0*)
@@ -58,8 +59,14 @@ All notable changes to this repository will be documented in this file.
    - Format JSON files (*cloud flows*) so they are easier to read in source control
    - Delete exported solution in packed format
    - Commit and push to development branch not using the [branch-solution](https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml) action for a better flexibility
-- **import-solution-to-validation.yml** (*import-solution-to-qa.yml renamed*)
-   - 
+- **build-managed-solution** job in the following workflows: workspace-initialization-when-issue-assigned.yml, solution-quality-check-on-pr.yml, import-solution-to-validation.yml and create-deploy-release.yml
+   - Flatten JSON files (*cloud flows*) before solution packing
+   - Pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
+   - Set solution version (*Other\Solution.xml*)
+- **import-solution-to-...** job in the following workflows: import-solution-to-validation.yml and create-deploy-release.yml
+    - Configure connection references with existing connections based on a mapping in a configuration file
+    - Enable cloud flows in the imported solution
+    - Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file
 
 
 
