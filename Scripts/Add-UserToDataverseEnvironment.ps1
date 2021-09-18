@@ -1,3 +1,6 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
 Function Add-UserToDataverseEnvironment {
     <#
         .SYNOPSIS
