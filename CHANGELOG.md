@@ -16,7 +16,7 @@ All notable changes to this repository will be documented in this file.
 
 ### 🤖 Changed
 
-- ...
+- Power Platform environment configuration details moved to a centralized configuration file and information extracted in workflows when needed using a dedicated action (*to configure*)
 
 ### ❌ Deleted
 
@@ -49,8 +49,10 @@ All notable changes to this repository will be documented in this file.
 
 - Pull request template moved in ".github" folder
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
+- GitHub hosted runner type update to **ubuntu-latest** for every job where it was possible to use it
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
 - Creation of Power Platform environments using the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action
+- Power Platform environment configuration details (*location, sku, currency name and language code*) moved from variables to secret to centralize the information
 - Deletion of Power Platform environments using the [delete-environme](https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml) action
 - **export-and-unpack-solution.yml**
    - Publish of the solution before the export
@@ -73,7 +75,6 @@ All notable changes to this repository will be documented in this file.
 - README.md: updates to reflect all the updates in this version
 - Numbers as prefix for the name of the GitHub workflows to make it easier to follow the flow of work
 - **powerapps** replaced by **dataverse** everywhere because it seems more inclusive when we talk about solutions
-- Run set to **ubuntu-latest** for every job where it was possible to use it
 - Label about the creation of the dev environment (*by default "dev env created"*) in the GitHub workflow for the initialization of a workspace for Power Platform development added to the issue as soon as it is created
 - GitHub workflow for the deployment of a Power Platform solution to a Validation environment after a build with a JIT environment on a push to the main branch - YAML file renamed(*import-solution-to-qa.yml --> import-solution-to-validation.yml*)
 - GitHub workflow to delete development environment after work replaced by a new one for the cleaning of the development workspace (*branch and Power Platform environment*) when the associated issue is closed or deleted - `YAML file renamed: delete-powerapps-dev-environment-when-issue-closed.yml --> clean-dev-workspace-when-issue-closed-or-deleted.yml`
