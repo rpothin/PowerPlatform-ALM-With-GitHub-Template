@@ -40,7 +40,7 @@ All notable changes to this repository will be documented in this file.
 - Pull request template moved in ".github" folder
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - GitHub hosted runner type update to **ubuntu-latest** for every job where it was possible to use it
-- Make some variables reusable in workflows to set them only once (*ex: NOW = $(date +'%Y%m%d')*)
+- Make some variables reusable in workflows to set them only once (*ex: `echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV`*)
 - Update of the version of the actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository `v0.1.8 --> main`
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
 - Creation of Power Platform environments using the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action
