@@ -64,6 +64,8 @@ All notable changes to this repository will be documented in this file.
 - **solution-quality-check-on-pr.yml**
    - Flatten JSON files (*cloud flows*) and pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
    - Connection to use [Microsoft.PowerApps.Checker.PowerShell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell) PowerShell module using a service principal
+- **workspace-initialization-when-issue-assigned.yml**
+   - ...
 
 ### ❌ Deleted
 
