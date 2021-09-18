@@ -54,6 +54,9 @@ All notable changes to this repository will be documented in this file.
    - Publish of the solution before the export
    - Set solution version (*Other\Solution.xml*) to a default value (*1.0.0*)
    - Unpack of canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas)
+   - Format JSON files (*cloud flows*) so they are easier to read in source control
+   - Delete exported solution in packed format
+   - Commit and push to development branch not using the [branch-solution](https://github.com/microsoft/powerplatform-actions/blob/main/branch-solution/action.yml) action for a better flexibility
 
 
 
