@@ -34,8 +34,6 @@ All notable changes to this repository will be documented in this file.
 - Issue form for bugs
 - Template chooser for issues
 - Copyright and MIT license at the top of each GitHub workflow and each PowerShell script
-- Publish of the considered solution before the export in the `export-and-unpack-solution.yml` workflow
-- Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
 
 
 
@@ -51,7 +49,10 @@ All notable changes to this repository will be documented in this file.
 
 - Pull request template moved in ".github" folder
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
-
+- Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
+- *export-and-unpack-solution.yml*
+   - Publish of the considered solution before the export
+   - 
 
 
 
