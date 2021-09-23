@@ -83,6 +83,16 @@ All notable changes to this repository will be documented in this file.
    - New step in the **import-solution-to-dev-environment** job to check if a solution exists in the repositoy
    - Flatten JSON files (*cloud flows*) and pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
    - Set solution version (*Other\Solution.xml*)
+- **clean-dev-workspace-when-issue-closed-or-deleted.yml** (*renamed - 'delete-powerapps-dev-environment-when-issue-closed.yml'*)
+   - Delete branch for development if it exists
+   - Add a condition for the **delete-dataverse-dev-environment** job: issue not deleted and with the 'dev env created' label
+   - Remove 'dev env created' label on the issue if closed
+   - Add a comment to the issue when the Dataverse Dev environment is deleted
+- **create-deploy-release.yml** (*renamed - 'create-github-release.yml'*)
+   - Create a release branch, then a GitHub release (*through a just-in-time Dataverse Build environment*) and finally deploy the managed solution to a production environment
+   - The GitHub release is created as a draft and publish only after a successfull deployment to a production environment
+   - If an error occurs during the pack of the solution as managed (*through a just-in-time Dataverse Build environment*), the release branch will be deleted
+- **import-solution-to-validation.yml** (*renamed - 'import-solution-to-qa.yml'*)
 
 ### ❌ Deleted
 
