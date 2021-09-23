@@ -35,6 +35,14 @@ All notable changes to this repository will be documented in this file.
 - Issue form for bugs
 - Template chooser for issues
 - Copyright and MIT license at the top of each GitHub workflow and each PowerShell script
+- Configuration files examples:
+   - **CanvasAppsGroupsAccessMapping.json**: for granting access to canvas apps to Azure AD groups
+   - **ConnectionsMapping-....json**: for the mapping between a connection reference in the solution and the id of a connection in the targeted environment (*one by environment you want to apply this configuration*)
+- PowerShell scripts:
+   - **Add-UserToDataverseEnvironment.ps1**: to add and configure a user in a Dataverse environment
+   - **Enable-CloudFlows.ps1**: to turn on cloud flows in the solution
+   - **Grant-GroupsAccessToCanvasApps.ps1**: to grant access to canvas apps to Azure AD groups
+   - **Update-ConnectionReferences.ps1**: to update connection references adding a connection
 
 ### 🤖 Changed
 
