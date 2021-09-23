@@ -16,12 +16,16 @@ All notable changes to this repository will be documented in this file.
 
 ### 🤖 Changed
 
+- README.md (*to do*)
+   - Gifs to explain how to configure the GitHub repository template
+   - Gifs to explain how to use the GitHub repository template
 - Power Platform environment configuration details moved to a centralized configuration file and information extracted in workflows when needed using a dedicated action (*to configure*)
 - Add multiple users (*the members of the development team for example*) configured in a file as System Administrators to the Dataverse Dev environment created in the **workspace-initialization-when-issue-assigned** GitHub workflow (*to configure*)
 - Update connection references through out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action (*to configure*)
 
 ### ❌ Deleted
 
+- Solution used for the tests to make the repository a bit cleaner (*to do*)
 - Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action - to configure*)
 
 ## [0.2.0] - 2021-09-??
@@ -97,7 +101,6 @@ All notable changes to this repository will be documented in this file.
 ### ❌ Deleted
 
 - Issue template for bugs (replaced by issue form)
-- Solution used for the tests to make the repository a bit cleaner
 
 ## [0.1.0] - 2020-12-22
 
