@@ -53,8 +53,8 @@ All notable changes to this repository will be documented in this file.
 - Make some variables reusable in workflows by setting them only once (*ex: `echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV`*)
 - Update of the version of the actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository `v0.1.8 --> main`
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
-- Creation of Power Platform environments using the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action
 - Power Platform environment configuration details (*location, sku, currency name and language code*) moved from variables to GitHub secret to centralize the information
+- Creation of Power Platform environments using the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action
 - Deletion of Power Platform environments using the [delete-environment](https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml) action
 - **export-and-unpack-solution.yml**
    - Publish of the solution before the export
