@@ -4,7 +4,7 @@ All notable changes to this repository will be documented in this file.
 
 > The format is based on [Keep a Changelog](https://keepachangelog.com/en/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [⚒ Unreleased]
+## [⚒ To do / Unreleased]
 
 ### 🔨 Fixed
 
@@ -17,6 +17,7 @@ All notable changes to this repository will be documented in this file.
 ### 🤖 Changed
 
 - Power Platform environment configuration details moved to a centralized configuration file and information extracted in workflows when needed using a dedicated action (*to configure*)
+- Add multiple users (*the members of the development team for example*) configured in a file as System Administrators to the Dataverse Dev environment created in the **workspace-initialization-when-issue-assigned** GitHub workflow (*to configure*)
 
 ### ❌ Deleted
 
@@ -40,7 +41,7 @@ All notable changes to this repository will be documented in this file.
 - Pull request template moved in ".github" folder
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - GitHub hosted runner type update to **ubuntu-latest** for every job where it was possible to use it
-- Make some variables reusable in workflows to set them only once (*ex: `echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV`*)
+- Make some variables reusable in workflows by setting them only once as GitHub secrets (*ex: `echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV`*)
 - Update of the version of the actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository `v0.1.8 --> main`
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
 - Creation of Power Platform environments using the [create-environment](https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml) action
@@ -65,7 +66,14 @@ All notable changes to this repository will be documented in this file.
    - Flatten JSON files (*cloud flows*) and pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
    - Connection to use [Microsoft.PowerApps.Checker.PowerShell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell) PowerShell module using a service principal
 - **workspace-initialization-when-issue-assigned.yml**
-   - ...
+   - Add a trigger for specific label addedd to an issue (*by default the considered label is 'in progress'*)
+   - Add a "pre-job" to avoid duplicate run of the GitHub workflow (*in the case where you assign an issue and add the considered label at the same time*)
+   - Add comments to the issue when the branch is created and when the Dataverse Dev environment is created
+   - Add a label to the issue when the Dataverse Dev environment is created (*by default the labe is 'dev env created'*)
+   - Add a job to add a user (*user email configured as a GitHub secret*) as System Administrator to the Dataverse Dev environment using a PowerShell script
+   - Add a step in the **import-solution-to-dev-environment** job to check if a solution exists in the repositoy
+   - Flatten JSON files (*cloud flows*) and pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
+   - Set solution version (*Other\Solution.xml*)
 
 ### ❌ Deleted
 
@@ -89,6 +97,6 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the deployment of a Power Platform solution to a QA environment after a build with a JIT environment on a push to the main branch
 - GitHub workflow for the creation of a GitHub release for a Power Platform managed solution (*build with a JIT environment*)
 
-[⚒ Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
+[⚒ To do / Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v0.1.0
