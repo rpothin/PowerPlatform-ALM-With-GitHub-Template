@@ -100,7 +100,7 @@ All notable changes to this repository will be documented in this file.
 
 ### ❌ Deleted
 
-- Issue template for bugs (replaced by issue form)
+- Issue template for bugs (*replaced by issue form*)
 
 ## [0.1.0] - 2020-12-22
 
