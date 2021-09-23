@@ -68,7 +68,7 @@ All notable changes to this repository will be documented in this file.
 - **workspace-initialization-when-issue-assigned.yml**
    - Add a trigger for specific label addedd to an issue (*by default the considered label is 'in progress'*)
    - Add a "pre-job" to avoid duplicate run of the GitHub workflow (*in the case where you assign an issue and add the considered label at the same time*)
-   - Add comments to the issue when the branch is created and when the Dataverse Dev environment is created
+   - Add comments to the issue when the branch is created, when the Dataverse Dev environment is created and when the solution is imported
    - Add a label to the issue when the Dataverse Dev environment is created (*by default the labe is 'dev env created'*)
    - Add a job to add a user (*user email configured as a GitHub secret*) as System Administrator to the Dataverse Dev environment using a PowerShell script
    - Add a step in the **import-solution-to-dev-environment** job to check if a solution exists in the repositoy
