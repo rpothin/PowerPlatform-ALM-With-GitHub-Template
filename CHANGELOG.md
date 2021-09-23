@@ -73,7 +73,7 @@ All notable changes to this repository will be documented in this file.
    - Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file
 - **solution-quality-check-on-pr.yml**
    - Flatten JSON files (*cloud flows*) and pack canvas apps using [Microsoft.PowerApps.CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli#canvas) before solution packing
-   - Connection to use [Microsoft.PowerApps.Checker.PowerShell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell) PowerShell module using a service principal
+   - Connection to the [Microsoft.PowerApps.Checker.PowerShell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell) PowerShell module using a service principal
 - **workspace-initialization-when-issue-assigned.yml**
    - Add a trigger for specific label addedd to an issue (*by default the considered label is 'in progress'*)
    - Add a "pre-job" to avoid duplicate run of the GitHub workflow (*in the case where you assign an issue and add the considered label at the same time*)
