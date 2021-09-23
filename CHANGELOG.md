@@ -49,7 +49,7 @@ All notable changes to this repository will be documented in this file.
 - Pull request template moved in ".github" folder
 - Copyright and MIT license added at the top of each GitHub workflow and each PowerShell script
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly find this notion more appropriate*
-- GitHub hosted runner type update to **ubuntu-latest** for every job where it was possible to use it
+- GitHub hosted runner type update to **ubuntu-latest** for every job where it was an option
 - Make some variables reusable in workflows by setting them only once as GitHub secrets (*ex: `echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV`*)
 - Update of the version of the actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository `v0.1.8 --> main`
 - Connection using a service principal in actions from [microsoft/powerplatform-actions](https://github.com/microsoft/powerplatform-actions) repository
