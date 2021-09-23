@@ -35,7 +35,6 @@ All notable changes to this repository will be documented in this file.
 - This Changelog 😋
 - Issue form for bugs
 - Template chooser for issues
-- Copyright and MIT license at the top of each GitHub workflow and each PowerShell script
 - Configuration files examples:
    - **CanvasAppsGroupsAccessMapping.json**: for granting access to canvas apps to Azure AD groups
    - **ConnectionsMapping-....json**: for the mapping between a connection reference in the solution and the id of a connection in the targeted environment (*one by environment you want to apply this configuration*)
@@ -48,6 +47,7 @@ All notable changes to this repository will be documented in this file.
 ### 🤖 Changed
 
 - Pull request template moved in ".github" folder
+- Copyright and MIT license added at the top of each GitHub workflow and each PowerShell script
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly found this notion more appropriate*
 - GitHub hosted runner type update to **ubuntu-latest** for every job where it was possible to use it
 - Make some variables reusable in workflows by setting them only once as GitHub secrets (*ex: `echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV`*)
