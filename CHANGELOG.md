@@ -22,7 +22,7 @@ All notable changes to this repository will be documented in this file.
 
 ### ❌ Deleted
 
-- Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action*) - (*to configure*)
+- Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action - to configure*)
 
 ## [0.2.0] - 2021-09-??
 
