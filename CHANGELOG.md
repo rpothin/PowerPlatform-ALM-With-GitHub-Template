@@ -42,7 +42,7 @@ All notable changes to this repository will be documented in this file.
    - **Add-UserToDataverseEnvironment.ps1**: to add and configure a user in a Dataverse environment
    - **Enable-CloudFlows.ps1**: to turn on cloud flows in the solution
    - **Grant-GroupsAccessToCanvasApps.ps1**: to grant access to canvas apps to Azure AD groups
-   - **Update-ConnectionReferences.ps1**: to update connection references adding a connection
+   - **Update-ConnectionReferences.ps1**: to update connection references adding a connection to it
 
 ### 🤖 Changed
 
