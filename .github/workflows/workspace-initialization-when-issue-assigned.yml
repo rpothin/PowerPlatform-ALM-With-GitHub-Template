@@ -10,7 +10,7 @@ on:
     types: [assigned, labeled]
 
 env:
-  branch_name: dev/issue_${{ github.event.issue.number }} # Name of the new dev branch
+  branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.issue.number }} # Name of the new dev branch
   dataverse_dev_environment_display_name: BAFC - Raphael - Dev - Issue ${{ github.event.issue.number }} # Display name for the new Dataverse Dev environment
   dataverse_dev_environment_domain_name: bafc-rpo-gh-dev-issue-${{ github.event.issue.number }} # Domain name for the new Dataverse Dev environment
   dataverse_environment_url_base: .crm3.dynamics.com # Base URL of the Dataverse Dev environment associated to the issue
