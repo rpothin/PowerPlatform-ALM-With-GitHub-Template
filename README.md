@@ -31,7 +31,7 @@
 <h3 align="center">
   <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions?discussions_q=category%3AIdeas">Feature request</a>
   <span> · </span>
-  <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues">Report a bug</a>
+  <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues/new/choose">Report a bug</a>
   <span> · </span>
   Support: <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions">Discussions</a>
 </h3>
