@@ -135,14 +135,11 @@
 
 12.  In the new repository, go to the **Code** tab
 13.  Open the **.github/workflows** folder
-14.  Open and update each YAML file in this folder:
-   - environment variables
-   - job conditions (if you decided to go for different label names)
-   - default value for the **solution_name** input variable in the **export-and-unpack-solution** GitHub Actions
-
-> *Notes:*
-> - *you can delete the **Solutions** folder if you want. It contains a simple solution to test the GitHub Actions.*
-> - *if you do not have a solution in your repository (in the **Solutions** folder) and you create a new issue, the **import-solution-to-dev-environment** job in the **workspace-initialization-when-issue-assigned** GitHub Actions will fail, but you will still be able to start building your solution.*
+14.  Open and make some updates, if necessary, in the GitHub workflows:
+   - environment variables:
+      - **dataverse_environment_sku** and **solution_name** in multiple workflows
+      - **solution_checker_geography** in "solution-quality-check-on-pr.yml"
+   - issue labels considered in the workflows
 
 You should now be ready to start using this solution 🎉
 
