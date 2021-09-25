@@ -12,7 +12,7 @@ All notable changes to this repository will be documented in this file.
 
 ### 🚀 Added
 
-- ...
+- Pro-development components management - plugins, PCFs, custom APIs, service endpoints...  (*to do*)
 
 ### 🤖 Changed
 
@@ -22,6 +22,7 @@ All notable changes to this repository will be documented in this file.
 - Power Platform environment configuration details moved to a centralized configuration file and information extracted in workflows when needed using a dedicated action (*to configure*)
 - Add multiple users (*the members of the development team for example*) configured in a file as System Administrators to the Dataverse Dev environment created in the **workspace-initialization-when-issue-assigned** GitHub workflow (*to configure*)
 - Update connection references through out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action (*to configure*)
+- Management of multiple solutions in the same repository (*to configure*)
 
 ### ❌ Deleted
 
