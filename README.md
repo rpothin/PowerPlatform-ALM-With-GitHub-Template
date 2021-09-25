@@ -125,8 +125,8 @@
 9. In the new repository, go to the **Issues** tab
 10.  Click on **Labels**
 11.  Create the following labels using the **New label** button:
-    - **work in progress**: Trigger the workspace initialization (branch and environment)
-    - **dev env created**: Power Platform Dev environment created for this issue
+   - **in progress**: Trigger the workspace initialization (*branch and environment*)
+   - **dev env created**: Indicate that a Power Platform Dev environment has been created for this issue
 
 > *Note: you can change the name of the labels, but you will need to make some replacements in the GitHub actions.*
 
