@@ -93,24 +93,35 @@
 4. In the new repository, go to the **Settings** tab
 5. Open the **Environments** section
 6. Create the following environments:
-   - dev_environment
-   - build_environment
-   - qa_environment
+   - development
+   - build
+   - validation
+   - production
 
-> *Note: We suggest to add a protection rule (at least one reviewer for solution deployments) on the **qa_environment**.*
+> *Note: We suggest to add a [protection rule](https://docs.github.com/en/actions/deployment/environments#environment-protection-rules) (at least one reviewer for solution deployments) on the **validation** and **production** environments.*
 
 7. Open the **Secrets** section
 8. Add the following repository secrets to the new repository:
    - APPLICATION_ID: Application (client) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
    - CLIENT_SECRET: Client secret of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
    - TENANT_ID: Directory (tenant) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
-   - DEV_USER_LOGIN: User login for the management of the Dev environments that will be created
-   - DEV_USER_PASSWORD: User password for the management of the Dev environments that will be created
-   - BUILD_USER_LOGIN: User login for the management of the Build environments that will be created
-   - BUILD_USER_PASSWORD: User password for the management of the Build environments that will be created
-   - POWERAPPS_QA_ENVIRONMENT_URL: URL of the existing QA environment
-   - QA_USER_LOGIN: User login for the management of the existing QA environment
-   - QA_USER_PASSWORD: User password for the management of the existing QA environment
+   - DATAVERSE_VALIDATION_ENVIRONMENT_URL: URL of the Power Platform Validation environment
+   - DATAVERSE_VALIDATION_ENVIRONMENT_NAME: Display name of the Power Platform Validation environment
+   - DATAVERSE_PRODUCTION_ENVIRONMENT_URL: URL of the Power Platform Production environment
+   - DATAVERSE_PRODUCTION_ENVIRONMENT_NAME: Display name of the Power Platform Production environment
+   - BRANCH_NAME_BASE: Base used with the number of the issue to build the name of the development branches (*in our case `dev/issue_`*)
+   - DATAVERSE_ENVIRONMENT_REGION: Name of the location used for the creation of the Power Platform environments (*development and build*)
+
+> *Note: The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command of the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module can be used to get all the supported locations for your Power Platform environment*
+
+   - DATAVERSE_ENVIRONMENT_CURRENCY_NAME: Name of the currency used for the creation of the Power Platform environments (*development and build*)
+
+> *Note: The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command of the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module can be used to get all the supported currencies for a specific location for your Power Platform environment*
+
+   - DATAVERSE_ENVIRONMENT_LANGUAGE_NAME: Name of the language used for the creation of the Power Platform environments (*development and build*)
+
+> *Note: The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command of the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module can be used to get all the supported languages for a specific location for your Power Platform environment*
+
 9. In the new repository, go to the **Issues** tab
 10.  Click on **Labels**
 11.  Create the following labels using the **New label** button:
