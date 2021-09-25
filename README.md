@@ -58,18 +58,18 @@
     </h3>
 </p>
 <p align="center">
-    <a href="#workspace-initialization-when-issue-assigned" alt="Workspace initialization">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/workspace-initialization-when-issue-assigned/badge.svg" /></a>
-    <a href="#export-and-unpack-solution" alt="Export & Unpack solution">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/export-and-unpack-solution/badge.svg" /></a>
-    <a href="#solution-quality-check-on-pr" alt="Quality checks">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/solution-quality-check-on-pr/badge.svg" /></a>
-    <a href="#import-solution-to-qa" alt="Import to QA">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/import-solution-to-qa/badge.svg" /></a>
-    <a href="#delete-powerapps-dev-environment-when-issue-closed" alt="Delete dev environment">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/delete-powerapps-dev-environment-when-issue-closed/badge.svg" /></a>
-    <a href="#create-github-release" alt="Create release">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/workflows/create-github-release/badge.svg" /></a>
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/workspace-initialization-when-issue-assigned.yml" alt="Workspace initialization">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/workspace-initialization-when-issue-assigned.yml/badge.svg" /></a>
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/export-and-unpack-solution.yml" alt="Export & Unpack solution">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/export-and-unpack-solution.yml/badge.svg" /></a>
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/solution-quality-check-on-pr.yml" alt="Quality checks">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/solution-quality-check-on-pr.yml/badge.svg?branch=main" /></a>
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml" alt="Clean workspace">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml/badge.svg" /></a>
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/import-solution-to-validation.yml" alt="Import solution to Validation">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/import-solution-to-validation.yml/badge.svg" /></a>
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/create-deploy-release.yml" alt="Create & Deploy release">
+        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/create-deploy-release.yml/badge.svg" /></a>
 </p>
 
 ## ✈️ How to use this repository template?
