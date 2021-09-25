@@ -38,17 +38,17 @@
 
 ## 🚀 Features
 
-- **Workspace initialization** when a specific label is added to an issue in GitHub:
+- **Workspace initialization** when a specific label is added to an assigned issue in GitHub:
   - create a new branch dedicated to the issue
-  - create a new Power Platform dev environment dedicated to the issue
-  - import the existing solution in the main branch of the repository to the new dev environment
-  - add a comment to the issue with workspace details
-  - add a specific label to the issue to indicate a Power Platform dev environment has been created for this issue
-- **On-demand solution export and unpack** from a Power Platform dev environment using the issue number and the name of the considered solution
-- **Solution checker** execution on solution version in a dev branch on the creation of a pull request targeting the main branch
-- **Import solution to a Power Platform QA environment** when a new commit is made on the main branch with changes in the **Solutions/** folder
-- **Delete a Power Platform dev environment** when the associated issue is closed or canceled
-- **Create a GitHub release** containing a packed managed version of the solution
+  - create a new Power Platform Dev environment dedicated to the issue
+  - import the existing solution in the repository to the new Dev environment
+  - add comments to the issue with workspace details (*branch an Dev environment*)
+  - add a specific label to the issue to indicate a Power Platform Dev environment has been created for this issue
+- **On-demand solution export and unpack** from a Power Platform Dev environment using the issue number and the name of the considered solution
+- **Solution validation** on the "work in progress" version of a solution on the creation of a pull request targeting the main branch
+- **Import solution to a Power Platform Validation environment** when a new commit is made on the main branch with changes in the **Solutions/** folder
+- **Clean a development workspace** when the associated issue is closed or deleted
+- **Create a GitHub release** and **deploy the managed solution in it to a Power Platform Production environment**
 
 > *Note: Some of these features used a Just In Time (JIT) Power Platform Build environment to build a managed version of a solution based on an exported and unpacked unmanaged solution.*
 
