@@ -145,7 +145,7 @@ You should now be ready to start using this solution 🎉
 
 ## 📅 Roadmap
 
-Keep an eye 👀 on the [⚒ To do / Unreleased](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CHANGELOG.md#-to-do--unreleased) section of the **CHANGELOG**.
+Keep an eye 👀 on the [⚒ To do / Unreleased](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CHANGELOG.md#-to-do--unreleased) section of the **CHANGELOG** to know what's coming next.
 
 ## ❗ Code of Conduct
 
