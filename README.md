@@ -78,14 +78,9 @@
 
 ### Prerequisites
 
-- A GitHub account and if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)
-- A user account capable of creating Power Platform environments on on your tenant
-
-> *Note: If you want to try this solution on a trial tenant, you will need at least 3 different users (1 per Power Platform environment used in this solution)*
-
-- A service principal regesterd in Azure Active Directory on your tenant with the following API Permissions (at least) that will be used to execute the **Power Apps Solution Checker**: Dynamics CRM.user_impersonation and Microsoft Graph.User.Read
-
-- A Power Platform QA environment already created on your tenant
+- A GitHub account - *if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)*
+- Access to the information of a service principal capable of creating Power Platform environments on the tenant you want to use and execute the solution checker - *API permissions you will need on the service principal (at least): Dynamics CRM.user_impersonation and Microsoft Graph.User.Read*
+- 2 Power Platform environments already created on your tenant: Validation and Production
 
 ### Step by step configuration procedure
 
