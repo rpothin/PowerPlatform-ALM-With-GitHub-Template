@@ -167,7 +167,7 @@ If you want to participate to this project, but you are not sure how you can do 
 At a high level, here are the main parts of this repository:
 
 - [.github/workflows](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/.github/workflows) - contains all the GitHub Actions workflows available in this repository and that can be use to manage the ALM process of Power Platform solutions directly from GitHub.
-- [Solutions/PowerPlatformALMWithGitHub](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/Solutions/PowerPlatformALMWithGitHub) - contains a simple Power Platform solution used for the tests of the GitHub Actions.
+- ...
 
 ## Contributors
 
