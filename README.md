@@ -72,6 +72,8 @@
         <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/create-deploy-release.yml/badge.svg" /></a>
 </p>
 
+> *Note: **3-solution-quality-check-on-pr** GitHub workflow appears failing because it does not execute on the main branch. The badge is displayed to provide a direct link to the workflow page.*
+
 ## ✈️ How to use this repository template?
 
 ### Prerequisites
