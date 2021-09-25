@@ -122,6 +122,10 @@
 
 > *Note: The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command of the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module can be used to get all the supported languages for a specific location for your Power Platform environment*
 
+   - DEVELOPER_INTERNAL_EMAIL: Email used by the developer to connect to the Power Platform environments (*currently the GitHub workflow support only one developer*)
+   - SOLUTION_COMPONENTS_OWNER_EMAIL: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
+   - PAC_CLI_VERSION: Version of the [Power Platform CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli) used in the GitHub workflows to unpack and pack the canvas apps (*in our case `1.8.6`*)
+
 9. In the new repository, go to the **Issues** tab
 10.  Click on **Labels**
 11.  Create the following labels using the **New label** button:
