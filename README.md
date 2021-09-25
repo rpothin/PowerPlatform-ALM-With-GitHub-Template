@@ -145,18 +145,7 @@ You should now be ready to start using this solution 🎉
 
 ## 📅 Roadmap
 
-- Replace the creation and deletion of Power Platform environments using PowerShell by the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions) project when they will be available
-
-- Add the **publish-solution** and **update-solution-version** actions when they will be available in the [Power Platform Actions](https://github.com/microsoft/powerplatform-actions) repository
-
-- Improve the way we manage the configuration of the Power Platform environments we create
-
-- Improve the documentation about the usage of this solution (branching strategy...)
-
-- Take in account more complex scenarios:
-  - multiple solutions
-  - solution upgrade
-  - ...
+Keep an eye 👀 on the [⚒ To do / Unreleased](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CHANGELOG.md#-to-do--unreleased) section of the **CHANGELOG**.
 
 ## ❗ Code of Conduct
 
