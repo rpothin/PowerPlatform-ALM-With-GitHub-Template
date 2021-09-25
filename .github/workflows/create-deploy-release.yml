@@ -19,7 +19,7 @@ on:
 
 env:
   solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
-  dataverse_environment_url_base: .crm3.dynamics.com # Base URL for the just in time Dataverse Build environment
+  dataverse_environment_url_base: ${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }} # Base URL for the just in time Dataverse Build environment
   
 jobs:
   # Job for the creation of the release branch
