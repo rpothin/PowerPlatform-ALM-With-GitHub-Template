@@ -72,12 +72,13 @@
         <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/create-deploy-release.yml/badge.svg" /></a>
 </p>
 
-> *Note: **3-solution-quality-check-on-pr** GitHub workflow appears failing because it does not execute on the main branch. The badge is displayed to provide a direct link to the workflow page.*
+> *Note: The **3-solution-quality-check-on-pr** GitHub workflow appears failing because it does not execute on the main branch. The badge is displayed to provide a direct link to the workflow page.*
 
 ## ✈️ How to use this repository template?
 
 ### Prerequisites
 
+- A GitHub account and if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)
 - A user account capable of creating Power Platform environments on on your tenant
 
 > *Note: If you want to try this solution on a trial tenant, you will need at least 3 different users (1 per Power Platform environment used in this solution)*
