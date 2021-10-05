@@ -103,6 +103,8 @@
 
 > *Note: We suggest to add a [protection rule](https://docs.github.com/en/actions/deployment/environments#environment-protection-rules) (at least one reviewer for solution deployments) on the **validation** and **production** environments.*
 
+*gif - Create environment*
+
 7. Open the **Secrets** section
 8. Add the following repository secrets to the new repository:
    - **APPLICATION_ID**: Application (client) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
@@ -128,6 +130,8 @@
 > - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command can be used to get all the supported currencies for a specific location for your Power Platform environment*
 > - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command can be used to get all the supported languages for a specific location for your Power Platform environment*
 
+*gif - Create secret*
+
 9. In the new repository, go to the **Issues** tab
 10.  Click on **Labels**
 11.  Create the following labels using the **New label** button:
@@ -136,6 +140,8 @@
 
 > *Note: you can change the name of the labels, but you will need to make some replacements in the GitHub workflows.*
 
+*gif - Create label*
+
 12.  In the new repository, go to the **Code** tab
 13.  Open the **.github/workflows** folder
 14.  Open and make some updates, if necessary, in the GitHub workflows:
@@ -143,6 +149,8 @@
       - **dataverse_environment_sku** and **solution_name** in multiple workflows
       - **solution_checker_geography** in "solution-quality-check-on-pr.yml"
    - issue labels considered in the workflows
+
+*gif - Update workflow*
 
 You should now be ready to start using this solution 🎉
 
