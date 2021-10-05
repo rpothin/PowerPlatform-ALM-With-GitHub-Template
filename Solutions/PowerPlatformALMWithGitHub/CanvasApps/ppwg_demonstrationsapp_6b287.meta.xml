@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>ppwg_demonstrationsapp_6b287</Name>
-  <AppVersion>2021-09-16T02:11:12Z</AppVersion>
+  <AppVersion>2021-10-05T02:28:54Z</AppVersion>
   <Status>Ready</Status>
   <CreatedByClientVersion>3.21091.30.0</CreatedByClientVersion>
   <MinClientVersion>3.21091.30.0</MinClientVersion>
@@ -10,20 +10,17 @@
   <GalleryItemId xsi:nil="true"></GalleryItemId>
   <BackgroundColor>rgba(37, 62, 143, 1)</BackgroundColor>
   <DisplayName>Demonstrations App</DisplayName>
-  <Description xsi:nil="true"></Description>
-  <CommitMessage xsi:nil="true"></CommitMessage>
+  <Description></Description>
+  <CommitMessage></CommitMessage>
   <Publisher></Publisher>
   <AuthorizationReferences>[]</AuthorizationReferences>
   <ConnectionReferences>{}</ConnectionReferences>
   <DatabaseReferences>{"default.cds":{"databaseDetails":{"referenceType":"Environmental","environmentName":"default.cds","overrideValues":{"status":"NotSpecified"}},"dataSources":{"Demonstrations":{"entitySetName":"ppwg_demonstrations","logicalName":"ppwg_demonstration"}}}}</DatabaseReferences>
-  <AppComponents>[]</AppComponents>
-  <AppComponentDependencies>[]</AppComponentDependencies>
   <CanvasAppType>0</CanvasAppType>
   <BypassConsent>0</BypassConsent>
-  <AdminControlBypassConsent>0</AdminControlBypassConsent>
   <EmbeddedApp xsi:nil="true"></EmbeddedApp>
   <IntroducedVersion>1.0</IntroducedVersion>
-  <CdsDependencies>{"cdsdependencies":[{"logicalname":"ppwg_demonstration","componenttype":1}]}</CdsDependencies>
+  <CdsDependencies xsi:nil="true"></CdsDependencies>
   <IsCustomizable>1</IsCustomizable>
   <BackgroundImageUri>/CanvasApps/ppwg_demonstrationsapp_6b287_BackgroundImageUri</BackgroundImageUri>
   <DocumentUri>/CanvasApps/ppwg_demonstrationsapp_6b287_DocumentUri.msapp</DocumentUri>
