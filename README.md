@@ -90,6 +90,9 @@
 > *Note: Let the **Include all branches** option unchecked.*
 
 3. Click on the **Create repository from template** button
+
+...
+
 4. In the new repository, go to the **Settings** tab
 5. Open the **Environments** section
 6. Create the following environments:
