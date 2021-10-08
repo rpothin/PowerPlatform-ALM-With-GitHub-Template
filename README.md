@@ -91,7 +91,7 @@
 
 3. Click on the **Create repository from template** button
 
-![Create_Repository_From_Template](https://user-images.githubusercontent.com/23240245/135956131-1391296b-defa-44b5-96b4-a3e340866938.gif)
+![Create_Repository_From_Template](https://user-images.githubusercontent.com/23240245/136492683-f9206b6f-2608-493c-a7ac-8bc2aea065b8.gif)
 
 4. In the new repository, go to the **Settings** tab
 5. Open the **Environments** section
