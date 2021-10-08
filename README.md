@@ -103,7 +103,7 @@
 
 > *Note: We suggest to add a [protection rule](https://docs.github.com/en/actions/deployment/environments#environment-protection-rules) (at least one reviewer for solution deployments) on the **validation** and **production** environments.*
 
-*gif - Create environment*
+![Create_Environment_With_Reviewer](https://user-images.githubusercontent.com/23240245/136494086-bccc84a5-1a82-4bfb-8359-d9211e0ea234.gif)
 
 7. Open the **Secrets** section
 8. Add the following repository secrets to the new repository:
