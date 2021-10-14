@@ -150,7 +150,7 @@
       - **solution_checker_geography** in "solution-quality-check-on-pr.yml"
    - issue labels considered in the workflows
 
-*gif - Update workflow*
+![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
 
 You should now be ready to start using this solution 🎉
 
