@@ -29,7 +29,7 @@ All notable changes to this repository will be documented in this file.
 - Solution used for the tests to make the repository a bit cleaner (*to do*)
 - Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action - to configure*)
 
-## [0.2.0] - 2021-09-??
+## [0.2.0] - 2021-10-??
 
 > Improve the GitHub workflows proposed in this repository template 🥳
 
