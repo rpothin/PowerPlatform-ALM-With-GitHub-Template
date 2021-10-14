@@ -140,7 +140,7 @@
 
 > *Note: you can change the name of the labels, but you will need to make some replacements in the GitHub workflows.*
 
-*gif - Create label*
+![Create_Label](https://user-images.githubusercontent.com/23240245/137238762-f0cd25a7-dc2d-4647-b33b-de6d41ab86a5.gif)
 
 12.  In the new repository, go to the **Code** tab
 13.  Open the **.github/workflows** folder
