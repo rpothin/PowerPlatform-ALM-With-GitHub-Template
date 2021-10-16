@@ -1,6 +1,10 @@
 # Contributing
 
-From opening a bug report to creating a pull request: every contribution is appreciated and welcome. If you're planning to implement a new feature or change the api please create an issue first. This way we can ensure that your precious work is not in vain.
+From opening a bug report to creating a pull request: every contribution is appreciated and welcome.
+If you're planning to:
+- implement a new feature please start a discussion in the [idea](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions/categories/ideas) category first
+- fix a bug, please create an [issue](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues/new/choose) first
+This way we can ensure that your precious work is not in vain.
 
 ### Not Sure Where to Start?
 
@@ -10,9 +14,10 @@ If you want to participate to this project, but you are not sure how you can do 
 
 ### How the repository is organized
 
-At a high level, here are the main parts of this repository:
+At a high level, here are the main folders of this repository:
 
-- [.github/workflows](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/.github/workflows) - contains all the GitHub Actions workflows available in this repository and that can be use to manage the ALM process of Power Platform solutions directly from GitHub.
+- [.github/workflows](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/.github/workflows) - contains all the GitHub workflows available in this repository and that can be use to manage the ALM process of Power Platform solutions directly from GitHub.
+- [Scripts](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/Scripts) - contains PowerShell scripts consumed by the GitHub workflows.
 
 # Contributing to this project
 
@@ -33,10 +38,6 @@ You can explore this repository and fork it at any time, but if you want to subm
 ### 1. Fork this repository
 
 If you do not know how to do this, you can follow the [Fork a repo](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) page of the GitHub documentation.
-
-### 2. Create a new branch
-
-In your fork repository create a new branch to make your changes.
 
 ### 2. Create a new branch
 
