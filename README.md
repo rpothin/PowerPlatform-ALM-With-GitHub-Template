@@ -6,7 +6,7 @@
         Simplify the setup of a GitHub repository for Power Platform development!
     </h3>
     <p align="center">
-        This project is an open-source template whose main purpose is to help you start your ALM journey for Power Platform solutions using GitHub.
+        This project is an open-source repository template whose main purpose is to help you start your ALM journey for Power Platform solutions using GitHub.
     </p>
 </p>
 
