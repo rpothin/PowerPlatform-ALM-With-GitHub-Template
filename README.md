@@ -11,11 +11,11 @@
 </p>
 
 <p align="center">
-    <a href="#repolicense" alt="Repository License">
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/LICENSE" alt="Repository License">
         <img src="https://img.shields.io/github/license/rpothin/PowerPlatform-ALM-With-GitHub-Template?color=yellow&label=License" /></a>
-    <a href="#openissues" alt="Open Issues">
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues" alt="Open Issues">
         <img src="https://img.shields.io/github/issues-raw/rpothin/PowerPlatform-ALM-With-GitHub-Template?label=Open%20Issues" /></a>
-    <a href="#openpr" alt="Open Pull Requests">
+    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/pulls" alt="Open Pull Requests">
         <img src="https://img.shields.io/github/issues-pr-raw/rpothin/PowerPlatform-ALM-With-GitHub-Template?label=Open%20Pull%20Requests" /></a>
 </p>
 
