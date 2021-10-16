@@ -4,6 +4,7 @@ From opening a bug report to creating a pull request: every contribution is appr
 If you're planning to:
 - implement a new feature please start a discussion in the [idea](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions/categories/ideas) category first
 - fix a bug, please create an [issue](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues/new/choose) first
+
 This way we can ensure that your precious work is not in vain.
 
 ### Not Sure Where to Start?
