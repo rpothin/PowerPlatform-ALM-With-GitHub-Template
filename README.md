@@ -57,7 +57,7 @@
 ### Prerequisites
 
 - A GitHub account - *if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)*
-- Access to the information of a service principal capable of creating Power Platform environments on the tenant you want to use and execute the solution checker - *API permissions you will need on the service principal (at least): Dynamics CRM.user_impersonation and Microsoft Graph.User.Read*
+- Access to the information (*tenant id, client id and secret*) of a service principal capable of creating Power Platform environments on the tenant you want to use and execute the solution checker - *API permissions required on the service principal (at least): Dynamics CRM.user_impersonation and Microsoft Graph.User.Read*
 - 2 Power Platform environments already created on your tenant: Validation and Production
 
 ### Step by step configuration procedure
