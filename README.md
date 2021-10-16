@@ -153,7 +153,7 @@ If you want to participate to this project, but you are not sure how you can do 
 
 ### Contributors
 
-Thanks to the following people who have contributed to this project ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks to the following people who have contributed to this project:
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
