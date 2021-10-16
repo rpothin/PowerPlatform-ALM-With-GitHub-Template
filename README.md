@@ -121,7 +121,7 @@
 ![Create_Label](https://user-images.githubusercontent.com/23240245/137238762-f0cd25a7-dc2d-4647-b33b-de6d41ab86a5.gif)
 
 12.  In the new repository, go to the **Code** tab
-13.  Open the **.github/workflows** folder
+13.  Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) interface
 14.  Open and make some updates, if necessary, in the GitHub workflows:
    - environment variables:
       - **dataverse_environment_sku** and **solution_name** in multiple workflows
@@ -130,7 +130,7 @@
 
 ![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
 
-You should now be ready to start using this solution 🎉
+You should now be ready to start your Power Platform developments from your new GitHub repository 🎉
 
 ## 📅 Roadmap
 
