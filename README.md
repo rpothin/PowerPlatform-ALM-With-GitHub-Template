@@ -38,7 +38,7 @@
 
 ## 🚀 Features
 
-- **Workspace initialization** when a specific label is added to an assigned issue in GitHub:
+- **Workspace initialization** when an issue is assigned and a specific label added to it:
   - create a new branch dedicated to the issue
   - create a new Power Platform Dev environment dedicated to the issue
   - import the existing solution in the repository to the new Dev environment
