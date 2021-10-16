@@ -40,7 +40,7 @@
 
 - **Workspace initialization** when an issue is assigned and a specific label added to it:
   - create a new branch dedicated to the issue
-  - create a new Power Platform Dev environment dedicated to the issue
+  - create a new Power Platform Dev environment dedicated to the issue and add the developer as System Administrator
   - import the existing solution in the repository to the new Dev environment (*if it exists*)
   - add comments to the issue with workspace details (*branch an Dev environment*)
   - add a specific label to the issue to indicate a Power Platform Dev environment has been created for this issue
