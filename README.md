@@ -33,7 +33,7 @@
   <span> · </span>
   <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues/new/choose">Report a bug</a>
   <span> · </span>
-  Support: <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions">Discussions</a>
+  <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions">Support</a>
 </h3>
 
 ## 🚀 Features
