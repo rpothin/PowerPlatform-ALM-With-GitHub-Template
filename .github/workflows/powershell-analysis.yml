@@ -12,8 +12,30 @@ name: PSScriptAnalyzer
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'Scripts/**'
+      - '!Solutions/**'
+      - '!.github/**'
+      - '!Configuration/**'
+      - '!.all-contributorsrc'
+      - '!CHANGELOG.md'
+      - '!CODE_OF_CONDUCT.md'
+      - '!CONTRIBUTING.md'
+      - '!LICENSE'
+      - '!README.md'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'Scripts/**'
+      - '!Solutions/**'
+      - '!.github/**'
+      - '!Configuration/**'
+      - '!.all-contributorsrc'
+      - '!CHANGELOG.md'
+      - '!CODE_OF_CONDUCT.md'
+      - '!CONTRIBUTING.md'
+      - '!LICENSE'
+      - '!README.md'
     
 jobs:
   build:
