@@ -52,28 +52,6 @@
 
 > *Note: Some of these features used a Just In Time (JIT) Power Platform Build environment to build a managed version of a solution based on an exported and unpacked unmanaged solution.*
 
-<p align="center">
-    <h3 align="center">
-        🤖 GitHub Actions last run status
-    </h3>
-</p>
-<p align="center">
-    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/workspace-initialization-when-issue-assigned.yml" alt="Workspace initialization">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/workspace-initialization-when-issue-assigned.yml/badge.svg" /></a>
-    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/export-and-unpack-solution.yml" alt="Export & Unpack solution">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/export-and-unpack-solution.yml/badge.svg" /></a>
-    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/solution-quality-check-on-pr.yml" alt="Quality checks">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/solution-quality-check-on-pr.yml/badge.svg?branch=main" /></a>
-    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml" alt="Clean workspace">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml/badge.svg" /></a>
-    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/import-solution-to-validation.yml" alt="Import solution to Validation">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/import-solution-to-validation.yml/badge.svg" /></a>
-    <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/create-deploy-release.yml" alt="Create & Deploy release">
-        <img src="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/actions/workflows/create-deploy-release.yml/badge.svg" /></a>
-</p>
-
-> *Note: The **3-solution-quality-check-on-pr** GitHub workflow appears failing because it does not execute on the main branch. The badge is displayed to provide a direct link to the workflow page.*
-
 ## ✈️ How to use this repository template?
 
 ### Prerequisites
