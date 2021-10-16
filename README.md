@@ -149,14 +149,7 @@ For more information, see [CONTRIBUTING.md](https://github.com/rpothin/PowerPlat
 
 If you want to participate to this project, but you are not sure how you can do it, do not hesitate to contact [@rpothin](https://github.com/rpothin):
 - By email at raphael.pothin@gmail.com
-- On [Twitter](https://twitter.com/RaphaelPothin)  
-
-### How the repository is organized
-
-At a high level, here are the main parts of this repository:
-
-- [.github/workflows](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/tree/main/.github/workflows) - contains all the GitHub Actions workflows available in this repository and that can be use to manage the ALM process of Power Platform solutions directly from GitHub.
-- ...
+- On [Twitter](https://twitter.com/RaphaelPothin)
 
 ### Contributors
 
