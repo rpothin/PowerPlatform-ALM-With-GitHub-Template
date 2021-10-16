@@ -177,6 +177,8 @@ This project is licensed under the [MIT](https://github.com/rpothin/PowerPlatfor
 
 I would like to thank the open-source projects below that helped me find some ideas on how to organize this project.
 
-- [budibase](https://github.com/Budibase/budibase/)
-- [all-contributors](https://github.com/all-contributors/all-contributors)
+- [budibase](https://github.com/Budibase/budibase/) - for the inspiration for the format of this README
+- [all-contributors](https://github.com/all-contributors/all-contributors) - for making easier the management of the contributors list
+- [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog) - for the inspiratation for the management of the changelog
+- [contributor_covenant](https://github.com/EthicalSource/contributor_covenant) - for the amazing "CONTRIBUTING.md" template they provide
 - CoE Starter Kit...
