@@ -1,7 +1,7 @@
 Screen1 As screen:
 
     Icon1 As icon.Check:
-        Icon: =Icon.Check
+        Icon: =Icon.LikeDislike
         X: =272
         Y: =356
         ZIndex: =1
