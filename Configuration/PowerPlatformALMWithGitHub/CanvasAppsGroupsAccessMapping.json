@@ -3,5 +3,10 @@
         "canvasAppName": "ppwg_demonstrationsapp_6b287",
         "groupName": "sg-raphael-test-canvasapp-access",
         "roleName": "CanView"
+    },
+    {
+        "canvasAppName": "ppwg_finaltestapp_a4942",
+        "groupName": "sg-raphael-test-canvasapp-access",
+        "roleName": "CanEdit"
     }
 ]
