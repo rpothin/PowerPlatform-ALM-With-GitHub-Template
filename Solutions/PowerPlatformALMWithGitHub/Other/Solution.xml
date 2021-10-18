@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.21093.138" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.21101.126" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>PowerPlatformALMWithGitHub</UniqueName>
     <LocalizedNames>
@@ -83,6 +83,7 @@
       <RootComponent type="9" schemaName="ppwg_type" behavior="0" />
       <RootComponent type="29" id="{1d8a71a8-3dce-eb11-bacc-0022483c0085}" behavior="0" />
       <RootComponent type="300" schemaName="ppwg_demonstrationsapp_6b287" behavior="0" />
+      <RootComponent type="300" schemaName="ppwg_finaltestapp_a4942" behavior="0" />
     </RootComponents>
     <MissingDependencies />
   </SolutionManifest>

@@ -1,0 +1,8 @@
+Screen1 As screen:
+
+    Icon1 As icon.Check:
+        Icon: =Icon.Check
+        X: =272
+        Y: =356
+        ZIndex: =1
+
