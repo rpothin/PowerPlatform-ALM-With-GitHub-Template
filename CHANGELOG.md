@@ -17,7 +17,6 @@ All notable changes to this repository will be documented in this file.
 ### 🤖 Changed
 
 - README.md (*to do*)
-   - Gifs to explain how to configure the GitHub repository template
    - Gifs to explain how to use the GitHub repository template
 - Power Platform environment configuration details moved to a centralized configuration file and information extracted in workflows when needed using a dedicated action (*to configure*)
 - Add multiple users (*the members of the development team for example*) configured in a file as System Administrators to the Dataverse Dev environment created in the **workspace-initialization-when-issue-assigned** GitHub workflow (*to configure*)
@@ -26,8 +25,7 @@ All notable changes to this repository will be documented in this file.
 
 ### ❌ Deleted
 
-- Solution used for the tests to make the repository a bit cleaner (*to do*)
-- Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action - to configure*)
+- Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action when it will managed the JSON settings file - to configure*)
 
 ## [0.2.0] - 2021-10-??
 
@@ -49,8 +47,10 @@ All notable changes to this repository will be documented in this file.
    - **Grant-GroupsAccessToCanvasApps.ps1**: to grant access to canvas apps to Azure AD groups
    - **Update-ConnectionReferences.ps1**: to update connection references adding a connection to it
 
+
 ### 🤖 Changed
 
+- Added some gifs to explain how to configure the GitHub repository template in the README.md
 - Pull request template moved in ".github" folder
 - Copyright and MIT license added at the top of each GitHub workflow and each PowerShell script
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly find this notion more appropriate*
@@ -102,6 +102,7 @@ All notable changes to this repository will be documented in this file.
 ### ❌ Deleted
 
 - Issue template for bugs (*replaced by issue form*)
+- Solution used for the tests to make the repository a bit cleaner
 
 ## [0.1.0] - 2020-12-22
 
