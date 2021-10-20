@@ -1,12 +1,12 @@
 [
     {
-        "canvasAppName": "ppwg_demonstrationsapp_6b287",
-        "groupName": "sg-raphael-test-canvasapp-access",
+        "canvasAppName": "demo_demonstrationapp_6b287",
+        "groupName": "sg-app-viewers",
         "roleName": "CanView"
     },
     {
-        "canvasAppName": "ppwg_finaltestapp_a4942",
-        "groupName": "sg-raphael-test-canvasapp-access",
+        "canvasAppName": "demo_demonstrationapp_6b287",
+        "groupName": "sg-app-co-ownerd",
         "roleName": "CanEdit"
     }
 ]
