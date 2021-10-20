@@ -27,11 +27,9 @@ All notable changes to this repository will be documented in this file.
 
 - Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action when it will managed the JSON settings file - to configure*)
 
-## [0.2.0] - 2021-10-??
+## [0.2.0] - 2021-10-19
 
-> Improve the GitHub workflows proposed in this repository template 🥳
-
-> *Note: This version has been built entirely using [GitHub Codespaces](https://github.com/features/codespaces)* 🤩
+> Improve the GitHub workflows proposed in this repository template 🤩
 
 ### 🚀 Added
 
@@ -46,11 +44,13 @@ All notable changes to this repository will be documented in this file.
    - **Enable-CloudFlows.ps1**: to turn on cloud flows in the solution
    - **Grant-GroupsAccessToCanvasApps.ps1**: to grant access to canvas apps to Azure AD groups
    - **Update-ConnectionReferences.ps1**: to update connection references adding a connection to it
-
+- GitHub workflow for PowerShell code analysis
 
 ### 🤖 Changed
 
-- Added some gifs to explain how to configure the GitHub repository template in the README.md
+- Update the README.md and added some gifs to explain how to configure the GitHub repository template
+- Update of the CODE_OF_CONDUCT.md based on the latest version of the [Contributor Covenant](https://www.contributor-covenant.org)
+- Update of the CONBTRIBUTING.md guide
 - Pull request template moved in ".github" folder
 - Copyright and MIT license added at the top of each GitHub workflow and each PowerShell script
 - References to "Power Apps" in variables / comments replaces by "Dataverse" - *I personnaly find this notion more appropriate*
