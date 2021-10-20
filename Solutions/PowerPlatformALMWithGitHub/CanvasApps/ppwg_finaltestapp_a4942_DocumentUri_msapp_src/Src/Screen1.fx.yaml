@@ -1,8 +1,10 @@
 Screen1 As screen:
 
     Icon1 As icon.Check:
-        Icon: =Icon.LikeDislike
-        X: =272
-        Y: =356
+        Height: =310
+        Icon: =Icon.Camera
+        Width: =254
+        X: =189
+        Y: =327
         ZIndex: =1
 
