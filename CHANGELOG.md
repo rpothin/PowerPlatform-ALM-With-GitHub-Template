@@ -4,7 +4,7 @@ All notable changes to this repository will be documented in this file.
 
 > The format is based on [Keep a Changelog](https://keepachangelog.com/en/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [⚒ To do / Unreleased]
+## [Work in progress]
 
 ### 🔨 Fixed
 
@@ -12,20 +12,19 @@ All notable changes to this repository will be documented in this file.
 
 ### 🚀 Added
 
-- Pro-development components management - plugins, PCFs, custom APIs, service endpoints...  (*to do*)
+- ...
 
 ### 🤖 Changed
 
-- README.md (*to do*)
-   - Gifs to explain how to use the GitHub repository template
-- Power Platform environment configuration details moved to a centralized configuration file and information extracted in workflows when needed using a dedicated action (*to configure*)
-- Add multiple users (*the members of the development team for example*) configured in a file as System Administrators to the Dataverse Dev environment created in the **workspace-initialization-when-issue-assigned** GitHub workflow (*to configure*)
-- Update connection references through out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action (*to configure*)
-- Management of multiple solutions in the same repository (*to configure*)
+- ...
 
 ### ❌ Deleted
 
-- Update-ConnectionReferences.ps1 (*replaced by the out of the box [import-solution](https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml) action when it will managed the JSON settings file - to configure*)
+- ...
+
+## [0.3.0] - 2022-03-01
+
+...
 
 ## [0.2.0] - 2021-10-19
 
@@ -121,6 +120,7 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the deployment of a Power Platform solution to a QA environment after a build with a JIT environment on a push to the main branch
 - GitHub workflow for the creation of a GitHub release for a Power Platform managed solution (*build with a JIT environment*)
 
-[⚒ To do / Unreleased]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
+[⚒ Work in progress]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
+[0.3.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/milestone/1
 [0.2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v0.1.0
