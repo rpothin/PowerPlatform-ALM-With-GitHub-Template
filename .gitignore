@@ -1,0 +1,2 @@
+# Ignore the files of the "Microsoft.PowerApps.CLI" nuget package
+pac/
