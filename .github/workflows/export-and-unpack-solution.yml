@@ -103,7 +103,9 @@ jobs:
             del $_.FullName
         }
 
-        Remove-Item -Path $outFolder -Recurse
+        $outFolderFullPath = $GITHUB_WORKSPACE + $outFolder
+
+        Remove-Item -Path $outFolderFullPath -Recurse
       shell: pwsh
 
     # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
