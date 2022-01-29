@@ -218,6 +218,8 @@ jobs:
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: false
+        run-asynchronously: true
+        max-async-wait-time: 10
 
     # Export solution as managed from the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
@@ -405,7 +407,9 @@ jobs:
         solution-file: out/release/${{ env.solution_name }}_managed.zip
         force-overwrite: true
         publish-changes: true
-        skip-dependency-check: true
+        skip-dependency-check: false
+        run-asynchronously: true
+        max-async-wait-time: 10
 
     # Action used to checkout the repository the release branch
     #   Community action: https://github.com/actions/checkout
