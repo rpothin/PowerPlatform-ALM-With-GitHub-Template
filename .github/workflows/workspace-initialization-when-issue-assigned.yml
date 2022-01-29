@@ -270,6 +270,8 @@ jobs:
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: false
+        run-asynchronously: true
+        max-async-wait-time: 10
 
     # Add "Solution imported" comment to the issue
     - name: Solution imported comment on issue
