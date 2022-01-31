@@ -90,7 +90,7 @@ jobs:
 
         $pacPath = $pacNugetFolder.FullName + "/tools"
 
-        echo "POWERAPPS_CLI_PATH=$outFolder" >> $Env:GITHUB_ENV
+        echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
       shell: pwsh
 
     # Generate deployment settings template file from packed solution using PAC CLI
