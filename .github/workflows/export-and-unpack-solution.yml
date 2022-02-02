@@ -77,28 +77,41 @@ jobs:
         (Get-Content $file) -replace $regex, '<Version>1.0.0</Version>' | Set-Content $file
       shell: pwsh
     
-    # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
-    # Use temp exe from PowerShell to unpack canvas app source files into a folder
-    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml
-    - name: Unpack canvas app source files
+    # "Microsoft.PowerApps.CLI" setup
+    - name: PowerApps CLI setup
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
         $nugetPackageVersion = "${{ secrets.PAC_CLI_VERSION }}" # 1.8.6
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
-          
+        
         $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
 
         $pacPath = $pacNugetFolder.FullName + "/tools"
 
+        echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
+      shell: pwsh
+
+    # Generate deployment settings template file from packed solution using PAC CLI
+    - name: Generate deployment settings file
+      run: |
+        $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
+
+        pac solution create-settings --solution-zip out/exported/${{ github.event.inputs.solution_name }}.zip --settings-file Configuration/${{ github.event.inputs.solution_name }}/DeploymentSettingsTemplate.json
+      shell: pwsh
+
+    # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
+    # Use temp exe from PowerShell to unpack canvas app source files into a folder
+    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml
+    - name: Unpack canvas app source files
+      run: |
         Get-ChildItem -Path "Solutions/${{ github.event.inputs.solution_name }}" -Recurse -Filter *.msapp | 
         ForEach-Object {
             $unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
             
-            # Utils\temp-canvas-packager\temp-canvas-packager.exe -unpack $_.FullName $unpackedPath
-            
-            $env:PATH = $env:PATH + ";" + "$pacPath"
+            $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
+
             pac canvas unpack --msapp $_.FullName --sources $unpackedPath
             del $_.FullName
         }
