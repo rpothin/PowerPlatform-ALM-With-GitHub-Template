@@ -423,6 +423,7 @@ jobs:
 
     # Complementary steps after solution import
     #   - Turn on cloud flows
+    #   - Share canvas apps to Azure AD groups
     - name: Steps post solution import
       run: |
         echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
