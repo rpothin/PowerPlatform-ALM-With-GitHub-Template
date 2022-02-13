@@ -234,7 +234,6 @@ jobs:
         deployment-settings-file: Configuration/${{ env.solution_name }}/DeploymentSettings_validation.json
 
     # Complementary steps after solution import
-    #   - Link connection references to connections
     #   - Turn on cloud flows
     - name: Steps post solution import
       run: |
