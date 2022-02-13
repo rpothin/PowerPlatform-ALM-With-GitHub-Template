@@ -235,6 +235,7 @@ jobs:
         skip-dependency-check: false
         run-asynchronously: true
         max-async-wait-time: 10
+        use-deployment-settings-file: false
 
     # Export solution as managed from the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml

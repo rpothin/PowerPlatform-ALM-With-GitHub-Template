@@ -220,6 +220,7 @@ jobs:
         skip-dependency-check: false
         run-asynchronously: true
         max-async-wait-time: 10
+        use-deployment-settings-file: false
 
     # Export solution as managed from the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
@@ -387,6 +388,13 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Action used to checkout the repository the release branch
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+      uses: actions/checkout@v2
+      with:
+        ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+
     # Get the content of the GitHub artifact store we got in the previous job
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
     - name: Fetch the ready to ship solution from GH artifact store
@@ -410,13 +418,8 @@ jobs:
         skip-dependency-check: false
         run-asynchronously: true
         max-async-wait-time: 10
-
-    # Action used to checkout the repository the release branch
-    #   Community action: https://github.com/actions/checkout
-    - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
-      uses: actions/checkout@v2
-      with:
-        ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+        use-deployment-settings-file: true
+        deployment-settings-file: Configuration/${{ env.solution_name }}/DeploymentSettings_production.json
 
     # Complementary steps after solution import
     #   - Link connection references to connections
