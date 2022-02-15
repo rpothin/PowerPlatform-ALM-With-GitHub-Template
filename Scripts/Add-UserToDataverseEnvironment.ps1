@@ -149,7 +149,7 @@ Function Add-UserToDataverseEnvironment {
 </fetch>
 "@
             $fetchSecurityRoles = $fetchSecurityRoles -F $SecurityRoleName, $businessUnitId
-            
+
             # Search considered environment based on Display name
             Write-Verbose "Search Dataverse environments with the following display name: $DataverseEnvironmentDisplayName"
             $dataverseEnvironments = Get-AdminPowerAppEnvironment *$dataverseEnvironmentNameForSearch*
