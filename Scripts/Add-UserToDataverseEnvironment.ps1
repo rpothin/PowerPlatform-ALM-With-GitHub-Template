@@ -29,7 +29,7 @@ Function Add-UserToDataverseEnvironment {
 
         .PARAMETER SecurityRoleName
             Specifies the name of the security role you want to assign to the user you will add to the considered Dataverse environment.
-        
+
         .INPUTS
             None. You cannot pipe objects to Add-UserToDataverseEnvironment.
 
