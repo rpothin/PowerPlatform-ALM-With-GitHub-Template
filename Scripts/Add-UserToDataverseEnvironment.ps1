@@ -155,7 +155,7 @@ Function Add-UserToDataverseEnvironment {
             $dataverseEnvironments = Get-AdminPowerAppEnvironment *$dataverseEnvironmentNameForSearch*
 
             # Number of environments found
-            $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure
+            $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure-Object
             $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
 
             # If only 1 Dataverse environment found we continue, else there is an error
