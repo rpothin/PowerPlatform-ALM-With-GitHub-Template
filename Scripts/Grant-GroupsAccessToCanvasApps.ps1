@@ -76,7 +76,7 @@ Function Grant-GroupsAccessToCanvasApps {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$DataverseEnvironmentDisplayName,
-        
+
         # Path to the configuration file with the mapping between canvas apps and Azure AD groups
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
