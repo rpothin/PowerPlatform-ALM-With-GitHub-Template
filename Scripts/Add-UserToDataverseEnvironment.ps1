@@ -118,7 +118,7 @@ Function Add-UserToDataverseEnvironment {
             # Connect to Microsoft.Xrm.Data.PowerShell with service principal
             Write-Verbose "Connect to Microsoft.Xrm.Data.PowerShell with service principal."
             Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
-            
+
             # Get the business unit ID of the of the account we are connected with
             Write-Verbose "Get the business unit ID of the of the account we are connected with."
             $businessUnitId = (Invoke-CrmWhoAmI).BusinessUnitId
