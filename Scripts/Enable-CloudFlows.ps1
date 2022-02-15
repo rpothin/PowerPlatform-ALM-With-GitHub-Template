@@ -81,7 +81,7 @@ Function Enable-CloudFlows {
         # Set generic connection (with service principal)
         Write-Verbose "Set generic connection (with service principal)."
         $connection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
-        
+
         # Set impersonation connection
         Write-Verbose "Set impersonation connection."
         $impersonationConnection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
