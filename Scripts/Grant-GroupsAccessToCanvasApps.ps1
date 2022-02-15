@@ -1,7 +1,7 @@
 # Copyright (c) 2020 Raphael Pothin.
 # Licensed under the MIT License.
 
-Function Grant-GroupsAccessToCanvasApps{
+Function Grant-GroupsAccessToCanvasApps {
     <#
         .SYNOPSIS
             Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file.
