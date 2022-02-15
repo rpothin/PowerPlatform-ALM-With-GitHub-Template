@@ -125,7 +125,7 @@ Function Grant-GroupsAccessToCanvasApps {
         # Connect to Power Apps with service principal
         Write-Verbose "Connect to Power Apps with service principal."
         Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
-        
+
         # Search considered environment based on Display name
         Write-Verbose "Search Dataverse environments with the following display name: $DataverseEnvironmentDisplayName"
         $dataverseEnvironments = Get-AdminPowerAppEnvironment *$dataverseEnvironmentNameForSearch*
