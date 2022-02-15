@@ -121,7 +121,7 @@ Function Grant-GroupsAccessToCanvasApps {
         # Connect to Azure CLI with service principal
         Write-Verbose "Connect to Azure CLI with service principal."
         az login --service-principal -u $ClientId -p $ClientSecret --tenant $TenantId --allow-no-subscriptions
-            
+
         # Connect to Power Apps with service principal
         Write-Verbose "Connect to Power Apps with service principal."
         Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
