@@ -154,7 +154,7 @@ Function Grant-GroupsAccessToCanvasApps{
                 
                 # If group found, we continue
                 Write-Verbose "If group found, we continue."
-                if ($group -ne $null) {
+                if ($null -ne $group) {
                     # Get the Object ID of the considered group
                     Write-Verbose "Get group Object ID from the provided name."
                     $groupObjectId = $group.objectId
