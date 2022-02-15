@@ -151,7 +151,7 @@ Function Grant-GroupsAccessToCanvasApps {
                 # Get the details of the considered group
                 Write-Verbose "Get group details from the provided name."
                 $group = az ad group show --group $configuration.groupName | ConvertFrom-Json
-                
+
                 # If group found, we continue
                 Write-Verbose "If group found, we continue."
                 if ($null -ne $group) {
