@@ -61,7 +61,7 @@ Function Add-UserToDataverseEnvironment {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$ClientId,
-        
+
         # Client Secret of the Azure AD application registration
         # associated to the application user with the System Administrator security role
         # in the targeted Dataverse environment
