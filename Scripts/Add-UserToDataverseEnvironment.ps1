@@ -164,8 +164,8 @@ Function Add-UserToDataverseEnvironment {
                 Write-Verbose "Set variable for the 'name' of the considered Dataverse environment."
                 $dataverseEnvironmentName = $dataverseEnvironments[0].EnvironmentName
 
-                Write-Verbose "Add the considered to the Dataverse environment we found."
-                $addUserToEnvironment = Add-AdminPowerAppsSyncUser -EnvironmentName "$dataverseEnvironmentName" -PrincipalObjectId $userObjectId
+                Write-Verbose "Add the considered user to the Dataverse environment we found."
+                Add-AdminPowerAppsSyncUser -EnvironmentName "$dataverseEnvironmentName" -PrincipalObjectId $userObjectId
 
                 Write-Verbose "List users with the considered internal email."
                 $users = Get-CrmRecordsByFetch -Fetch $fetchUsers
