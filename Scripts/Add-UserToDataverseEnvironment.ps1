@@ -106,7 +106,7 @@ Function Add-UserToDataverseEnvironment {
         
         # If user found, we continue
         Write-Verbose "If user found, we continue."
-        if ($user -ne $null) {
+        if ($null -ne $user) {
             # Get the Object ID of the considered user
             Write-Verbose "Get user Object ID from the provided principal name."
             $userObjectId = $user.objectId
