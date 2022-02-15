@@ -114,7 +114,7 @@ Function Enable-CloudFlows {
 </fetch>
 "@;
         $draftCloudFlows = (Get-CrmRecordsByFetch -conn $connection -Fetch $fetchDraftCloudFlows -Verbose).CrmRecords
-        
+
         # For each cloud flow in the considered solution
         Write-Verbose "For each cloud flow in the considered solution..."
         foreach ($draftCloudFlow in $draftCloudFlows) {
