@@ -113,7 +113,7 @@ Function Grant-GroupsAccessToCanvasApps {
                 Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
             }
         }
-        
+
         # Set generic connection (with service principal)
         Write-Verbose "Set generic connection (with service principal)."
         $connection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
