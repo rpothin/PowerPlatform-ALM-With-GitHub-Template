@@ -114,7 +114,7 @@ Function Add-UserToDataverseEnvironment {
             # Connect to Power Apps with service principal
             Write-Verbose "Connect to Power Apps with service principal."
             Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
-            
+
             # Connect to Microsoft.Xrm.Data.PowerShell with service principal
             Write-Verbose "Connect to Microsoft.Xrm.Data.PowerShell with service principal."
             Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
