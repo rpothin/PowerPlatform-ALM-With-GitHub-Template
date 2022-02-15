@@ -110,7 +110,7 @@ Function Add-UserToDataverseEnvironment {
             # Get the Object ID of the considered user
             Write-Verbose "Get user Object ID from the provided principal name."
             $userObjectId = $user.objectId
-            
+
             # Connect to Power Apps with service principal
             Write-Verbose "Connect to Power Apps with service principal."
             Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
