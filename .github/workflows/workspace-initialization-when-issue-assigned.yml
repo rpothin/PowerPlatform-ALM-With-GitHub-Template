@@ -65,6 +65,8 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: windows-latest
+    outputs:
+      dev_environment_url: ${{ steps.create_dev_environment.outputs.environment-url }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
@@ -73,6 +75,7 @@ jobs:
     # Create the new Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
     - name: Create environment
+      id: create_dev_environment
       uses: microsoft/powerplatform-actions/create-environment@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
@@ -105,7 +108,7 @@ jobs:
     needs: [create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
-      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+      url: ${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }} # https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -132,7 +135,7 @@ jobs:
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+          DataverseEnvironmentUrl = "${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}"
           DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
           UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
         }
@@ -145,10 +148,10 @@ jobs:
   
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   import-solution-to-dev-environment:
-    needs: add-user-to-dev-environment
+    needs: [create-dataverse-dev-environment, add-user-to-dev-environment]
     environment:
       name: development
-      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+      url: ${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }} # https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -265,7 +268,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: ${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -285,7 +288,7 @@ jobs:
 
   # Job to add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
-    needs: import-solution-to-dev-environment
+    needs: [create-dataverse-dev-environment, import-solution-to-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -300,4 +303,4 @@ jobs:
           # 🎆 Workspace initialized!
 
           Branch: [**${{ env.branch_name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ env.branch_name }})
-          Dataverse Dev environment created: [**${{ env.dataverse_dev_environment_display_name }}**](https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }})
+          Dataverse Dev environment created: [**${{ env.dataverse_dev_environment_display_name }}**](${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }})
