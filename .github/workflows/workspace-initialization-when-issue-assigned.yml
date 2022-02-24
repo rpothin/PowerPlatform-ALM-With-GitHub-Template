@@ -103,8 +103,9 @@ jobs:
         
         pac auth create --tenant ${{ secrets.TENANT_ID }} --applicationId ${{ secrets.APPLICATION_ID }} --clientSecret ${{ secrets.CLIENT_SECRET }} --kind ADMIN
         $devEnvironmentDetails = pac admin list --environment ${{ steps.create_dev_environment.outputs.environment-id }}
-        $devEnvironmentUrlTmpSubstring = $devEnvironmentDetails.Substring($devEnvironmentDetails.IndexOf("https"), $devEnvironmentDetails.Length - $devEnvironmentDetails.IndexOf("https"))
-        $devEnvironmentUrlTmpSplitArray = $devEnvironmentUrlTmp.Split(" ")
+        $devEnvironmentDetailsFocus = $devEnvironmentDetails[4]
+        $devEnvironmentUrlTmpSubstring = $devEnvironmentDetailsFocus.Substring($devEnvironmentDetailsFocus.IndexOf("https"), $devEnvironmentDetailsFocus.Length - $devEnvironmentDetailsFocus.IndexOf("https"))
+        $devEnvironmentUrlTmpSplitArray = $devEnvironmentUrlTmpSubstring.Split(" ")
         $devEnvironmentUrl = $devEnvironmentUrlTmpSplitArray[0]
 
         echo "::set-output name=dev_environment_url::$devEnvironmentUrl"
