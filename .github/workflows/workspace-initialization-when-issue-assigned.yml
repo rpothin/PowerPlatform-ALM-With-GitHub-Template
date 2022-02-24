@@ -66,7 +66,7 @@ jobs:
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: windows-latest
     outputs:
-      dev_environment_url: ${{ steps.create_dev_environment.outputs.environment-url }}
+      dev_environment_url: ${{ steps.get_dev_environment_url.outputs.dev_environment_url }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
@@ -87,6 +87,28 @@ jobs:
         currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
         language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
         domain: ${{ env.dataverse_dev_environment_domain_name }}
+
+    # Get Dev environment URL from environment ID (output of "Create environment" action)
+    - name: Get Dev environment URL from environment ID
+      id: get_dev_environment_url
+      run: |
+        $nugetPackage = "Microsoft.PowerApps.CLI"
+        $nugetPackageVersion = "${{ secrets.PAC_CLI_VERSION }}" # 1.8.6
+        $outFolder = "pac"
+
+        nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+        $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
+        $pacPath = $pacNugetFolder.FullName + "/tools"
+        $env:PATH = $env:PATH + ";" + "$pacPath"
+        
+        pac auth create --tenant ${{ secrets.TENANT_ID }} --applicationId ${{ secrets.APPLICATION_ID }} --clientSecret ${{ secrets.CLIENT_SECRET }} --kind ADMIN
+        $devEnvironmentDetails = pac admin list --environment ${{ steps.create_dev_environment.outputs.environment-id }}
+        $devEnvironmentUrlTmpSubstring = $devEnvironmentDetails.Substring($devEnvironmentDetails.IndexOf("https"), $devEnvironmentDetails.Length - $devEnvironmentDetails.IndexOf("https"))
+        $devEnvironmentUrlTmpSplitArray = $devEnvironmentUrlTmp.Split(" ")
+        $devEnvironmentUrl = $devEnvironmentUrlTmpSplitArray[0]
+
+        echo "::set-output name=dev_environment_url::$devEnvironmentUrl"
+      shell: pwsh
 
     # Add the 'dev env created' label to the current issue
     #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
