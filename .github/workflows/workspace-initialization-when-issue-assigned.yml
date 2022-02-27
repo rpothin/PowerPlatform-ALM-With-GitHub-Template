@@ -111,8 +111,9 @@ jobs:
         $devEnvironmentDetailsFocus
 
         $devEnvironmentUrlTmpSubstring = $devEnvironmentDetailsFocus.Substring($devEnvironmentDetailsFocus.IndexOf("https"), $devEnvironmentDetailsFocus.Length - $devEnvironmentDetailsFocus.IndexOf("https"))
-        $devEnvironmentUrlTmpSplitArray = $devEnvironmentUrlTmpSubstring.Split(" ")
-        $devEnvironmentUrl = $devEnvironmentUrlTmpSplitArray[0]
+        $devEnvironmentUrlTmpSplitSpace = $devEnvironmentUrlTmpSubstring.Split(" ")
+        $devEnvironmentUrlTmpSplitHttps = $devEnvironmentUrlTmpSplitSpace[0].Split("//")
+        $devEnvironmentUrl = $devEnvironmentUrlTmpSplitHttps[1]
 
         $devEnvironmentUrl
 
@@ -139,7 +140,7 @@ jobs:
     needs: [create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
-      url: ${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }} # https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+      url: "https://${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}" # https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -166,7 +167,7 @@ jobs:
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}"
+          DataverseEnvironmentUrl = "https://${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}"
           DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
           UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
         }
@@ -182,7 +183,7 @@ jobs:
     needs: [create-dataverse-dev-environment, add-user-to-dev-environment]
     environment:
       name: development
-      url: ${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }} # https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+      url: "https://${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}" # https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -299,7 +300,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}
+        environment-url: "https://${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }}"
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -334,4 +335,4 @@ jobs:
           # 🎆 Workspace initialized!
 
           Branch: [**${{ env.branch_name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ env.branch_name }})
-          Dataverse Dev environment created: [**${{ env.dataverse_dev_environment_display_name }}**](${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }})
+          Dataverse Dev environment created: [**${{ env.dataverse_dev_environment_display_name }}**](https://${{ needs.create-dataverse-dev-environment.outputs.dev_environment_url }})
