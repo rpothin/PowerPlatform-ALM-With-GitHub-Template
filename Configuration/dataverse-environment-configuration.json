@@ -1,0 +1,15 @@
+{
+    "region": "canada",
+    "url-base": ".crm3.dynamics.com",
+    "language-name": "1033",
+    "currency-name": "CAD",
+    "dev-environment": {
+        "display-name-base": "BAFC - Raphael - Dev - ",
+        "domain-name-base": "bafc-rpo-gh-dev-",
+        "developers-azure-ad-group-name": ""
+    },
+    "build-environment": {
+        "display-name-base": "BAFC - Raphael - Build - ",
+        "domain-name-base": "bafc-rpo-gh-build-"
+    }
+}
