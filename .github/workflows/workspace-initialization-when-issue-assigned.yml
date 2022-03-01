@@ -22,6 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      environment-region: ${{ steps.get-configuration.outputs.environment-region }}
+      environment-url-base: ${{ steps.get-configuration.outputs.environment-url-base }}
+      environment-language-name: ${{ steps.get-configuration.outputs.environment-language-name }}
+      environment-currency-name: ${{ steps.get-configuration.outputs.environment-currency-name }}
+      dev-environment-display-name-base: ${{ steps.get-configuration.outputs.dev-environment-display-name-base }}${{ github.event.issue.number }}
+      dev-environment-domain-name-base: ${{ steps.get-configuration.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}
     env:
       RUNNER_DEBUG: 1
       
@@ -34,6 +40,11 @@ jobs:
       with:
         concurrent_skipping: 'same_content_newer' # Only skip newer runs with the same content
         skip_after_successful_duplicate: 'false' # Do not skip if an already finished duplicate run is found
+
+    # Get Dataverse environment configuration from JSON file in the repository
+    - name: Get configuration
+      uses: ./.github/actions/get-dataverse-environment-configuration
+      id: get-configuration
 
   # Job for the creation of the new dev branch
   create-issue-development-branch:
@@ -78,12 +89,12 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        name: ${{ env.dataverse_dev_environment_display_name }}
-        region: ${{ secrets.DATAVERSE_ENVIRONMENT_REGION }}
+        name: ${{ needs.pre_job.outputs.dev-environment-display-name-base }}
+        region: ${{ needs.pre_job.outputs.environment-region }}
         type: ${{ env.dataverse_environment_sku }}
-        currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
-        language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
-        domain: ${{ env.dataverse_dev_environment_domain_name }}
+        currency: ${{ needs.pre_job.outputs.environment-currency-name }}
+        language: ${{ needs.pre_job.outputs.environment-language-name }}
+        domain: ${{ needs.pre_job.outputs.dev-environment-domain-name-base }}
 
     # Add the 'dev env created' label to the current issue
     #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
