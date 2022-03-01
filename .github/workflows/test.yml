@@ -12,5 +12,7 @@ jobs:
     - uses: ./.github/actions/get-dataverse-environment-configuration
       name: Test
       id: test
+      with:
+        path-to-configuration-file: toto
     - run: echo ${{ steps.test.outputs.build-environment-domain-name-base }}
       shell: bash
