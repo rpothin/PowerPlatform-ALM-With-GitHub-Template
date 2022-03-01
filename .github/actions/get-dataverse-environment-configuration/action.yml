@@ -49,7 +49,7 @@ runs:
       run:  |
         # Set variables
         Write-Verbose "Set variables."
-        $ConfigurationFilePath = ${{ inputs.path-to-configuration-file }}
+        $ConfigurationFilePath = "${{ inputs.path-to-configuration-file }}"
 
         # Test the path provided to the file with the configuration
         Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
