@@ -68,18 +68,30 @@ runs:
           Write-Error -Message "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError" -ErrorAction Stop
         }
 
-        $configurations
+        # Convert configurations from the file to variables
+        Write-Host "Convert configurations from the file to variables"
+        $environment-region = $configurations.region
+        $environment-url-base = $configurations.url-base
+        $environment-language-name = $configurations.language-name
+        $environment-currency-name = $configurations.currency-name
+
+        $dev-environment-display-name-base = $configurations.dev-environment.display-name-base
+        $dev-environment-domain-name-base = $configurations.dev-environment.domain-name-base
+        $developers-azure-ad-group-name = $configurations.dev-environment.developers-azure-ad-group-name
+
+        $build-environment-display-name-base = $configurations.build-environment.display-name-base
+        $build-environment-domain-name-base = $configurations.build-environment.domain-name-base
 
         # Generate outputs
         Write-Host "Generate outputs for the different configurations in the file"
-        echo "::set-output name=environment-region::$configurations.region"
-        echo "::set-output name=environment-url-base::$configurations.url-base"
-        echo "::set-output name=environment-language-name::$configurations.language-name"
-        echo "::set-output name=environment-currency-name::$configurations.currency-name"
+        echo "::set-output name=environment-region::$environment-region"
+        echo "::set-output name=environment-url-base::$environment-url-base"
+        echo "::set-output name=environment-language-name::$environment-language-name"
+        echo "::set-output name=environment-currency-name::$environment-currency-name"
         
-        echo "::set-output name=dev-environment-display-name-base::$configurations.dev-environment.display-name-base"
-        echo "::set-output name=dev-environment-domain-name-base::$configurations.dev-environment.domain-name-base"
-        echo "::set-output name=developers-azure-ad-group-name::$configurations.dev-environment.developers-azure-ad-group-name"
+        echo "::set-output name=dev-environment-display-name-base::$dev-environment-display-name-base"
+        echo "::set-output name=dev-environment-domain-name-base::$dev-environment-domain-name-base"
+        echo "::set-output name=developers-azure-ad-group-name::$developers-azure-ad-group-name"
 
         echo "::set-output name=build-environment-display-name-base::$configurations.build-environment.display-name-base"
         echo "::set-output name=build-environment-domain-name-base::$configurations.build-environment.domain-name-base"
