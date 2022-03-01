@@ -41,6 +41,11 @@ jobs:
         concurrent_skipping: 'same_content_newer' # Only skip newer runs with the same content
         skip_after_successful_duplicate: 'false' # Do not skip if an already finished duplicate run is found
 
+    # Action used to checkout the main branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v2
+    
     # Get Dataverse environment configuration from JSON file in the repository
     - name: Get configuration
       uses: ./.github/actions/get-dataverse-environment-configuration
