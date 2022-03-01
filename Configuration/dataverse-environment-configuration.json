@@ -1,7 +1,7 @@
 {
     "region": "canada",
     "urlBase": ".crm3.dynamics.com",
-    "languageName": "1033",
+    "languageDisplayName": "English",
     "currencyName": "CAD",
     "devEnvironment": {
         "displayNameBase": "BAFC - Raphael - Dev - ",
