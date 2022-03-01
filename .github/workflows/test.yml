@@ -11,3 +11,6 @@ jobs:
       name: Checkout
     - uses: ./.github/actions/get-dataverse-environment-configuration
       name: Test
+      id: test
+    - run: echo ${{ steps.test.outputs.build-environment-domain-name-base }}
+      shell: bash
