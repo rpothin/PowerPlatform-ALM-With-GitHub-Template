@@ -48,20 +48,20 @@ runs:
       id: get-dataverse-environment-configuration
       run:  |
         # Set variables
-        Write-Verbose "Set variables."
+        Write-Host "Set variables."
         $ConfigurationFilePath = "${{ inputs.path-to-configuration-file }}"
 
         # Test the path provided to the file with the configuration
-        Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
+        Write-Host "Test the path provided to the file with the configuration: $ConfigurationFilePath"
         $testPathResult = Test-Path $ConfigurationFilePath
         if(!$testPathResult) {
           Write-Error -Message "Following path to configuration file not valid: $ConfigurationFilePath" -ErrorAction Stop
         }
         
         # Extract configuration from the file
-        Write-Verbose "Get content from file with the configuration in following location: $ConfigurationFilePath"
+        Write-Host "Get content from file with the configuration in following location: $ConfigurationFilePath"
         try {
-          Write-Verbose "Try to call the Get-Content command."
+          Write-Host "Try to call the Get-Content command."
           $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
         }
         catch {
@@ -69,7 +69,7 @@ runs:
         }
 
         # Generate outputs
-        Write-Verbose "Generate outputs for the different configurations in the file"
+        Write-Host "Generate outputs for the different configurations in the file"
         echo "::set-output name=environment-region::$configurations.region"
         echo "::set-output name=environment-url-base::$configurations.url-base"
         echo "::set-output name=environment-language-name::$configurations.language-name"
