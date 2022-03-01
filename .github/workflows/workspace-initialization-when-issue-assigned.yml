@@ -118,10 +118,10 @@ jobs:
 
   # Job to add the developer to the new Developer Dataverse environment
   add-user-to-dev-environment:
-    needs: [create-issue-development-branch, create-dataverse-dev-environment]
+    needs: [pre_job, create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
-      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}${{ needs.pre_job.outputs.environment-url-base }}
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -148,8 +148,8 @@ jobs:
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
-          DataverseEnvironmentDisplayName = "${{ env.dataverse_dev_environment_display_name }}"
+          DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}${{ needs.pre_job.outputs.environment-url-base }}"
+          DataverseEnvironmentDisplayName = "${{ needs.pre_job.outputs.dev-environment-display-name-base }}"
           UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
         }
 
@@ -161,10 +161,10 @@ jobs:
   
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   import-solution-to-dev-environment:
-    needs: add-user-to-dev-environment
+    needs: [pre_job, add-user-to-dev-environment]
     environment:
       name: development
-      url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}${{ needs.pre_job.outputs.environment-url-base }}
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -281,7 +281,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}${{ needs.pre_job.outputs.environment-url-base }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -301,7 +301,7 @@ jobs:
 
   # Job to add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
-    needs: import-solution-to-dev-environment
+    needs: [pre_job, import-solution-to-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -316,4 +316,4 @@ jobs:
           # 🎆 Workspace initialized!
 
           Branch: [**${{ env.branch_name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ env.branch_name }})
-          Dataverse Dev environment created: [**${{ env.dataverse_dev_environment_display_name }}**](https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }})
+          Dataverse Dev environment created: [**${{ needs.pre_job.outputs.dev-environment-display-name-base }}**](https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}${{ needs.pre_job.outputs.environment-url-base }})
