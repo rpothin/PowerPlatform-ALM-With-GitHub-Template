@@ -1,0 +1,84 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: 'Get Dataverse environment configuration'
+
+description: 'Get Dataverse environment configuration from JSON file in the repository'
+
+inputs:
+  path-to-configuration-file:
+    description: 'Absolute path to configuration file'
+    required: true
+    default: 'Configuration\dataverse-environment-configuration.json'
+
+outputs:
+  environment-region:
+    description: "Region"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-region }}
+  environment-url-base:
+    description: "Base of the URL"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-url-base }}
+  environment-language-name:
+    description: "Language"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-language-name }}
+  environment-currency-name:
+    description: "Currency"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-currency-name }}
+  dev-environment-display-name-base:
+    description: "Base of the display name for a development environment"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.dev-environment-display-name-base }}
+  dev-environment-domain-name-base:
+    description: "Base of the domain name for a development environment"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.dev-environment-domain-name-base }}
+  developers-azure-ad-group-name:
+    description: "Base of the display name of a development environment"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.developers-azure-ad-group-name }}
+  build-environment-display-name-base:
+    description: "Base of the display name for a build environment"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.build-environment-display-name-base }}
+  build-environment-domain-name-base:
+    description: "Base of the domain name for a build environment"
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.build-environment-domain-name-base }}
+
+runs:
+  using: "composite"
+  steps:
+    # Get Dataverse environment configuration from JSON file in the repository
+    - name: Get Dataverse environment configuration
+      id: get-dataverse-environment-configuration
+      run:  |
+        # Set variables
+        Write-Verbose "Set variables."
+        $ConfigurationFilePath = ${{ inputs.path-to-configuration-file }}
+
+        # Test the path provided to the file with the configuration
+        Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
+        $testPathResult = Test-Path $ConfigurationFilePath
+        if(!$testPathResult) {
+          Write-Error -Message "Following path to configuration file not valid: $ConfigurationFilePath" -ErrorAction Stop
+        }
+        
+        # Extract configuration from the file
+        Write-Verbose "Get content from file with the configuration in following location: $ConfigurationFilePath"
+        try {
+          Write-Verbose "Try to call the Get-Content command."
+          $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+        }
+        catch {
+          Write-Error -Message "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError" -ErrorAction Stop
+        }
+
+        # Generate outputs
+        Write-Verbose "Generate outputs for the different configurations in the file"
+        echo "::set-output name=environment-region::$configurations.region"
+        echo "::set-output name=environment-url-base::$configurations.url-base"
+        echo "::set-output name=environment-language-name::$configurations.language-name"
+        echo "::set-output name=environment-currency-name::$configurations.currency-name"
+        
+        echo "::set-output name=dev-environment-display-name-base::$configurations.dev-environment.display-name-base"
+        echo "::set-output name=dev-environment-domain-name-base::$configurations.dev-environment.domain-name-base"
+        echo "::set-output name=developers-azure-ad-group-name::$configurations.dev-environment.developers-azure-ad-group-name"
+
+        echo "::set-output name=build-environment-display-name-base::$configurations.build-environment.display-name-base"
+        echo "::set-output name=build-environment-domain-name-base::$configurations.build-environment.domain-name-base"
+      shell: pwsh
