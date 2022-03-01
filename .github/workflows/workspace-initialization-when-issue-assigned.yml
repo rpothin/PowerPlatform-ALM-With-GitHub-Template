@@ -24,7 +24,7 @@ jobs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
       environment-region: ${{ steps.get-configuration.outputs.environment-region }}
       environment-url-base: ${{ steps.get-configuration.outputs.environment-url-base }}
-      environment-language-name: ${{ steps.get-configuration.outputs.environment-language-name }}
+      environment-language-display-name: ${{ steps.get-configuration.outputs.environment-language-display-name }}
       environment-currency-name: ${{ steps.get-configuration.outputs.environment-currency-name }}
       dev-environment-display-name-base: ${{ steps.get-configuration.outputs.dev-environment-display-name-base }}${{ github.event.issue.number }}
       dev-environment-domain-name-base: ${{ steps.get-configuration.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}
@@ -98,7 +98,7 @@ jobs:
         region: ${{ needs.pre_job.outputs.environment-region }}
         type: ${{ env.dataverse_environment_sku }}
         currency: ${{ needs.pre_job.outputs.environment-currency-name }}
-        language: ${{ needs.pre_job.outputs.environment-language-name }}
+        language: ${{ needs.pre_job.outputs.environment-language-display-name }}
         domain: ${{ needs.pre_job.outputs.dev-environment-domain-name-base }}
 
     # Add the 'dev env created' label to the current issue
