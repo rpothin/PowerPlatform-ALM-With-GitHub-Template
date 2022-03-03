@@ -15,9 +15,9 @@ outputs:
   environment-region:
     description: "Region"
     value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-region }}
-  environment-url-base:
+  environment-url-region-code:
     description: "Base of the URL"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-url-base }}
+    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-url-region-code }}
   environment-language-display-name:
     description: "Language"
     value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-language-display-name }}
@@ -71,7 +71,7 @@ runs:
         # Convert configurations from the file to variables
         Write-Host "Convert configurations from the file to variables"
         $environmentRegion = $configurations.region
-        $environmentUrlBase = $configurations.urlBase
+        $environmentUrlRegionCode = $configurations.urlRegionCode
         $environmentLanguageDisplayName = $configurations.languageName
         $environmentCurrencyName = $configurations.currencyName
 
@@ -85,7 +85,7 @@ runs:
         # Generate outputs
         Write-Host "Generate outputs for the different configurations in the file"
         echo "::set-output name=environment-region::$environmentRegion"
-        echo "::set-output name=environment-url-base::$environmentUrlBase"
+        echo "::set-output name=environment-url-region-code::$environmentUrlRegionCode"
         echo "::set-output name=environment-language-display-name::$environmentLanguageDisplayName"
         echo "::set-output name=environment-currency-name::$environmentCurrencyName"
         
