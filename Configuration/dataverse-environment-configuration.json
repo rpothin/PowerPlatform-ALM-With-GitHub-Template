@@ -1,6 +1,6 @@
 {
     "region": "canada",
-    "urlBase": ".crm3.dynamics.com",
+    "urlRegionCode": "crm3",
     "languageDisplayName": "English",
     "currencyName": "CAD",
     "devEnvironment": {
