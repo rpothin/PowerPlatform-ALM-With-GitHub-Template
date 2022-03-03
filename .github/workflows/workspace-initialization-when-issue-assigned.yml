@@ -121,7 +121,6 @@ jobs:
     needs: [pre_job, create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
-      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -164,7 +163,6 @@ jobs:
     needs: [pre_job, add-user-to-dev-environment]
     environment:
       name: development
-      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
