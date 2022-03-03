@@ -17,9 +17,7 @@ on:
         default: 'PowerPlatformALMWithGitHub'
 
 env:
-  branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.inputs.issue_number }} # Name of the new dev branch
-  dataverse_dev_environment_domain_name: ${{ secrets.DATAVERSE_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.inputs.issue_number }} # Domain name of the Dataverse Dev environment associated to the issue
-  dataverse_environment_url_base: ${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }} # Base URL of the Dataverse Dev environment associated to the issue
+  branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.inputs.issue_number }} # Name of the considered dev branch
 
 jobs:
   # Job for the export of the considered solution from the dev environment associated to the issue
@@ -35,6 +33,11 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: ${{ env.branch_name }}
+    
+    # Get Dataverse environment configurations from JSON file in the repository
+    - name: Get configurations
+      uses: ./.github/actions/get-dataverse-environment-configuration
+      id: get-configurations
 
     # Publish all customizations on the Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/publish-solution/action.yml
@@ -44,7 +47,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
 
     # Export the considered solution as unmanaged from the Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
@@ -54,7 +57,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_dev_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
         solution-name: ${{ github.event.inputs.solution_name }}
         solution-output-file: out/exported/${{ github.event.inputs.solution_name }}.zip
         managed: false
