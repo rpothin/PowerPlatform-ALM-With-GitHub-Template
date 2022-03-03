@@ -103,4 +103,4 @@ jobs:
 
           > The Dev branch associated to the issue has been deleted if it was still existing.
 
-          [**${{ needs.pre_job.outputs.dev-environment-display-name-base }}**](https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
+          [**${{ needs.delete-dataverse-dev-environment.outputs.dev-environment-display-name-base }}**](https://${{ needs.delete-dataverse-dev-environment.outputs.dev-environment-domain-name-base }}.${{ needs.delete-dataverse-dev-environment.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
