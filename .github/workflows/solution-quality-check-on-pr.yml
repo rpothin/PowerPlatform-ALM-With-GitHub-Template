@@ -10,20 +10,28 @@ on:
     branches:
       - main
 
-env:
-  dataverse_environment_url_base: ${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }} # Base URL for the just in time Dataverse Build environment
-
 jobs:
   # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
     runs-on: ubuntu-latest
     outputs:
       dataverse_build_environment_domain_name: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
+      environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
 
     steps:
+    # Action used to checkout the main branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    # Get Dataverse environment configurations from JSON file in the repository
+    - name: Get configurations
+      uses: ./.github/actions/get-dataverse-environment-configuration
+      id: get-configurations
+
     # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
       id: current_date
@@ -32,15 +40,18 @@ jobs:
 
     # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
     - name: Set dataverse_build_environment_display_name as env variable
-      run: echo "dataverse_build_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_number }}" >> $Env:GITHUB_ENV
+      run: |
+        $dataverseBuildEnvironmentDisplayName = "${{ steps.get-configurations.outputs.build-environment-display-name-base }}${{ env.NOW }} - ${{ github.run_number }}"
+        
+        echo "dataverse_build_environment_display_name=$dataverseBuildEnvironmentDisplayName" >> $Env:GITHUB_ENV
       shell: pwsh
     
     # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
     - name: Set dataverse_build_environment_domain_name as env variable
       id: dataverse_build_environment_domain_name
       run: |
-        $dataverseBuildEnvironmentDomainName='gh-build-${{ env.NOW }}-${{ github.run_number }}'
-        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
+        $dataverseBuildEnvironmentDomainName = "${{ steps.get-configurations.outputs.build-environment-domain-name-base }}${{ env.NOW }}-${{ github.run_number }}"
+        
         echo "::set-output name=dataverse_build_environment_domain_name::$dataverseBuildEnvironmentDomainName"
       shell: pwsh
 
@@ -53,18 +64,17 @@ jobs:
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ env.dataverse_build_environment_display_name }}
-        region: ${{ secrets.DATAVERSE_ENVIRONMENT_REGION }}
+        region: ${{ steps.get-configurations.outputs.environment-region }}
         type: ${{ env.dataverse_environment_sku }}
-        currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
-        language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
-        domain: ${{ env.dataverse_build_environment_domain_name }}
+        currency: ${{ steps.get-configurations.outputs.environment-currency-name }}
+        language: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+        domain: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
     needs: create-build-environment
     environment:
       name: build
-      url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     outputs:
       solution_checker_status: ${{ steps.solution_checker_status.outputs.status }}
@@ -83,7 +93,8 @@ jobs:
 
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
     # Flatten all the json files for packing
@@ -228,7 +239,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com
         solution-file: ${{ env.path_to_solution_zip_file }}
         force-overwrite: true
         publish-changes: true
@@ -246,7 +257,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com
         solution-name: ${{ env.solution_name }}
         solution-output-file: out/ship/${{ env.solution_name }}.zip
         managed: true
@@ -277,7 +288,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com
         
     # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
     - name: Exit if too many notable points in solution checker results
