@@ -11,9 +11,6 @@ on:
 
 env:
   branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.issue.number }} # Name of the new dev branch
-  dataverse_environment_display_name: ${{ secrets.DATAVERSE_ENVIRONMENT_DISPLAY_NAME_BASE }}${{ github.event.issue.number }} # Display name of the Dataverse Dev environment associated to the issue
-  dataverse_environment_domain_name: ${{ secrets.DATAVERSE_ENVIRONMENT_DOMAIN_NAME_BASE }}${{ github.event.issue.number }} # Domain name of the Dataverse Dev environment associated to the issue
-  dataverse_environment_url_base: ${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }} # Base URL of the Dataverse Dev environment associated to the issue
 
 jobs:
   # Job to delete the Dev branch associated to the issue if it exists
@@ -52,10 +49,24 @@ jobs:
       contains(github.event.issue.labels.*.name, 'dev env created') ||
       (github.event_name == 'issues' && github.event.action == 'deleted')
     runs-on: ubuntu-latest
+    outputs:
+      environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
+      dev-environment-display-name-base: ${{ steps.get-configurations.outputs.dev-environment-display-name-base }}${{ github.event.issue.number }}
+      dev-environment-domain-name-base: ${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}
     env:
       RUNNER_DEBUG: 1
 
     steps:
+    # Action used to checkout the main branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    # Get Dataverse environment configurations from JSON file in the repository
+    - name: Get configurations
+      uses: ./.github/actions/get-dataverse-environment-configuration
+      id: get-configurations
+
     # Delete the Dataverse Dev environment associated to the issue
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/delete-environment/action.yml
     - name: Delete environment
@@ -64,7 +75,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
   
   # Remove the 'dev env created' label and add a comment on the issue to notify that the Dataverse Dev environment has been deleted
   update-issue:
@@ -92,4 +103,4 @@ jobs:
 
           > The Dev branch associated to the issue has been deleted if it was still existing.
 
-          [**${{ env.dataverse_environment_display_name }}**](https://${{ env.dataverse_environment_domain_name }}${{ env.dataverse_environment_url_base }}) Dataverse Dev environment deleted!
+          [**${{ needs.pre_job.outputs.dev-environment-display-name-base }}**](https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
