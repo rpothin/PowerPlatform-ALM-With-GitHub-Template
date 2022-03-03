@@ -102,16 +102,12 @@
    - **DATAVERSE_VALIDATION_ENVIRONMENT_NAME**: Display name of the Power Platform Validation environment
    - **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**: URL of the Power Platform Production environment
    - **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME**: Display name of the Power Platform Production environment
-   - **BRANCH_NAME_BASE**: Base used with the number of the issue to build the name of the development branches (*for example `dev/issue_`*)
-   - **DATAVERSE_ENVIRONMENT_DISPLAY_NAME_BASE**: Base used with the number of the issue to build the display name of the Power Platform environments (*for example `BAFC - Raphael - Dev - Issue `*)
-   - **DATAVERSE_ENVIRONMENT_DOMAIN_NAME_BASE**: Base used with the number of the issue to build the domain name of the Power Platform environments (*for example `bafc-rpo-gh-dev-issue-`*)
-   - **DATAVERSE_ENVIRONMENT_URL_BASE**: Base of the URL used for the creation of the Power Platform environments (*for example `.crm3.dynamics.com`*) - you can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page
-   - **DATAVERSE_ENVIRONMENT_REGION**: Name of the location used for the creation of the Power Platform environments (*development and build*)
-   - **DATAVERSE_ENVIRONMENT_CURRENCY_NAME**: Name of the currency used for the creation of the Power Platform environments (*development and build*)
-   - **DATAVERSE_ENVIRONMENT_LANGUAGE_NAME**: Name of the language used for the creation of the Power Platform environments (*development and build*)
+   - **BRANCH_NAME_BASE**: Base used with the number of the issue to build the name of the development branches (*for example `work/`*)
    - **DEVELOPER_INTERNAL_EMAIL**: Email used by the developer to connect to the Power Platform environments (*currently the GitHub workflow support only one developer*)
-   - SOLUTION_COMPONENTS_OWNER_EMAIL: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
-   - PAC_CLI_VERSION: Version of the [Power Platform CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli) used in the GitHub workflows to unpack and pack the canvas apps (*for example `1.8.6`*)
+   - **SOLUTION_COMPONENTS_OWNER_EMAIL**: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
+   - **PAC_CLI_VERSION**: Version of the [Power Platform CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli) used in the GitHub workflows to unpack and pack the canvas apps (*for example `1.8.6`*)
+
+> *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
 
 > *Note: You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the GitHub secrets for the creation of the Power Platform environments:*
 > - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command can be used to get all the supported locations for your Power Platform environment*
