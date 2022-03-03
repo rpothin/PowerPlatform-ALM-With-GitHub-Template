@@ -46,8 +46,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    # Get Dataverse environment configuration from JSON file in the repository
-    - name: Get configuration
+    # Get Dataverse environment configurations from JSON file in the repository
+    - name: Get configurations
       uses: ./.github/actions/get-dataverse-environment-configuration
       id: get-configurations
 
@@ -121,7 +121,7 @@ jobs:
     needs: [pre_job, create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
-      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-environment-url-region-code }}.dynamics.com
+      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -148,7 +148,7 @@ jobs:
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-environment-url-region-code }}.dynamics.com"
+          DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com"
           DataverseEnvironmentDisplayName = "${{ needs.pre_job.outputs.dev-environment-display-name-base }}"
           UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
         }
@@ -164,7 +164,7 @@ jobs:
     needs: [pre_job, add-user-to-dev-environment]
     environment:
       name: development
-      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-environment-url-region-code }}.dynamics.com
+      url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -281,7 +281,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-environment-url-region-code }}.dynamics.com
+        environment-url: https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -316,4 +316,4 @@ jobs:
           # 🎆 Workspace initialized!
 
           Branch: [**${{ env.branch_name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ env.branch_name }})
-          Dataverse Dev environment created: [**${{ needs.pre_job.outputs.dev-environment-display-name-base }}**](https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-environment-url-region-code }}.dynamics.com)
+          Dataverse Dev environment created: [**${{ needs.pre_job.outputs.dev-environment-display-name-base }}**](https://${{ needs.pre_job.outputs.dev-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com)

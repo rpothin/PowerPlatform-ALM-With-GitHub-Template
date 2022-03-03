@@ -14,38 +14,38 @@ inputs:
 outputs:
   environment-region:
     description: "Region"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-region }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.environment-region }}
   environment-url-region-code:
-    description: "Base of the URL"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-url-region-code }}
+    description: "Code of the region in the URL"
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.environment-url-region-code }}
   environment-language-display-name:
     description: "Language"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-language-display-name }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.environment-language-display-name }}
   environment-currency-name:
     description: "Currency"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.environment-currency-name }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.environment-currency-name }}
   dev-environment-display-name-base:
     description: "Base of the display name for a development environment"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.dev-environment-display-name-base }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.dev-environment-display-name-base }}
   dev-environment-domain-name-base:
     description: "Base of the domain name for a development environment"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.dev-environment-domain-name-base }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.dev-environment-domain-name-base }}
   developers-azure-ad-group-name:
     description: "Base of the display name of a development environment"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.developers-azure-ad-group-name }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.developers-azure-ad-group-name }}
   build-environment-display-name-base:
     description: "Base of the display name for a build environment"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.build-environment-display-name-base }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.build-environment-display-name-base }}
   build-environment-domain-name-base:
     description: "Base of the domain name for a build environment"
-    value: ${{ steps.get-dataverse-environment-configuration.outputs.build-environment-domain-name-base }}
+    value: ${{ steps.get-dataverse-environment-configurations.outputs.build-environment-domain-name-base }}
 
 runs:
   using: "composite"
   steps:
     # Get Dataverse environment configuration from JSON file in the repository
     - name: Get Dataverse environment configuration
-      id: get-dataverse-environment-configuration
+      id: get-dataverse-environment-configurations
       run:  |
         # Set variables
         Write-Host "Set variables."
