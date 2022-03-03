@@ -19,11 +19,26 @@ on:
 
 env:
   solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
-  dataverse_environment_url_base: ${{ secrets.DATAVERSE_ENVIRONMENT_URL_BASE }} # Base URL for the just in time Dataverse Build environment
   
 jobs:
+  # Job to initialize a variable for other jobs in the workflow
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      current-date: ${{ steps.current_date.outputs.NOW }}
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
+    - name: Set current date as env variable
+      id: current_date
+      run: echo "::set-output name=NOW::$(date +'%Y%m%d')"
+      shell: pwsh
+
   # Job for the creation of the release branch
   create-release-branch:
+    needs: pre_job
     runs-on: ubuntu-latest
     outputs:
       release_version: ${{ steps.release_version.outputs.release_version }}
@@ -32,17 +47,11 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Set a current date environment variable in the following format: YYYYMMDD
-    - name: Set current date as env variable
-      id: current_date
-      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
-      shell: pwsh
-
     # Initialize the release version
     - name: Set release version
       id: release_version
       run: |
-        $releaseVersion = '${{ github.event.inputs.solution_base_version }}_${{ env.NOW }}_${{ github.run_number }}'
+        $releaseVersion = '${{ github.event.inputs.solution_base_version }}_${{ needs.pre_job.outputs.current-date }}_${{ github.run_number }}'
         echo "RELEASE_VERSION=$releaseVersion" >> $Env:GITHUB_ENV
         echo "::set-output name=release_version::$releaseVersion"
       shell: pwsh
@@ -53,7 +62,7 @@ jobs:
       run: |
         $solutionBaseVersion = "${{ github.event.inputs.solution_base_version }}"
         $solutionBaseVersion = $solutionBaseVersion.replace("_", ".")
-        $solutionVersion = $solutionBaseVersion + ".${{ env.NOW }}${{ github.run_number }}"
+        $solutionVersion = $solutionBaseVersion + ".${{ needs.pre_job.outputs.current-date }}${{ github.run_number }}"
         echo "::set-output name=solution_version::$solutionVersion"
       shell: pwsh
     
@@ -67,31 +76,40 @@ jobs:
 
   # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
+    needs: pre_job
     runs-on: ubuntu-latest
     outputs:
       dataverse_build_environment_domain_name: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
+      environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
 
     steps:
-    # Set a current date environment variable in the following format: YYYYMMDD
-    - name: Set current date as env variable
-      id: current_date
-      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
-      shell: pwsh
+    # Action used to checkout the main branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    # Get Dataverse environment configurations from JSON file in the repository
+    - name: Get configurations
+      uses: ./.github/actions/get-dataverse-environment-configuration
+      id: get-configurations
 
     # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
     - name: Set dataverse_build_environment_display_name as env variable
-      run: echo "dataverse_build_environment_display_name=Build - ${{ env.NOW }} - ${{ github.run_number }}" >> $Env:GITHUB_ENV
+      run: |
+        $dataverseBuildEnvironmentDisplayName = "${{ steps.get-configurations.outputs.build-environment-display-name-base }}${{ needs.pre_job.outputs.current-date }} - ${{ github.run_number }}"
+        
+        echo "dataverse_build_environment_display_name=$dataverseBuildEnvironmentDisplayName" >> $Env:GITHUB_ENV
       shell: pwsh
     
     # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
     - name: Set dataverse_build_environment_domain_name as env variable
       id: dataverse_build_environment_domain_name
       run: |
-        $dataverseBuildEnvironmentDomainName='gh-build-${{ env.NOW }}-${{ github.run_number }}'
-        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
+        $dataverseBuildEnvironmentDomainName = "${{ steps.get-configurations.outputs.build-environment-domain-name-base }}${{ needs.pre_job.outputs.current-date }}-${{ github.run_number }}"
+        
         echo "::set-output name=dataverse_build_environment_domain_name::$dataverseBuildEnvironmentDomainName"
       shell: pwsh
 
@@ -104,18 +122,17 @@ jobs:
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ env.dataverse_build_environment_display_name }}
-        region: ${{ secrets.DATAVERSE_ENVIRONMENT_REGION }}
+        region: ${{ steps.get-configurations.outputs.environment-region }}
         type: ${{ env.dataverse_environment_sku }}
-        currency: ${{ secrets.DATAVERSE_ENVIRONMENT_CURRENCY_NAME }}
-        language: ${{ secrets.DATAVERSE_ENVIRONMENT_LANGUAGE_NAME }}
-        domain: ${{ env.dataverse_build_environment_domain_name }}
+        currency: ${{ steps.get-configurations.outputs.environment-currency-name }}
+        language: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+        domain: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
   
   # Job to build a managed solution in the just in time Dataverse Build environment
   build-managed-solution:
     needs: [create-release-branch, create-build-environment]
     environment:
       name: build
-      url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -213,7 +230,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: "https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}"
+        environment-url: "https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com"
         solution-file: ${{ env.path_to_solution_zip_file }}
         force-overwrite: true
         publish-changes: true
@@ -230,7 +247,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com
         solution-name: ${{ env.solution_name }}
         solution-output-file: out/Solutions/${{ env.solution_name }}_managed.zip
         managed: true
@@ -260,7 +277,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}${{ env.dataverse_environment_url_base }}
+        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com
 
   # Job to delete the release branch if solution deployment to Dataverse Build environment fails
   delete-release-branch:
