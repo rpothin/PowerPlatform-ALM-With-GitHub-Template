@@ -84,7 +84,13 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
     Begin{}
 
     Process{
-        
+        # Connect to Azure CLI with service principal
+        Write-Verbose "Connect to Azure CLI with service principal."
+        az login --service-principal -u $ClientId -p $ClientSecret --tenant $TenantId --allow-no-subscriptions
+
+        # Search the considered Azure AD security group based on the provided name
+        Write-Verbose "Search the considered Azure AD security group based on the provided name: $AzureADSecurityGroupName"
+        $groups = az ad group list --filter "displayname eq '$AzureADSecurityGroupName'"
     }
 
     End{}
