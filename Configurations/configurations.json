@@ -1,0 +1,17 @@
+{
+    "environment": {
+        "region": "canada",
+        "urlRegionCode": "crm3",
+        "languageDisplayName": "English",
+        "currencyName": "CAD",
+        "developmentEnvironment": {
+            "displayNameBase": "BAFC - Raphael - Dev - ",
+            "domainNameBase": "bafc-rpo-gh-dev-",
+            "developersAzureAdGroupName": ""
+        },
+        "buildEnvironment": {
+            "displayNameBase": "BAFC - Raphael - Build - ",
+            "domainNameBase": "bafc-rpo-gh-build-"
+        }
+    }
+}

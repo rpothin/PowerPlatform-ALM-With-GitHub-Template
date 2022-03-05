@@ -91,9 +91,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    # Get Dataverse environment configurations from JSON file in the repository
+    # Get configurations from a JSON file in the repository
     - name: Get configurations
-      uses: ./.github/actions/get-dataverse-environment-configuration
+      uses: ./.github/actions/get-configurations
       id: get-configurations
 
     # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
@@ -472,7 +472,7 @@ jobs:
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
           DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_URL }}"
           DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_NAME }}"
-          ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/CanvasAppsGroupsAccessMapping.json"
+          ConfigurationFilePath = "./Configurations/${{ env.solution_name }}/CanvasAppsGroupsAccessMapping.json"
         }
 
         Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
