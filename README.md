@@ -104,7 +104,6 @@
    - **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME**: Display name of the Power Platform Production environment
    - **DEVELOPER_INTERNAL_EMAIL**: Email used by the developer to connect to the Power Platform environments (*currently the GitHub workflow support only one developer*)
    - **SOLUTION_COMPONENTS_OWNER_EMAIL**: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
-   - **PAC_CLI_VERSION**: Version of the [Power Platform CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli) used in the GitHub workflows to unpack and pack the canvas apps (*for example `1.8.6`*)
 
 > *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
 
