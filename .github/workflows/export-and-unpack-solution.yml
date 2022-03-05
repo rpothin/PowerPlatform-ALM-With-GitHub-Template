@@ -103,6 +103,8 @@ jobs:
       run: |
         $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
 
+        pac solution help
+        
         pac solution create-settings --solution-zip out/exported/${{ github.event.inputs.solution_name }}.zip --settings-file Configuration/${{ github.event.inputs.solution_name }}/DeploymentSettingsTemplate.json
       shell: pwsh
 
