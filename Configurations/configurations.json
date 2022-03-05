@@ -16,5 +16,6 @@
             "displayNameBase": "BAFC - Raphael - Build - ",
             "domainNameBase": "bafc-rpo-gh-build-"
         }
-    }
+    },
+    "pacCliVErsion": "1.8.6"
 }
