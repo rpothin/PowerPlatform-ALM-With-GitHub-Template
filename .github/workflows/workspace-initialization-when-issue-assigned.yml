@@ -23,6 +23,7 @@ jobs:
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       development-environment-display-name: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
+      pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
     env:
       RUNNER_DEBUG: 1
       
@@ -209,7 +210,7 @@ jobs:
       if: ${{ env.SolutionsExist == 'true' }}
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "${{ secrets.PAC_CLI_VERSION }}" # 1.8.6
+        $nugetPackageVersion = "${{ needs.pre_job.outputs.pac-cli-version }}"
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
