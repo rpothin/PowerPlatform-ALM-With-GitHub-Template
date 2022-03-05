@@ -86,7 +86,7 @@ jobs:
     - name: PowerApps CLI setup
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "${{ secrets.PAC_CLI_VERSION }}" # 1.8.6
+        $nugetPackageVersion = "${{ steps.get-configurations.outputs.pac-cli-version }}"
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
