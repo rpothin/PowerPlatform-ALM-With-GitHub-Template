@@ -34,7 +34,7 @@ Function Add-UserToDataverseEnvironment {
             None. You cannot pipe objects to Add-UserToDataverseEnvironment.
 
         .OUTPUTS
-            Object. Add-UserToDataverseEnvironment returns the details of of the operation of adding the user to the targeted Dataverse environment.
+            None.
 
         .EXAMPLE
             PS> Add-UserToDataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -DataverseEnvironmentDisplayName "Demo" -UserInternalEmail "user.demo@demo.com"

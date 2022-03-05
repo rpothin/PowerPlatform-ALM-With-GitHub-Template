@@ -31,7 +31,7 @@ Function Grant-GroupsAccessToCanvasApps {
             None. You cannot pipe objects to Grant-GroupsAccessToCanvasApps.
 
         .OUTPUTS
-            Object. Grant-GroupsAccessToCanvasApps returns the result of the operation of giving access to canvas apps to Azure AD groups in the targeted Dataverse environment.
+            None.
 
         .EXAMPLE
             PS> Grant-GroupsAccessToCanvasApps -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -DataverseEnvironmentDisplayName "Demo" -ConfigurationFilePath ".\CanvasAppsGroupsAccessMapping.json"
