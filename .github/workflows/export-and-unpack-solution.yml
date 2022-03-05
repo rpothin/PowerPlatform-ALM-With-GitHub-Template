@@ -34,9 +34,9 @@ jobs:
       with:
         ref: ${{ env.branch_name }}
     
-    # Get Dataverse environment configurations from JSON file in the repository
+    # Get configurations from a JSON file in the repository
     - name: Get configurations
-      uses: ./.github/actions/get-dataverse-environment-configuration
+      uses: ./.github/actions/get-configurations
       id: get-configurations
 
     # Publish all customizations on the Dataverse Dev environment
@@ -47,7 +47,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.inputs.issue_number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: https://${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.inputs.issue_number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
 
     # Export the considered solution as unmanaged from the Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
@@ -57,7 +57,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.inputs.issue_number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: https://${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.inputs.issue_number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
         solution-name: ${{ github.event.inputs.solution_name }}
         solution-output-file: out/exported/${{ github.event.inputs.solution_name }}.zip
         managed: false

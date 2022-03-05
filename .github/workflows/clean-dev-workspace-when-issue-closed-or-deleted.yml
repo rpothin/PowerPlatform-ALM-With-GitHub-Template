@@ -51,8 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
-      dev-environment-display-name-base: ${{ steps.get-configurations.outputs.dev-environment-display-name-base }}${{ github.event.issue.number }}
-      dev-environment-domain-name-base: ${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}
+      development-environment-display-name-base: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
+      development-environment-domain-name-base: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
     env:
       RUNNER_DEBUG: 1
 
@@ -62,9 +62,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    # Get Dataverse environment configurations from JSON file in the repository
+    # Get configurations from a JSON file in the repository
     - name: Get configurations
-      uses: ./.github/actions/get-dataverse-environment-configuration
+      uses: ./.github/actions/get-configurations
       id: get-configurations
 
     # Delete the Dataverse Dev environment associated to the issue
@@ -75,7 +75,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ steps.get-configurations.outputs.dev-environment-domain-name-base }}${{ github.event.issue.number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: https://${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}.${{ steps.get-configurations.outputs.environment-url-region-code }}.dynamics.com
   
   # Remove the 'dev env created' label and add a comment on the issue to notify that the Dataverse Dev environment has been deleted
   update-issue:
@@ -103,4 +103,4 @@ jobs:
 
           > The Dev branch associated to the issue has been deleted if it was still existing.
 
-          [**${{ needs.delete-dataverse-dev-environment.outputs.dev-environment-display-name-base }}**](https://${{ needs.delete-dataverse-dev-environment.outputs.dev-environment-domain-name-base }}.${{ needs.delete-dataverse-dev-environment.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
+          [**${{ needs.delete-dataverse-dev-environment.outputs.development-environment-display-name-base }}**](https://${{ needs.delete-dataverse-dev-environment.outputs.development-environment-domain-name-base }}.${{ needs.delete-dataverse-dev-environment.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!

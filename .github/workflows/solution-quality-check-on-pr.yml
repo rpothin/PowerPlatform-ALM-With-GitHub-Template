@@ -27,9 +27,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    # Get Dataverse environment configurations from JSON file in the repository
+    # Get configurations from a JSON file in the repository
     - name: Get configurations
-      uses: ./.github/actions/get-dataverse-environment-configuration
+      uses: ./.github/actions/get-configurations
       id: get-configurations
 
     # Set a current date environment variable in the following format: YYYYMMDD

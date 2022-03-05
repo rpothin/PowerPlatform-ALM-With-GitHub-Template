@@ -1,0 +1,98 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: 'Get configurations'
+
+description: 'Get configurations from a JSON file in the repository'
+
+inputs:
+  path-to-configuration-file:
+    description: 'Absolute path to the configuration file'
+    required: true
+    default: 'Configurations\configurations.json'
+
+outputs:
+  environment-region:
+    description: "Environment region"
+    value: ${{ steps.get-configurations.outputs.environment-region }}
+  environment-url-region-code:
+    description: "Code of the region in the URL of the environment"
+    value: ${{ steps.get-configurations.outputs.environment-url-region-code }}
+  environment-language-display-name:
+    description: "Environment language"
+    value: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+  environment-currency-name:
+    description: "Environment currency"
+    value: ${{ steps.get-configurations.outputs.environment-currency-name }}
+  development-environment-display-name-base:
+    description: "Base of the display name for a development environment"
+    value: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}
+  development-environment-domain-name-base:
+    description: "Base of the domain name for a development environment"
+    value: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}
+  developers-azure-ad-group-name:
+    description: "Base of the display name of a development environment"
+    value: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
+  build-environment-display-name-base:
+    description: "Base of the display name for a build environment"
+    value: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
+  build-environment-domain-name-base:
+    description: "Base of the domain name for a build environment"
+    value: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
+
+runs:
+  using: "composite"
+  steps:
+    # Get configurations from a JSON file in the repository
+    - name: Get configurations
+      id: get-configurations
+      run:  |
+        # Set variables
+        Write-Host "Set variables"
+        $ConfigurationFilePath = "${{ inputs.path-to-configuration-file }}"
+
+        # Test the path provided to the file with the configurations
+        Write-Host "Test the path provided to the file with the configuration: $ConfigurationFilePath"
+        $testPathResult = Test-Path $ConfigurationFilePath
+        if(!$testPathResult) {
+          Write-Error -Message "Following path to configuration file not valid: $ConfigurationFilePath" -ErrorAction Stop
+        }
+        
+        # Extract configuration from the file
+        Write-Host "Get content from file with the configurations in the following location: $ConfigurationFilePath"
+        try {
+          Write-Host "Try to call the Get-Content command"
+          $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+        }
+        catch {
+          Write-Error -Message "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError" -ErrorAction Stop
+        }
+
+        # Convert configurations from the file to variables
+        Write-Host "Convert configurations from the file to variables"
+        $environmentRegion = $configurations.environment.region
+        $environmentUrlRegionCode = $configurations.environment.urlRegionCode
+        $environmentLanguageDisplayName = $configurations.environment.languageName
+        $environmentCurrencyName = $configurations.environment.currencyName
+
+        $developmentEnvironmentDisplayNameBase = $configurations.environment.developmentEnvironment.displayNameBase
+        $developmentEnvironmentDomainNameBase = $configurations.environment.developmentEnvironment.domainNameBase
+        $developersAzureAdGroupName = $configurations.environment.developmentEnvironment.developersAzureAdGroupName
+
+        $buildEnvironmentDisplayNameBase = $configurations.environment.buildEnvironment.displayNameBase
+        $buildEnvironmentDomainNameBase = $configurations.environment.buildEnvironment.domainNameBase
+
+        # Generate outputs
+        Write-Host "Generate outputs for the different configurations in the file"
+        echo "::set-output name=environment-region::$environmentRegion"
+        echo "::set-output name=environment-url-region-code::$environmentUrlRegionCode"
+        echo "::set-output name=environment-language-display-name::$environmentLanguageDisplayName"
+        echo "::set-output name=environment-currency-name::$environmentCurrencyName"
+        
+        echo "::set-output name=development-environment-display-name-base::$developmentEnvironmentDisplayNameBase"
+        echo "::set-output name=development-environment-domain-name-base::$developmentEnvironmentDomainNameBase"
+        echo "::set-output name=developers-azure-ad-group-name::$developersAzureAdGroupName"
+
+        echo "::set-output name=build-environment-display-name-base::$buildEnvironmentDisplayNameBase"
+        echo "::set-output name=build-environment-domain-name-base::$buildEnvironmentDomainNameBase"
+      shell: pwsh

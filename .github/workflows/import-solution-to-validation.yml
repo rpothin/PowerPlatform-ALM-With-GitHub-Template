@@ -41,9 +41,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    # Get Dataverse environment configurations from JSON file in the repository
+    # Get configurations from a JSON file in the repository
     - name: Get configurations
-      uses: ./.github/actions/get-dataverse-environment-configuration
+      uses: ./.github/actions/get-configurations
       id: get-configurations
 
     # Set a current date environment variable in the following format: YYYYMMDD
@@ -275,7 +275,7 @@ jobs:
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
           DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}"
           DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_NAME }}"
-          ConfigurationFilePath = "./Configuration/${{ env.solution_name }}/CanvasAppsGroupsAccessMapping.json"
+          ConfigurationFilePath = "./Configurations/${{ env.solution_name }}/CanvasAppsGroupsAccessMapping.json"
         }
 
         Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
