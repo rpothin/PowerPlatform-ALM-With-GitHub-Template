@@ -81,6 +81,7 @@ jobs:
     outputs:
       dataverse_build_environment_domain_name: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
       environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
+      pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
@@ -164,7 +165,7 @@ jobs:
     - name: Pack msapp files
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "${{ secrets.PAC_CLI_VERSION }}" # 1.8.6
+        $nugetPackageVersion = "${{ needs.create-build-environment.outputs.pac-cli-version }}"
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
