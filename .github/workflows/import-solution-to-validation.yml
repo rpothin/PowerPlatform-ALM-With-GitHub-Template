@@ -240,7 +240,7 @@ jobs:
         run-asynchronously: true
         max-async-wait-time: 10
         use-deployment-settings-file: true
-        deployment-settings-file: Configuration/${{ env.solution_name }}/DeploymentSettings_validation.json
+        deployment-settings-file: Configurations/${{ env.solution_name }}/DeploymentSettings_validation.json
 
     # Complementary steps after solution import
     #   - Turn on cloud flows
