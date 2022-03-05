@@ -12,7 +12,7 @@ on:
       - 'Solutions/**'
       - '!.github/**'
       - '!Scripts/**'
-      - '!Configuration/**'
+      - '!Configurations/**'
       - '!.all-contributorsrc'
       - '!CHANGELOG.md'
       - '!CODE_OF_CONDUCT.md'
