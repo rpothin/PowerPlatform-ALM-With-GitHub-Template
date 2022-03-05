@@ -102,7 +102,6 @@
    - **DATAVERSE_VALIDATION_ENVIRONMENT_NAME**: Display name of the Power Platform Validation environment
    - **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**: URL of the Power Platform Production environment
    - **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME**: Display name of the Power Platform Production environment
-   - **BRANCH_NAME_BASE**: Base used with the number of the issue to build the name of the development branches (*for example `work/`*)
    - **DEVELOPER_INTERNAL_EMAIL**: Email used by the developer to connect to the Power Platform environments (*currently the GitHub workflow support only one developer*)
    - **SOLUTION_COMPONENTS_OWNER_EMAIL**: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
    - **PAC_CLI_VERSION**: Version of the [Power Platform CLI](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/powerapps-cli) used in the GitHub workflows to unpack and pack the canvas apps (*for example `1.8.6`*)
