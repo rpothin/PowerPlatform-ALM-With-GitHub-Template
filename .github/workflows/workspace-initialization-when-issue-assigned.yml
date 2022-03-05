@@ -9,9 +9,6 @@ on:
   issues:
     types: [assigned, labeled]
 
-env:
-  branch_name: ${{ secrets.BRANCH_NAME_BASE }}${{ github.event.issue.number }} # Name of the new dev branch
-
 jobs:
   # Job to check for a duplicate run of this workflow
   pre_job:
@@ -19,12 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      development-branch-name: ${{ steps.get-configurations.outputs.development-branch-name-base }}${{ github.event.issue.number }}
       environment-region: ${{ steps.get-configurations.outputs.environment-region }}
       environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
       environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
-      development-environment-display-name-base: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
-      development-environment-domain-name-base: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
+      development-environment-display-name: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
+      development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
     env:
       RUNNER_DEBUG: 1
       
@@ -63,7 +61,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: ${{ env.branch_name }}
+        branch: ${{ needs.pre_job.outputs.development-branch-name }}
 
     # Add "Branch created" comment to the issue
     - name: Branch created comment on issue
@@ -91,12 +89,12 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        name: ${{ needs.pre_job.outputs.development-environment-display-name-base }}
+        name: ${{ needs.pre_job.outputs.development-environment-display-name }}
         region: ${{ needs.pre_job.outputs.environment-region }}
         type: ${{ env.dataverse_environment_sku }}
         currency: ${{ needs.pre_job.outputs.environment-currency-name }}
         language: ${{ needs.pre_job.outputs.environment-language-display-name }}
-        domain: ${{ needs.pre_job.outputs.development-environment-domain-name-base }}
+        domain: ${{ needs.pre_job.outputs.development-environment-domain-name }}
 
     # Add the 'dev env created' label to the current issue
     #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
@@ -125,10 +123,10 @@ jobs:
     steps:
     # Action used to checkout the new dev branch in the current repository
     #   Community action: https://github.com/actions/checkout
-    - name: Checkout branch ${{ env.branch_name }}
+    - name: Checkout branch ${{ needs.pre_job.outputs.development-branch-name }}
       uses: actions/checkout@v2
       with:
-        ref: ${{ env.branch_name }}
+        ref: ${{ needs.pre_job.outputs.development-branch-name }}
 
     # Add developer as user to environment
     - name: Add developer as user to environment
@@ -144,8 +142,8 @@ jobs:
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.development-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com"
-          DataverseEnvironmentDisplayName = "${{ needs.pre_job.outputs.development-environment-display-name-base }}"
+          DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com"
+          DataverseEnvironmentDisplayName = "${{ needs.pre_job.outputs.development-environment-display-name }}"
           UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
         }
 
@@ -168,10 +166,10 @@ jobs:
     steps:
     # Action used to checkout the new dev branch in the current repository
     #   Community action: https://github.com/actions/checkout
-    - name: Checkout branch ${{ env.branch_name }}
+    - name: Checkout branch ${{ needs.pre_job.outputs.development-branch-name }}
       uses: actions/checkout@v2
       with:
-        ref: ${{ env.branch_name }}
+        ref: ${{ needs.pre_job.outputs.development-branch-name }}
 
     # Check if solutions exist before continuing the import process
     - name: Check if solutions exist
@@ -276,7 +274,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.pre_job.outputs.development-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -310,5 +308,5 @@ jobs:
         body: |
           # 🎆 Workspace initialized!
 
-          Branch: [**${{ env.branch_name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ env.branch_name }})
-          Dataverse Dev environment created: [**${{ needs.pre_job.outputs.development-environment-display-name-base }}**](https://${{ needs.pre_job.outputs.development-environment-domain-name-base }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com)
+          Branch: [**${{ needs.pre_job.outputs.development-branch-name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ needs.pre_job.outputs.development-branch-name }})
+          Dataverse Dev environment created: [**${{ needs.pre_job.outputs.development-environment-display-name }}**](https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com)
