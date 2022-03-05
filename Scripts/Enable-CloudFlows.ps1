@@ -28,7 +28,7 @@ Function Enable-CloudFlows {
             None. You cannot pipe objects to Enable-CloudFlows.
 
         .OUTPUTS
-            Object. Enable-CloudFlows returns the result of the operation of enabling Cloud Flows in the targeted Dataverse environment.
+            None.
 
         .EXAMPLE
             PS> Enable-CloudFlows -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com"
