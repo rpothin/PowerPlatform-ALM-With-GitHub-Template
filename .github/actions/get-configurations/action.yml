@@ -42,6 +42,9 @@ outputs:
   build-environment-domain-name-base:
     description: "Base of the domain name for a build environment"
     value: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
+  pac-cli-version:
+    description: "PAC CLI version"
+    value: ${{ steps.get-configurations.outputs.pac-cli-version }}
 
 runs:
   using: "composite"
@@ -87,6 +90,8 @@ runs:
         $buildEnvironmentDisplayNameBase = $configurations.environment.buildEnvironment.displayNameBase
         $buildEnvironmentDomainNameBase = $configurations.environment.buildEnvironment.domainNameBase
 
+        $pacCliVersion = $configurations.pacCliVErsion
+
         # Generate outputs
         Write-Host "Generate outputs for the different configurations in the file"
         echo "::set-output name=development-branch-name-base::$developmentBranchNameBase"
@@ -102,4 +107,6 @@ runs:
 
         echo "::set-output name=build-environment-display-name-base::$buildEnvironmentDisplayNameBase"
         echo "::set-output name=build-environment-domain-name-base::$buildEnvironmentDomainNameBase"
+        
+        echo "::set-output name=pac-cli-version::$pacCliVersion"
       shell: pwsh
