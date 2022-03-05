@@ -1,4 +1,7 @@
 {
+    "branch" : {
+        "developmentBranchNameBase": "work/"
+    },
     "environment": {
         "region": "canada",
         "urlRegionCode": "crm3",
