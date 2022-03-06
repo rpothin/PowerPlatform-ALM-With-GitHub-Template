@@ -23,6 +23,7 @@ jobs:
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       development-environment-display-name: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
+      developers-azure-ad-group-name: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
     env:
       RUNNER_DEBUG: 1
@@ -112,8 +113,8 @@ jobs:
         body: |
           🎉 Environment created!
 
-  # Job to add the developer to the new Developer Dataverse environment
-  add-user-to-dev-environment:
+  # Job to add the developers to the new Development Dataverse environment
+  add-developers-to-dev-environment:
     needs: [pre_job, create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
@@ -141,7 +142,7 @@ jobs:
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
           DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com"
-          AzureADSecurityGroupName = "sg-roles-powerplatformadmin"
+          AzureADSecurityGroupName = "${{ needs.pre_job.outputs.developers-azure-ad-group-name }}"
         }
 
         echo "========== Add-AADSecurityGroupTeamToDataverseEnvironment =========="
@@ -152,7 +153,7 @@ jobs:
   
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   import-solution-to-dev-environment:
-    needs: [pre_job, add-user-to-dev-environment]
+    needs: [pre_job, add-developers-to-dev-environment]
     environment:
       name: development
     runs-on: windows-latest
