@@ -8,7 +8,7 @@
         "developmentEnvironment": {
             "displayNameBase": "BAFC - Raphael - Dev - ",
             "domainNameBase": "bafc-rpo-gh-dev-",
-            "developersAzureAdGroupName": ""
+            "developersAzureAdGroupName": "sg-roles-powerplatformadmin"
         },
         "buildEnvironment": {
             "displayNameBase": "BAFC - Raphael - Build - ",
