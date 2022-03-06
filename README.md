@@ -102,7 +102,6 @@
    - **DATAVERSE_VALIDATION_ENVIRONMENT_NAME**: Display name of the Power Platform Validation environment
    - **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**: URL of the Power Platform Production environment
    - **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME**: Display name of the Power Platform Production environment
-   - **DEVELOPER_INTERNAL_EMAIL**: Email used by the developer to connect to the Power Platform environments (*currently the GitHub workflow support only one developer*)
    - **SOLUTION_COMPONENTS_OWNER_EMAIL**: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
 
 > *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
