@@ -144,7 +144,7 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
                 $azureAdSecurityGroupDataverseTeamId = New-CrmRecord -conn $connection -EntityLogicalName team -Fields $azureAdSecurityGroupDataverseTeamConfiguration
             }
             # Case only one team found for the provided name
-            else if ($dataverseTeamsCount -eq 1) {
+            elseif ($dataverseTeamsCount -eq 1) {
                 Write-Verbose "One Azure AD security group found for the provided name - Update it."
                 $azureAdSecurityGroupDataverseTeamId = $dataverseTeams.CrmRecords[0].teamid
 
@@ -171,7 +171,7 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
                 Add-CrmSecurityRoleToTeam -TeamId $azureAdSecurityGroupDataverseTeamId -SecurityRoleId $securityRoleId
             }
             # Case no security role found
-            else if ($securityRolesCount -eq 0) {
+            elseif ($securityRolesCount -eq 0) {
                 Throw "No security role found in the considered Dataverse environment."
             }
             else {
@@ -179,7 +179,7 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
             }
         }
         # Case no Azure AD security group found for the provided name
-        else if ($azureAdGroupsCount -eq 0) {
+        elseif ($azureAdGroupsCount -eq 0) {
             Throw "No Azure AD security group found with the following name: $AzureADSecurityGroupName"
         }
         # Case more than one Azure AD security group found for the provided name
