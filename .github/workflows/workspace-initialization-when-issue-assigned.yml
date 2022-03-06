@@ -79,7 +79,7 @@ jobs:
     runs-on: windows-latest
     outputs:
       development-environment-url: ${{ steps.create-dev-environment.outputs.environment-url }}
-      development-environment-id: ${{ steps.create-dev-environment.outputs.environment-id }}
+      powerappsmaker-development-environment-url: https://make.preview.powerapps.com/environments/${{ steps.create-dev-environment.outputs.environment-id }}/solutions
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
@@ -121,6 +121,7 @@ jobs:
     needs: [pre_job, create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
+      url: ${{ needs.create-dataverse-dev-environment.outputs.powerappsmaker-development-environment-url }}
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -159,6 +160,7 @@ jobs:
     needs: [pre_job, create-dataverse-dev-environment, add-developers-to-dev-environment]
     environment:
       name: development
+      url: ${{ needs.create-dataverse-dev-environment.outputs.powerappsmaker-development-environment-url }}
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -311,5 +313,5 @@ jobs:
 
           - Branch: [**${{ needs.pre_job.outputs.development-branch-name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ needs.pre_job.outputs.development-branch-name }})
           - Dataverse Dev environment created:
-             - [**Power Apps Maker Portal - ${{ needs.pre_job.outputs.development-environment-display-name }}**](https://make.preview.powerapps.com/environments/${{ needs.create-dataverse-dev-environment.outputs.development-environment-id }}/solutions)
+             - [**Power Apps Maker Portal - ${{ needs.pre_job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.powerappsmaker-development-environment-url }})
              - [**${{ needs.pre_job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.development-environment-url }})
