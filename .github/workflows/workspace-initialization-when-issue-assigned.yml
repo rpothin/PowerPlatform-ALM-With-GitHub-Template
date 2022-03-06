@@ -78,6 +78,9 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: windows-latest
+    outputs:
+      development-environment-url: ${{ steps.create-dev-environment.outputs.environment-url }}
+      development-environment-id: ${{ steps.create-dev-environment.outputs.environment-id }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
@@ -86,6 +89,7 @@ jobs:
     # Create the new Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
     - name: Create environment
+      id: create-dev-environment
       uses: microsoft/powerplatform-actions/create-environment@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
