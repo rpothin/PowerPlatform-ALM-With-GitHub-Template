@@ -172,7 +172,7 @@ jobs:
         echo "========== Add-AADSecurityGroupTeamToDataverseEnvironment =========="
         Import-Module ./Scripts/Add-AADSecurityGroupTeamToDataverseEnvironment.ps1 -Force
 
-        Add-UserToDataverseEnvironment @Params -verbose
+        Add-AADSecurityGroupTeamToDataverseEnvironment @Params -verbose
       shell: powershell
   
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
