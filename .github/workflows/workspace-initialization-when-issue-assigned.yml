@@ -18,7 +18,6 @@ jobs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
       development-branch-name: ${{ steps.get-configurations.outputs.development-branch-name-base }}${{ github.event.issue.number }}
       environment-region: ${{ steps.get-configurations.outputs.environment-region }}
-      environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
       environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       development-environment-display-name: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
@@ -145,7 +144,7 @@ jobs:
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com"
+          DataverseEnvironmentUrl = "${{ needs.create-dataverse-dev-environment.outputs.development-environment-url }}"
           AzureADSecurityGroupName = "${{ needs.pre_job.outputs.developers-azure-ad-group-name }}"
         }
 
@@ -157,7 +156,7 @@ jobs:
   
   # Job for the import of the version of the solution in the main branch to the new Dataverse Dev environment
   import-solution-to-dev-environment:
-    needs: [pre_job, add-developers-to-dev-environment]
+    needs: [pre_job, create-dataverse-dev-environment, add-developers-to-dev-environment]
     environment:
       name: development
     runs-on: windows-latest
@@ -276,7 +275,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: ${{ needs.create-dataverse-dev-environment.outputs.development-environment-url }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
