@@ -138,7 +138,7 @@ jobs:
         echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
         Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
 
-        echo "==========  Set params =========="
+        echo "========== Set params =========="
         $Params = @{
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
@@ -148,8 +148,29 @@ jobs:
           UserInternalEmail = "${{ secrets.DEVELOPER_INTERNAL_EMAIL }}"
         }
 
-        echo "==========  Add-UserToDataverseEnvironment =========="
+        echo "========== Add-UserToDataverseEnvironment =========="
         Import-Module ./Scripts/Add-UserToDataverseEnvironment.ps1 -Force
+
+        Add-UserToDataverseEnvironment @Params -verbose
+      shell: powershell
+    
+    # Add Azure AD security group with developers as a team on the environment
+    - name: Add developers through a team to the environment
+      run: |
+        echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
+        Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
+
+        echo "========== Set params =========="
+        $Params = @{
+          TenantId = "${{ secrets.TENANT_ID }}"
+          ClientId = "${{ secrets.APPLICATION_ID }}"
+          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+          DataverseEnvironmentUrl = "https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com"
+          AzureADSecurityGroupName = "sg-roles-powerplatformadmin"
+        }
+
+        echo "========== Add-AADSecurityGroupTeamToDataverseEnvironment =========="
+        Import-Module ./Scripts/Add-AADSecurityGroupTeamToDataverseEnvironment.ps1 -Force
 
         Add-UserToDataverseEnvironment @Params -verbose
       shell: powershell
