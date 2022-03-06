@@ -296,7 +296,7 @@ jobs:
 
   # Job to add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
-    needs: [pre_job, import-solution-to-dev-environment]
+    needs: [pre_job, create-dataverse-dev-environment, import-solution-to-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -310,5 +310,7 @@ jobs:
         body: |
           # 🎆 Workspace initialized!
 
-          Branch: [**${{ needs.pre_job.outputs.development-branch-name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ needs.pre_job.outputs.development-branch-name }})
-          Dataverse Dev environment created: [**${{ needs.pre_job.outputs.development-environment-display-name }}**](https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com)
+          - Branch: [**${{ needs.pre_job.outputs.development-branch-name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ needs.pre_job.outputs.development-branch-name }})
+          - Dataverse Dev environment created:
+             - [**Power Apps Maker Portal - ${{ needs.pre_job.outputs.development-environment-display-name }}**](https://make.preview.powerapps.com/environments/${{ needs.create-dataverse-dev-environment.outputs.development-environment-id }}/solutions)
+             - [**${{ needs.pre_job.outputs.development-environment-display-name }}**](https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com)
