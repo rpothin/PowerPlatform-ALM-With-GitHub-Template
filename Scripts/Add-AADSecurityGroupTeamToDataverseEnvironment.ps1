@@ -75,7 +75,7 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$AzureADSecurityGroupName,
-        
+
         # Name of the security role to assign to the new user
         [Parameter()]
         [String]$SecurityRoleName="System Administrator"
@@ -87,7 +87,7 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
         # Set variables
         Write-Verbose "Set variables."
         $aadSecurityGroupTeamType = New-CrmOptionSetValue -Value 2
-        
+
         # Connect to Azure CLI with service principal
         Write-Verbose "Connect to Azure CLI with service principal."
         az login --service-principal -u $ClientId -p $ClientSecret --tenant $TenantId --allow-no-subscriptions
