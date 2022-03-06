@@ -97,7 +97,7 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
         $azureAdGroups = az ad group list --filter "displayname eq '$AzureADSecurityGroupName'" | ConvertFrom-Json
 
         # Number of groups found
-        $azureAdGroupsMeasure = $azureAdGroups | Measure
+        $azureAdGroupsMeasure = $azureAdGroups | Measure-Object
         $azureAdGroupsCount = $azureAdGroupsMeasure.Count
 
         # Case only one Azure AD security group found for the provided name
