@@ -31,8 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       current-date: ${{ steps.current_date.outputs.NOW }}
-      dataverse_build_environment_domain_name: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
-      environment-url-region-code: ${{ steps.get-configurations.outputs.environment-url-region-code }}
+      build-environment-url: ${{ steps.create-build-environment.outputs.environment-url }}
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
@@ -69,7 +68,7 @@ jobs:
       run: |
         $dataverseBuildEnvironmentDomainName = "${{ steps.get-configurations.outputs.build-environment-domain-name-base }}${{ steps.current_date.outputs.NOW }}-${{ github.run_number }}"
         
-        echo "::set-output name=dataverse_build_environment_domain_name::$dataverseBuildEnvironmentDomainName"
+        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
       shell: pwsh
 
     # Create the just in time Dataverse Build environment
@@ -85,7 +84,7 @@ jobs:
         type: ${{ env.dataverse_environment_sku }}
         currency: ${{ steps.get-configurations.outputs.environment-currency-name }}
         language: ${{ steps.get-configurations.outputs.environment-language-display-name }}
-        domain: ${{ steps.dataverse_build_environment_domain_name.outputs.dataverse_build_environment_domain_name }}
+        domain: ${{ env.dataverse_build_environment_domain_name }}
   
   # Job to build a managed solution in the just in time Dataverse Build environment
   build-managed-solution:
@@ -174,7 +173,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: "https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com"
+        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
         solution-file: ${{ env.path_to_solution_zip_file }}
         force-overwrite: true
         publish-changes: true
@@ -191,7 +190,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
         solution-name: ${{ env.solution_name }}
         solution-output-file: out/ship/${{ env.solution_name }}.zip
         managed: true
@@ -301,4 +300,4 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.create-build-environment.outputs.dataverse_build_environment_domain_name }}.${{ needs.create-build-environment.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
