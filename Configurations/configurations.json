@@ -1,5 +1,4 @@
 {
-    "developmentBranchNameBase": "work/",
     "environment": {
         "region": "canada",
         "urlRegionCode": "crm3",
@@ -15,5 +14,7 @@
             "domainNameBase": "bafc-rpo-gh-build-"
         }
     },
-    "pacCliVErsion": "1.10.4"
+    "developmentBranchNameBase": "work/",
+    "pacCliVersion": "1.10.4",
+    "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/"
 }
