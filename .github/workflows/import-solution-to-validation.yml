@@ -74,6 +74,7 @@ jobs:
     # Create the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
     - name: Create environment
+      id: create-build-environment
       uses: microsoft/powerplatform-actions/create-environment@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
