@@ -10,10 +10,12 @@ on:
     branches: [ main ]
     paths:
       - 'Solutions/**'
+      - 'Configurations/**'
       - '!.github/**'
+      - '!Configurations/configurations.json'
       - '!Scripts/**'
-      - '!Configurations/**'
       - '!.all-contributorsrc'
+      - '!.gitignore'
       - '!CHANGELOG.md'
       - '!CODE_OF_CONDUCT.md'
       - '!CONTRIBUTING.md'
