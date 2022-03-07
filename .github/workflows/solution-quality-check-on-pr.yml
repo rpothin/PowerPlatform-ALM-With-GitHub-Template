@@ -7,8 +7,20 @@ name: 3-solution-quality-check-on-pr
 # Workflow triggered by a pull request targeting the main branch
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+    paths:
+      - 'Solutions/**'
+      - 'Configurations/**'
+      - '!.github/**'
+      - '!Configurations/configurations.json'
+      - '!Scripts/**'
+      - '!.all-contributorsrc'
+      - '!.gitignore'
+      - '!CHANGELOG.md'
+      - '!CODE_OF_CONDUCT.md'
+      - '!CONTRIBUTING.md'
+      - '!LICENSE'
+      - '!README.md'
 
 jobs:
   # Job for the creation of a just in time Dataverse Build environment
