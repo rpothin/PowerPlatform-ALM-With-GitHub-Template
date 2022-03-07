@@ -24,6 +24,7 @@ jobs:
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
       developers-azure-ad-group-name: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
+      powerapps-maker-portal-base-url: ${{ steps.get-configurations.outputs.powerapps-maker-portal-base-url }}
     env:
       RUNNER_DEBUG: 1
       
@@ -79,7 +80,7 @@ jobs:
     runs-on: windows-latest
     outputs:
       development-environment-url: ${{ steps.create-dev-environment.outputs.environment-url }}
-      powerappsmaker-development-environment-url: https://make.preview.powerapps.com/environments/${{ steps.create-dev-environment.outputs.environment-id }}/solutions
+      powerappsmaker-development-environment-url: ${{ needs.pre_job.outputs.powerapps-maker-portal-base-url }}${{ steps.create-dev-environment.outputs.environment-id }}/solutions
     env:
       dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
