@@ -22,6 +22,7 @@ jobs:
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       development-environment-display-name: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
+      development-environment-sku-name: ${{ steps.get-configurations.outputs.development-environment-sku-name }}
       developers-azure-ad-group-name: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
       powerapps-maker-portal-base-url: ${{ steps.get-configurations.outputs.powerapps-maker-portal-base-url }}
@@ -82,7 +83,6 @@ jobs:
       development-environment-url: ${{ steps.create-dev-environment.outputs.environment-url }}
       powerappsmaker-development-environment-url: ${{ needs.pre_job.outputs.powerapps-maker-portal-base-url }}${{ steps.create-dev-environment.outputs.environment-id }}/solutions
     env:
-      dataverse_environment_sku: Sandbox # SKU for the new Dataverse Dev environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
 
     steps:
@@ -97,7 +97,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ needs.pre_job.outputs.development-environment-display-name }}
         region: ${{ needs.pre_job.outputs.environment-region }}
-        type: ${{ env.dataverse_environment_sku }}
+        type: ${{ needs.pre_job.outputs.development-environment-sku-name }}
         currency: ${{ needs.pre_job.outputs.environment-currency-name }}
         language: ${{ needs.pre_job.outputs.environment-language-display-name }}
         domain: ${{ needs.pre_job.outputs.development-environment-domain-name }}
