@@ -84,7 +84,6 @@ jobs:
       deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}
       custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
     env:
-      dataverse_environment_sku: Sandbox # SKU for the just in time Dataverse Build environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
       RUNNER_DEBUG: 1
 
     steps:
@@ -126,7 +125,7 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         name: ${{ env.dataverse_build_environment_display_name }}
         region: ${{ steps.get-configurations.outputs.environment-region }}
-        type: ${{ env.dataverse_environment_sku }}
+        type: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
         currency: ${{ steps.get-configurations.outputs.environment-currency-name }}
         language: ${{ steps.get-configurations.outputs.environment-language-display-name }}
         domain: ${{ env.dataverse_build_environment_domain_name }}
