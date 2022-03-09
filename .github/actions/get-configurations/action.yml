@@ -48,6 +48,9 @@ outputs:
   powerapps-maker-portal-base-url:
     description: "Base URL of the Power Apps maker portal"
     value: ${{ steps.get-configurations.outputs.powerapps-maker-portal-base-url }}
+  custom-deployment-settings-file-name-base:
+    description: "Base of the name for a custom deployment settings file"
+    value: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
 
 runs:
   using: "composite"
@@ -94,6 +97,7 @@ runs:
         $developmentBranchNameBase = $configurations.developmentBranchNameBase
         $pacCliVersion = $configurations.pacCliVersion
         $powerAppsMakerPortalBaseUrl = $configurations.powerAppsMakerPortalBaseUrl
+        $customDeploymentSettingsFileNameBase = $configurations.customDeploymentSettingsFileNameBase
 
         # Generate outputs
         Write-Host "Generate outputs for the different configurations in the file"
@@ -112,4 +116,5 @@ runs:
         echo "::set-output name=development-branch-name-base::$developmentBranchNameBase"
         echo "::set-output name=pac-cli-version::$pacCliVersion"
         echo "::set-output name=powerapps-maker-portal-base-url::$powerAppsMakerPortalBaseUrl"
+        echo "::set-output name=custom-deployment-settings-file-name-base::$customDeploymentSettingsFileNameBase"
       shell: pwsh
