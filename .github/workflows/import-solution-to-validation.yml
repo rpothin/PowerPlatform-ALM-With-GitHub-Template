@@ -33,6 +33,7 @@ jobs:
       current-date: ${{ steps.current_date.outputs.NOW }}
       build-environment-url: ${{ steps.create-build-environment.outputs.environment-url }}
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
+      deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}
       custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
     env:
       dataverse_environment_sku: Sandbox # SKU for the just in time Dataverse Build environment (Allowed values: Production, Sandbox, Trial or SubscriptionBasedTrial)
@@ -243,7 +244,7 @@ jobs:
         run-asynchronously: true
         max-async-wait-time: 10
         use-deployment-settings-file: true
-        deployment-settings-file: Configurations/${{ env.solution_name }}/DeploymentSettings_validation.json
+        deployment-settings-file: Configurations/${{ env.solution_name }}/${{ needs.create-build-environment.outputs.deployment-settings-file-name-base }}_validation.json
 
     # Complementary steps after solution import
     #   - Turn on cloud flows
