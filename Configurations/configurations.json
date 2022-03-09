@@ -7,11 +7,13 @@
         "developmentEnvironment": {
             "displayNameBase": "BAFC - Raphael - Dev - ",
             "domainNameBase": "bafc-rpo-gh-dev-",
+            "skuName": "Sandbox",
             "developersAzureAdGroupName": "sg-roles-powerplatformadmin"
         },
         "buildEnvironment": {
             "displayNameBase": "BAFC - Raphael - Build - ",
-            "domainNameBase": "bafc-rpo-gh-build-"
+            "domainNameBase": "bafc-rpo-gh-build-",
+            "skuName": "Sandbox"
         }
     },
     "developmentBranchNameBase": "work/",
