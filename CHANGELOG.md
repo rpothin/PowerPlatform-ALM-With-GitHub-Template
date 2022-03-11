@@ -6,7 +6,7 @@ All notable changes to this repository will be documented in this file.
 
 ## [⚒ Work in progress]
 
-### 🔨 Fixed
+<!-- ### 🔨 Fixed
 
 - ...
 
@@ -20,11 +20,43 @@ All notable changes to this repository will be documented in this file.
 
 ### ❌ Deleted
 
-- ...
+- ... -->
 
-## [0.3.0] - 2022-03-01
+## [0.3.0] - 2022-03-14
 
-...
+> "Industrialize" our development flow for this repository template 🤖
+
+### 🔨 Fixed
+
+- Manage **pac/** folder in **.gitignore** file to ignore it during commits and remove the line that was handling this task from the **export-and-unpack-solution** workflow
+- Run **microsoft/powerplatform-actions/import-solution** action asynchronously with a maximum wait time of 10 minutes in all workflows where this action is used
+- Correction of PowerShell scripts to remediate code scanning alerts
+- **workspace-initialization-when-issue-assigned** workflow renamed **workspace-initialization**
+- Add filter on paths to the trigger of the **solution-quality-check-on-pr** workflow
+
+### 🚀 Added
+
+- Composite action **get-configurations** localized to the repository to extract configurations used in workflows from a configuration file (JSON)
+- Global configuration file (JSON) that contains information used in the workflows like the details of the Dataverse environments we create - *multiple configurations where added to the file during the work on this version*
+- PowerShell script **Add-AADSecurityGroupTeamToDataverseEnvironment.ps1** for the creation of a security group team associated to an Azure AD security group in a Dataverse environment and the assignation of a security role
+
+### 🤖 Changed
+
+- Generation of a deployment settings file from the exported solution added to the **export-and-unpack-solution** workflow
+- Include the deployment settings file associated to the considered environment in the **microsoft/powerplatform-actions/import-solution** action in the following workflows: **create-deploy-release** and **import-solution-to-validation**
+- Calls to **Update-ConnectionReferences.ps1** PowerShell script removed from the following workflows: **create-deploy-release** and **import-solution-to-validation**
+- All workflows to used the composite action **get-configurations** localized to the repository to get the configurations they need
+- References to GitHub secrets replaced by configurations in the configuration file (JSON) removed from the README file
+- Creation of a user in the Dataverse environment replaced by the creation of a security group team in the **workspace-initialization** workflow
+- Update paths considered in the trigger of the **import-solution-to-validation** workflow
+- Use the **environment-url** output of the **microsoft/powerplatform-actions/create-environment** action in the following workflows: **create-deploy-release**, **import-solution-to-validation** and **solution-quality-check-on-pr**
+- **Custom deployment settings files configuration** section added to the README file to explain how to manage the configuration file (JSON) for the sharing of the canvas apps to Azure AD security groups
+
+### ❌ Deleted
+
+- **Update-ConnectionReferences.ps1** PowerShell script replaced by deployment settings files management
+- **ConnectionsMapping-%.json** files removed replaced by deployment settings files
+- **Configuration/PowerPlatformALMWithGitHub** folder deleted - *it was forgotten during the cleaning of the elements related the demo solution in version 0.2.0*
 
 ## [0.2.0] - 2021-10-19
 
