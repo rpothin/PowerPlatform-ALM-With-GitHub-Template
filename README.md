@@ -52,7 +52,7 @@
 
 Keep an eye 👀 on:
 - the [⚒ Backlog](https://github.com/users/rpothin/projects/1/views/1) to know what's coming next
-- the [CHANGELOG](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CHANGELOG.md) to know what have already been done
+- the [Changelog](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CHANGELOG.md) to know what have already been done
 
 ## ❗ Code of Conduct
 
