@@ -3,7 +3,7 @@
         Power Platform ALM With GitHub - Template
     </h1>
     <h3 align="center">
-        Simplify the setup of a GitHub repository for Power Platform / Dynamics 365 development!
+        Simplify Power Platform / Dynamics 365 development using GitHub!
     </h3>
 </p>
 
