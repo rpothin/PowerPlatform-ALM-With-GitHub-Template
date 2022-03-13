@@ -51,7 +51,7 @@
 
 > *Note: The GIF above is not up to date. We will update it in a future version.*
 
-### 3 - Add action secrets to repository
+### 3 - Add secrets to repository
 
 1. In the new repository, go to the **Settings** tab
 2. Open the **Secrets > Actions** section
