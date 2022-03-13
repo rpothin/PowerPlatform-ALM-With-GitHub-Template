@@ -23,10 +23,10 @@
 > New-PowerAppManagementApp -ApplicationId 00000000-0000-0000-0000-000000000000
 ```
 
-## Step by step configuration procedure
+## Step by step guide
 
 1. Click on the **Use this template** button on the top of the main page of [this repository](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template)
-2. In the page that will open, enter the information for the creation of the new repository based on this template
+2. In the page that will open, enter the information for the creation of your new repository based on this template
 
 > *Note: Let the **Include all branches** option unchecked.*
 
