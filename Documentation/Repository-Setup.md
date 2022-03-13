@@ -1,21 +1,20 @@
 <p align="center">
     <h1 align="center">
-        How to setup your repository from this template?
+        How to setup a repository from this template?
     </h1>
     <p align="center">
-        First steps to initialize your repository for Power Platform / Dynamics 365 development.
+        First steps to initialize a repository for Power Platform / Dynamics 365 development.
     </p>
 </p>
 
 ## Prerequisites
 
 - [ ] A GitHub account - *if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)*
-- [ ] Access to the information (*tenant id, client id and secret*) of a service principal capable of creating Power Platform environments on the tenant you want to use and execute the solution checker - *API permissions required on the service principal (at least): Dynamics CRM.user_impersonation and Microsoft Graph.User.Read*
-- [ ] 2 Power Platform environments already created on your tenant: Validation and Production
+- [ ] 2 Dataverse environments already created on your tenant: **Validation** and **Production**
 - [ ] An **app registration** registered in Azure Active Directory with (*at least*):
   - the following permission (delegated type) : `Dynamics CRM.user_impersonation`
-  - a client secret generated and stored somewhere safe
   - the following account type selected: **multitenant**
+  - a client secret generated and stored somewhere safe
 - [ ] Run the [**New-PowerAppManagementApp**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/new-powerappmanagementapp) PowerShell command of the [**Microsoft.PowerApps.Administration.PowerShell**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell) PowerShell module specifying the **Application (client) ID** of the app registration you registered previously in Azure AD:
 
 ```shell
@@ -30,9 +29,9 @@
 1. Click on the **Use this template** button on the top of the main page of [this repository](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template)
 2. In the page that will open, enter the information for the creation of your new repository based on this template
 
-> *Note: Let the **Include all branches** option unchecked.*
+> *Note: Let the **Include all branches** option unchecked if you don't want to get potential branches with work in progress.*
 
-3. Click on the **Create repository from template** button
+3. Click on the **Create repository from template** button to finalize the creation of the repository
 
 ![Create_Repository_From_Template](https://user-images.githubusercontent.com/23240245/136492683-f9206b6f-2608-493c-a7ac-8bc2aea065b8.gif)
 
@@ -50,10 +49,13 @@
 
 ![Create_Environment_With_Reviewer](https://user-images.githubusercontent.com/23240245/136494086-bccc84a5-1a82-4bfb-8359-d9211e0ea234.gif)
 
+> *Note: The GIF above is not up to date. We will update it in a future version.*
+
 ### 3 - Add action secrets to repository
 
-1. Open the **Secrets** section
-2. Add the following repository secrets to the new repository:
+1. In the new repository, go to the **Settings** tab
+2. Open the **Secrets > Actions** section
+3. Create the secrets below using the **New repository secret** button:
 
 | **Secret Name**                           | **Description**                                                                            | **Example**                          |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------ |
@@ -68,15 +70,20 @@
 
 ![Create_Secret](https://user-images.githubusercontent.com/23240245/136882520-ba598d65-7760-4504-b2df-9dfae930570d.gif)
 
+> *Note: The GIF above is not up to date. We will update it in a future version.*
+
 ### 4 - Add labels to repository
 
 1. In the new repository, go to the **Issues** tab
 2. Click on **Labels**
-3. Create the following labels using the **New label** button:
-   - **in progress**: Trigger the workspace initialization (*branch and environment*)
-   - **dev env created**: Indicate that a Dataverse Dev environment has been created for this issue
+3. Create the labels below using the **New label** button:
 
-> *Note: you can change the name of the labels, but you will need to make some replacements in the GitHub workflows.*
+| **Label Name**      | **Description**                                | Usage                                                                               |
+| ------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **in progress**     | Work in progress                               | Involved in the trigger of the workspace initialization (*branch and environment*)  |
+| **dev env created** | Development environment created for this issue | Indicate that a Dataverse Dev environment has been created for the considered issue |
+
+> *Note: You can change the name of the labels, but you will need to make some replacements in the GitHub workflows.*
 
 ![Create_Label](https://user-images.githubusercontent.com/23240245/137238762-f0cd25a7-dc2d-4647-b33b-de6d41ab86a5.gif)
 
