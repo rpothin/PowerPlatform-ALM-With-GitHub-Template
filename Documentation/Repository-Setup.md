@@ -25,6 +25,8 @@
 
 ## Step by step guide
 
+### 1 - Create repository from template
+
 1. Click on the **Use this template** button on the top of the main page of [this repository](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template)
 2. In the page that will open, enter the information for the creation of your new repository based on this template
 
@@ -34,9 +36,11 @@
 
 ![Create_Repository_From_Template](https://user-images.githubusercontent.com/23240245/136492683-f9206b6f-2608-493c-a7ac-8bc2aea065b8.gif)
 
-4. In the new repository, go to the **Settings** tab
-5. Open the **Environments** section
-6. Create the following environments:
+### 2 - Add environments to repository
+
+1. In the new repository, go to the **Settings** tab
+2. Open the **Environments** section
+3. Create the following environments:
    - development
    - build
    - validation
@@ -46,11 +50,13 @@
 
 ![Create_Environment_With_Reviewer](https://user-images.githubusercontent.com/23240245/136494086-bccc84a5-1a82-4bfb-8359-d9211e0ea234.gif)
 
-7. Open the **Secrets** section
-8. Add the following repository secrets to the new repository:
+### 3 - Add action secrets to repository
+
+1. Open the **Secrets** section
+2. Add the following repository secrets to the new repository:
 
 | **Secret Name**                           | **Description**                                                                            | **Example**                          |
-|-------------------------------------------|--------------------------------------------------------------------------------------------|--------------------------------------|
+| ----------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------ |
 | **APPLICATION_ID**                        | **Application (client) ID** of the app registration with *Dynamics CRM.user_impersonation* | 00000000-0000-0000-0000-000000000000 |
 | **CLIENT_SECRET**                         | **Secret** of the app registration with *Dynamics CRM.user_impersonation*                  | *********************                |
 | **TENANT_ID**                             | **Directory (tenant) ID** of the app registration with *Dynamics CRM.user_impersonation*   | 00000000-0000-0000-0000-000000000000 |
@@ -62,9 +68,11 @@
 
 ![Create_Secret](https://user-images.githubusercontent.com/23240245/136882520-ba598d65-7760-4504-b2df-9dfae930570d.gif)
 
-9. In the new repository, go to the **Issues** tab
-10.  Click on **Labels**
-11.  Create the following labels using the **New label** button:
+### 4 - Add labels to repository
+
+1. In the new repository, go to the **Issues** tab
+2. Click on **Labels**
+3. Create the following labels using the **New label** button:
    - **in progress**: Trigger the workspace initialization (*branch and environment*)
    - **dev env created**: Indicate that a Dataverse Dev environment has been created for this issue
 
@@ -72,17 +80,9 @@
 
 ![Create_Label](https://user-images.githubusercontent.com/23240245/137238762-f0cd25a7-dc2d-4647-b33b-de6d41ab86a5.gif)
 
-12.  In the new repository, go to the **Code** tab
-13.  Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) interface
-14.  Open and make some updates, if necessary, in the GitHub workflows:
-   - environment variables:
-      - **dataverse_environment_sku** (*in "global" configurations file now*) and **solution_name** in multiple workflows
-      - **solution_checker_geography** in "solution-quality-check-on-pr.yml" ==> *will soon be replaced by properties in the "global" configurations file*
-   - issue labels considered in the workflows
+### 5 - Update global configurations
 
-![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
-
-15. Update the [configurations.json](Configurations/configurations.json) file...
+1. Update the [configurations.json](Configurations/configurations.json) file...
 
 > *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
 
@@ -91,4 +91,16 @@
 > - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command can be used to get all the supported currencies for a specific location for your Power Platform environment*
 > - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command can be used to get all the supported languages for a specific location for your Power Platform environment*
 
-You should now be ready to start your Power Platform developments from your new GitHub repository 🎉
+You should now be ready to start your Power Platform / Dynamics 365 developments using your new GitHub repository 🎉
+
+### 6 - Update code for your own needs (optional)
+
+1. In the new repository, go to the **Code** tab
+2. Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) interface
+3. Open and make some updates, if necessary, in the GitHub workflows:
+   - environment variables:
+      - **dataverse_environment_sku** (*in "global" configurations file now*) and **solution_name** in multiple workflows
+      - **solution_checker_geography** in "solution-quality-check-on-pr.yml" ==> *will soon be replaced by properties in the "global" configurations file*
+   - issue labels considered in the workflows
+
+![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
