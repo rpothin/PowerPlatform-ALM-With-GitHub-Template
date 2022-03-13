@@ -2,9 +2,9 @@
     <h1 align="center">
         How to setup your repository from this template?
     </h1>
-    <h3 align="center">
+    <p align="center">
         First steps to initialize your repository for Power Platform / Dynamics 365 developmen.
-    </h3>
+    </p>
 </p>
 
 ## Prerequisites
