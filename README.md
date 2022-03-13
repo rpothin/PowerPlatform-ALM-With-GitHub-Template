@@ -36,6 +36,12 @@
   <a href="https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/discussions/categories/q-a">Support Q&A</a>
 </h3>
 
+## What is the PowerPlatform-ALM-With-GitHub-Template project?
+
+It is a **GitHub repository** that can be easily used as a starting point to create your own for Power Platform / Dynamics 365 development.
+
+It contains components (GitHub workflows, PowerShell scripts...) that will support your application lifecylce management (ALM) for Power Platform / Dynamics 365 applications using GitHub.
+
 ## 🚀 Goals
 
 1. Provide an easy way to setup a GitHub repository for Power Platform / Dynamics 365 development.
@@ -47,7 +53,7 @@
 
 ### Non-goals
 
-1. Be the best "solution" for Power Platform / Dynamics 365 development using GitHub.
+1. Be the best "solution" for Power Platform / Dynamics 365 development using GitHub - *our expectations are high regarding the quality of the solution we will propose, but we will always support other similar projects or ideas*.
 2. Cover all the aspects of Power Platform / Dynamics 365 development - *it could be a really long-term goal but I ([@rpothin](https://github.com/rpothin)) will definitely not be able to do that alone*.
 
 ## 📖 Documentation
