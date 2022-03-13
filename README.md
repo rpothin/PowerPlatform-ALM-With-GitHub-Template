@@ -37,7 +37,7 @@
 
 It is a **GitHub repository** that can be easily used as a starting point to create your own for Power Platform / Dynamics 365 development.
 
-It contains components (GitHub workflows, PowerShell scripts...) that will support your application lifecylce management (ALM) for Power Platform / Dynamics 365 applications using GitHub.
+It contains components (GitHub workflows, PowerShell scripts...) that will support your application lifecylce management (ALM) processes for Power Platform / Dynamics 365 applications using GitHub.
 
 ## 🚀 Goals
 
