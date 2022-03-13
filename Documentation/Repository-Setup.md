@@ -1,4 +1,13 @@
-### Prerequisites
+<p align="center">
+    <h1 align="center">
+        How to setup your repository from this template?
+    </h1>
+    <h3 align="center">
+        First steps to initialize your repository for Power Platform / Dynamics 365 developmen.
+    </h3>
+</p>
+
+## Prerequisites
 
 - A GitHub account - *if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)*
 - Access to the information (*tenant id, client id and secret*) of a service principal capable of creating Power Platform environments on the tenant you want to use and execute the solution checker - *API permissions required on the service principal (at least): Dynamics CRM.user_impersonation and Microsoft Graph.User.Read*
@@ -14,7 +23,7 @@
 > New-PowerAppManagementApp -ApplicationId 00000000-0000-0000-0000-000000000000
 ```
 
-### Step by step configuration procedure
+## Step by step configuration procedure
 
 1. Click on the **Use this template** button on the top of the main page of [this repository](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template)
 2. In the page that will open, enter the information for the creation of the new repository based on this template
