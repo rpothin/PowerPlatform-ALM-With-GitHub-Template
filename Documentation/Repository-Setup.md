@@ -9,14 +9,14 @@
 
 ## Prerequisites
 
-- [] A GitHub account - *if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)*
-- [] Access to the information (*tenant id, client id and secret*) of a service principal capable of creating Power Platform environments on the tenant you want to use and execute the solution checker - *API permissions required on the service principal (at least): Dynamics CRM.user_impersonation and Microsoft Graph.User.Read*
-- [] 2 Power Platform environments already created on your tenant: Validation and Production
-- [] An **app registration** registered in Azure Active Directory with (*at least*):
+- [ ] A GitHub account - *if you don't have one it is really easy and fun to create one: [GitHub signup](https://github.com/signup)*
+- [ ] Access to the information (*tenant id, client id and secret*) of a service principal capable of creating Power Platform environments on the tenant you want to use and execute the solution checker - *API permissions required on the service principal (at least): Dynamics CRM.user_impersonation and Microsoft Graph.User.Read*
+- [ ] 2 Power Platform environments already created on your tenant: Validation and Production
+- [ ] An **app registration** registered in Azure Active Directory with (*at least*):
   - the following permission (delegated type) : `Dynamics CRM.user_impersonation`
   - a client secret generated and stored somewhere safe
   - the following account type selected: **multitenant**
-- [] Run the [**New-PowerAppManagementApp**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/new-powerappmanagementapp) PowerShell command of the [**Microsoft.PowerApps.Administration.PowerShell**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell) PowerShell module specifying the **Application (client) ID** of the app registration you registered previously in Azure AD:
+- [ ] Run the [**New-PowerAppManagementApp**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/new-powerappmanagementapp) PowerShell command of the [**Microsoft.PowerApps.Administration.PowerShell**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell) PowerShell module specifying the **Application (client) ID** of the app registration you registered previously in Azure AD:
 
 ```shell
 > Add-PowerAppsAccount
