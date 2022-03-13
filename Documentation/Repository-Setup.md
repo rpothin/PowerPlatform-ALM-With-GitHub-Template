@@ -40,10 +40,10 @@
 1. In the new repository, go to the **Settings** tab
 2. Open the **Environments** section
 3. Create the following environments:
-   - development
-   - build
-   - validation
-   - production
+   - **development**
+   - **build**
+   - **validation**
+   - **production**
 
 > *Note: We suggest to add a [protection rule](https://docs.github.com/en/actions/deployment/environments#environment-protection-rules) (at least one reviewer for solution deployments) on the **validation** and **production** environments.*
 
