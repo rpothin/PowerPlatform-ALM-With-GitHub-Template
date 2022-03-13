@@ -66,7 +66,7 @@
 10.  Click on **Labels**
 11.  Create the following labels using the **New label** button:
    - **in progress**: Trigger the workspace initialization (*branch and environment*)
-   - **dev env created**: Indicate that a Power Platform Dev environment has been created for this issue
+   - **dev env created**: Indicate that a Dataverse Dev environment has been created for this issue
 
 > *Note: you can change the name of the labels, but you will need to make some replacements in the GitHub workflows.*
 
@@ -76,13 +76,13 @@
 13.  Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) interface
 14.  Open and make some updates, if necessary, in the GitHub workflows:
    - environment variables:
-      - **dataverse_environment_sku** and **solution_name** in multiple workflows
-      - **solution_checker_geography** in "solution-quality-check-on-pr.yml"
+      - **dataverse_environment_sku** (*in "global" configurations file now*) and **solution_name** in multiple workflows
+      - **solution_checker_geography** in "solution-quality-check-on-pr.yml" ==> *will soon be replaced by properties in the "global" configurations file*
    - issue labels considered in the workflows
 
 ![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
 
-15. Update the [configurations.json](Configurations/configurations.json) file
+15. Update the [configurations.json](Configurations/configurations.json) file...
 
 > *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
 
