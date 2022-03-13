@@ -55,24 +55,24 @@ It contains components (GitHub workflows, PowerShell scripts...) that will suppo
 
 ## 📖 Documentation
 
-...
+
 
 ## 📅 Roadmap
 
 Keep an eye 👀 on:
 - the [⚒ Backlog](https://github.com/users/rpothin/projects/1/views/1) to know what's coming next
-- the [Changelog](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CHANGELOG.md) to know what has already been done
+- the [Changelog](CHANGELOG.md) to know what has already been done
 
 ## ❗ Code of Conduct
 
 I, **Raphael Pothin** ([@rpothin](https://github.com/rpothin)), as creator of this project, am dedicated to providing a welcoming, diverse, and harrassment-free experience for everyone.
-I expect everyone visiting or participating to this project to abide by the following [**Code of Conduct**](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CODE_OF_CONDUCT.md).
+I expect everyone visiting or participating to this project to abide by the following [**Code of Conduct**](CODE_OF_CONDUCT.md).
 Please read it.
 
 ## 👐 Contributing to this project
 
 From opening a bug report to creating a pull request: every contribution is appreciated and welcomed.
-For more information, see [CONTRIBUTING.md](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/CONTRIBUTING.md)
+For more information, see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ### Not Sure Where to Start?
 
@@ -100,7 +100,7 @@ Thanks to the following people who have contributed to this project:
 
 ## 📝 License
 
-All files in this repository are subject to the [MIT](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/LICENSE) license.
+All files in this repository are subject to the [MIT](LICENSE) license.
 
 ## 💡 Inspiration
 
