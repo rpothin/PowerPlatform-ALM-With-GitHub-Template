@@ -60,22 +60,6 @@
 | **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME** | Display name of the Dataverse Production environment                                       | Production                           |
 | **SOLUTION_COMPONENTS_OWNER_EMAIL**       | Email of the user considered for the ownership of solution components (*ex: cloud flows*)  | appcomponentsowner@email.com         |
 
-   - **APPLICATION_ID**: Application (client) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
-   - **CLIENT_SECRET**: Client secret of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
-   - **TENANT_ID**: Directory (tenant) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
-   - **DATAVERSE_VALIDATION_ENVIRONMENT_URL**: URL of the Dataverse Validation environment
-   - **DATAVERSE_VALIDATION_ENVIRONMENT_NAME**: Display name of the Dataverse Validation environment
-   - **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**: URL of the Dataverse Production environment
-   - **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME**: Display name of the Dataverse Production environment
-   - **SOLUTION_COMPONENTS_OWNER_EMAIL**: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
-
-> *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
-
-> *Note: You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the GitHub secrets for the creation of the Power Platform environments:*
-> - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command can be used to get all the supported locations for your Power Platform environment*
-> - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command can be used to get all the supported currencies for a specific location for your Power Platform environment*
-> - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command can be used to get all the supported languages for a specific location for your Power Platform environment*
-
 ![Create_Secret](https://user-images.githubusercontent.com/23240245/136882520-ba598d65-7760-4504-b2df-9dfae930570d.gif)
 
 9. In the new repository, go to the **Issues** tab
@@ -97,5 +81,14 @@
    - issue labels considered in the workflows
 
 ![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
+
+15. Update the [configurations.json](Configurations/configurations.json) file
+
+> *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
+
+> *Note: You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the GitHub secrets for the creation of the Power Platform environments:*
+> - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command can be used to get all the supported locations for your Power Platform environment*
+> - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command can be used to get all the supported currencies for a specific location for your Power Platform environment*
+> - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command can be used to get all the supported languages for a specific location for your Power Platform environment*
 
 You should now be ready to start your Power Platform developments from your new GitHub repository 🎉
