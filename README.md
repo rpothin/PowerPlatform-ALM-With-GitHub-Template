@@ -55,7 +55,14 @@ It contains components (GitHub workflows, PowerShell scripts...) that will suppo
 
 ## 📖 Documentation
 
+### Setup and configurations
 
+- [How to setup your repository from this template?](Documentation/Repository-Setup.md)
+- [How to configure a custom deployment settings file?](Documentation/Custom-Deployment-Settings-File-Management.md) - *for canvas apps sharing the Azure AD security groups*
+
+### Others
+
+- [What can be found in this repository?](Documentation/Repository-Content.md)
 
 ## 📅 Roadmap
 
