@@ -48,13 +48,25 @@
 
 7. Open the **Secrets** section
 8. Add the following repository secrets to the new repository:
+
+| **Secret Name**                           | **Description**                                                                            | **Example**                          |
+|-------------------------------------------|--------------------------------------------------------------------------------------------|--------------------------------------|
+| **APPLICATION_ID**                        | **Application (client) ID** of the app registration with *Dynamics CRM.user_impersonation* | 00000000-0000-0000-0000-000000000000 |
+| **CLIENT_SECRET**                         | **Secret** of the app registration with *Dynamics CRM.user_impersonation*                  | *********************                |
+| **TENANT_ID**                             | **Directory (tenant) ID** of the app registration with *Dynamics CRM.user_impersonation*   | 00000000-0000-0000-0000-000000000000 |
+| **DATAVERSE_VALIDATION_ENVIRONMENT_URL**  | URL of the Dataverse Validation environment                                                | https://validation.crm3.dynamics.com |
+| **DATAVERSE_VALIDATION_ENVIRONMENT_NAME** | Display name of the Dataverse Validation environment                                       | Validation                           |
+| **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**  | URL of the Dataverse Production environment                                                | https://production.crm3.dynamics.com |
+| **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME** | Display name of the Dataverse Production environment                                       | Production                           |
+| **SOLUTION_COMPONENTS_OWNER_EMAIL**       | Email of the user considered for the ownership of solution components (*ex: cloud flows*)  | appcomponentsowner@email.com         |
+
    - **APPLICATION_ID**: Application (client) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
    - **CLIENT_SECRET**: Client secret of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
    - **TENANT_ID**: Directory (tenant) ID of the service principal with Dynamics CRM.user_impersonation and Microsoft Graph.User.Read API permissions
-   - **DATAVERSE_VALIDATION_ENVIRONMENT_URL**: URL of the Power Platform Validation environment
-   - **DATAVERSE_VALIDATION_ENVIRONMENT_NAME**: Display name of the Power Platform Validation environment
-   - **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**: URL of the Power Platform Production environment
-   - **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME**: Display name of the Power Platform Production environment
+   - **DATAVERSE_VALIDATION_ENVIRONMENT_URL**: URL of the Dataverse Validation environment
+   - **DATAVERSE_VALIDATION_ENVIRONMENT_NAME**: Display name of the Dataverse Validation environment
+   - **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**: URL of the Dataverse Production environment
+   - **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME**: Display name of the Dataverse Production environment
    - **SOLUTION_COMPONENTS_OWNER_EMAIL**: Email of the user considered for the ownership of solution components (*ex: cloud flows*)
 
 > *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
