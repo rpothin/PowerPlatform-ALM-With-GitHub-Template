@@ -43,7 +43,7 @@ It contains components (GitHub workflows, PowerShell scripts...) that will suppo
 
 1. Provide an easy way to setup a GitHub repository for Power Platform / Dynamics 365 development.
 2. Propose a starting point allowing a development team to customize the components included based on their own needs.
-3. Illustrate that we can automate many things related to the Power Platform to support an healthy ALM strategy.
+3. Illustrate that we can automate many things related to the Power Platform to support a healthy ALM strategy.
 4. Be a complement to the work done around ALM in the [coe-starter-kit](https://github.com/microsoft/coe-starter-kit) & [coe-alm-accelerator-templates](https://github.com/microsoft/coe-alm-accelerator-templates) repositories.
 5. Show that a trunk-based development approach can be applied to Power Platform / Dynamics 365 development.
 6. Be an inspiration for the Power Platform & Dynamics 365 communities regarding using GitHub to support open-source projects that could benefit others. 
