@@ -89,14 +89,58 @@
 
 ### 5 - Update global configurations
 
-1. Update the [configurations.json](Configurations/configurations.json) file...
+The global configurations file is used to simplify the management of information required in the GitHub workflows proposed in this repository.
 
-> *Note: You can find all the available values in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
+This file follows the format below:
 
-> *Note: You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the GitHub secrets for the creation of the Power Platform environments:*
-> - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command can be used to get all the supported locations for your Power Platform environment*
-> - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command can be used to get all the supported currencies for a specific location for your Power Platform environment*
-> - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command can be used to get all the supported languages for a specific location for your Power Platform environment*
+```json
+{
+    "environment": {
+        "region": "canada",
+        "urlRegionCode": "crm3",
+        "languageDisplayName": "English",
+        "currencyName": "CAD",
+        "developmentEnvironment": {
+            "displayNameBase": "xxx - ",
+            "domainNameBase": "xxx-",
+            "skuName": "Sandbox",
+            "developersAzureAdGroupName": "sg-xxx"
+        },
+        "buildEnvironment": {
+            "displayNameBase": "xxx - ",
+            "domainNameBase": "xxx-",
+            "skuName": "Sandbox"
+        }
+    },
+    "developmentBranchNameBase": "work/",
+    "pacCliVersion": "1.10.4",
+    "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/",
+    "deploymentSettingsFileNameBase": "DeploymentSettings",
+    "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings"
+}
+```
+
+You will find below details regarding each configuration:
+
+| **Configuration Name**                             | **Description**                                                                                                           | **Example**               |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| environment.region                                 | Region considered for the Dataverse environments                                                                          | canada                    |
+| environment.urlRegionCode                          | Code of the region considered for the URL of the Dataverse environments                                                   | crm3                      |
+| environment.languageDisplayName                    | Display name of the default language for the Dataverse environments                                                       | English                   |
+| environment.currencyName                           | Name of the default currency for the Dataverse environments                                                               | CAD                       |
+| environment.developmentEnvironment.displayNameBase | Left part of the display name of the Dataverse Dev environment that will be created during workspace initialization phase | "BAFC - Raphael - Dev - " |
+| environment.developmentEnvironment.domainNameBase  | Left part of the URL of the Dataverse Dev environment that will be created during workspace initialization phase          | "bafc-rpo-gh-dev-"        |
+| environment.developmentEnvironment.skuName         | SKU name the Dataverse Dev environment that will be created during workspace initialization phase                         | Sandbox                   |
+| ...                                                |                                                                                                                           |                           |
+
+> *Note: You can find the code for the URL of a Datavers environment of the considered region in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
+
+> *Note: You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the configurations of Dataverse environments:*
+> - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command (**LocationName** column value in results) can be used to get all the supported locations for Dataverse environments*
+> - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command can be used to get all the supported currencies for a specific location for Dataverse environments*
+> - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command can be used to get all the supported languages for a specific location for Dataverse environments*
+
+> *Note: Valid options for **skuName** configurations are: Trial, Sandbox, Production, SubscriptionBasedTrial (source [microsoft/powerplatform-actions/create-environment](https://github.com/microsoft/powerplatform-actions/blob/30b7cbe414cf675d173d8af70e06c1ed7eef10f3/create-environment/action.yml#L36))*
 
 You should now be ready to start your Power Platform / Dynamics 365 developments using your new GitHub repository 🎉
 
