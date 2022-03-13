@@ -3,7 +3,7 @@
         How to setup your repository from this template?
     </h1>
     <p align="center">
-        First steps to initialize your repository for Power Platform / Dynamics 365 developmen.
+        First steps to initialize your repository for Power Platform / Dynamics 365 development.
     </p>
 </p>
 
