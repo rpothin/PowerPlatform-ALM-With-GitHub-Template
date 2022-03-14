@@ -154,11 +154,12 @@ You should now be ready to start your Power Platform / Dynamics 365 developments
 ### 6 - Update code for your own needs (optional)
 
 1. In the new repository, go to the **Code** tab
-2. Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) interface
-3. Open and make some updates, if necessary, in the GitHub workflows:
+2. Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) interface by pressing "."
+3. In the **VS Code for the web** experience you will be able to make some updates, if necessary, in the GitHub workflows:
    - environment variables:
-      - **dataverse_environment_sku** (*in "global" configurations file now*) and **solution_name** in multiple workflows
-      - **solution_checker_geography** in "solution-quality-check-on-pr.yml" ==> *will soon be replaced by properties in the "global" configurations file*
-   - issue labels considered in the workflows
+      - **solution_name** (*by default it is "PowerPlatformALMWithGitHub"*)
+   - issue labels:
+      - **in progress**
+      - **dev env created**
 
 ![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
