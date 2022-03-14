@@ -60,6 +60,18 @@ outputs:
   custom-deployment-settings-file-name-base:
     description: "Base of the name for a custom deployment settings file"
     value: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
+  solution-checker-output-directory:
+    description: "Output directory for the results of the execution of the solution checker"
+    value: ${{ steps.get-configurations.outputs.solution-checker-output-directory }}
+  solution-checker-geography:
+    description: "Condiered geography for the execution of the solution checker"
+    value: ${{ steps.get-configurations.outputs.solution-checker-geography }}
+  solution-checker-maximum-number-high-severity-points:
+    description: "Maximum number of the high severity points allowed in the results of the execution of the solution checker"
+    value: ${{ steps.get-configurations.outputs.solution-checker-maximum-number-high-severity-points }}
+  solution-checker-maximum-number-medium-severity-points:
+    description: "Maximum number of the medium severity points allowed in the results of the execution of the solution checker"
+    value: ${{ steps.get-configurations.outputs.solution-checker-maximum-number-medium-severity-points }}
 
 runs:
   using: "composite"
@@ -111,6 +123,11 @@ runs:
         $deploymentSettingsFileNameBase = $configurations.deploymentSettingsFileNameBase
         $customDeploymentSettingsFileNameBase = $configurations.customDeploymentSettingsFileNameBase
 
+        $solutionCheckerOutputDirectory = $configurations.solutionChecker.outputDirectory
+        $solutionCheckerGeography = $configurations.solutionChecker.geography
+        $solutionCheckerMaximumNumberHighSeverityPoints = $configurations.solutionChecker.maximumNumberHighSeverityPoints
+        $solutionCheckerMaximumNumberMediumSeverityPoints = $configurations.solutionChecker.maximumNumberMediumSeverityPoints
+
         # Generate outputs
         Write-Host "Generate outputs for the different configurations in the file"
         echo "::set-output name=environment-region::$environmentRegion"
@@ -132,4 +149,9 @@ runs:
         echo "::set-output name=powerapps-maker-portal-base-url::$powerAppsMakerPortalBaseUrl"
         echo "::set-output name=deployment-settings-file-name-base::$deploymentSettingsFileNameBase"
         echo "::set-output name=custom-deployment-settings-file-name-base::$customDeploymentSettingsFileNameBase"
+        
+        echo "::set-output name=solution-checker-output-directory::$solutionCheckerOutputDirectory"
+        echo "::set-output name=solution-checker-geography::$solutionCheckerGeography"
+        echo "::set-output name=solution-checker-maximum-number-high-severity-points::$solutionCheckerMaximumNumberHighSeverityPoints"
+        echo "::set-output name=solution-checker-maximum-number-medium-severity-points::$solutionCheckerMaximumNumberMediumSeverityPoints"
       shell: pwsh

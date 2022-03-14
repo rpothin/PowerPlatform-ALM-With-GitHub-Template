@@ -20,5 +20,11 @@
     "pacCliVersion": "1.10.4",
     "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/",
     "deploymentSettingsFileNameBase": "DeploymentSettings",
-    "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings"
+    "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings",
+    "solutionChecker": {
+        "outputDirectory": "solutionCheckerResults/",
+        "geography": "Canada",
+        "maximumNumberHighSeverityPoints": 0,
+        "maximumNumberMediumSeverityPoints": 5
+    }
 }
