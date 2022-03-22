@@ -35,17 +35,17 @@
 
 ## 📢 What is the PowerPlatform-ALM-With-GitHub-Template project?
 
-It is a **GitHub repository** that can be easily used as a starting point to create your own for Power Platform / Dynamics 365 development.
+It is a **GitHub repository** that can be easily used as a starting point to create your own repository for Power Platform / Dynamics 365 development.
 
-It contains components (GitHub workflows, PowerShell scripts...) that will support your application lifecycle management (ALM) processes for Power Platform / Dynamics 365 applications using GitHub.
+It contains components (GitHub workflows, PowerShell scripts...) that will help you have a healthy application lifecycle management (ALM) strategy for Power Platform / Dynamics 365 applications using GitHub.
 
 ## 🚀 Goals
 
 1. Provide an easy way to setup a GitHub repository for Power Platform / Dynamics 365 development.
 2. Propose a starting point allowing a development team to customize the components included based on their own needs.
 3. Illustrate that we can automate many things related to the Power Platform to support a healthy ALM strategy.
-4. Be a complement to the work done around ALM in the [coe-starter-kit](https://github.com/microsoft/coe-starter-kit) & [coe-alm-accelerator-templates](https://github.com/microsoft/coe-alm-accelerator-templates) repositories.
-5. Show that a trunk-based development approach can be applied to Power Platform / Dynamics 365 development.
+4. Be a complement to the work done around ALM in other repositories like [coe-starter-kit](https://github.com/microsoft/coe-starter-kit) and [coe-alm-accelerator-templates](https://github.com/microsoft/coe-alm-accelerator-templates).
+5. Show that a [trunk-based development approach](https://trunkbaseddevelopment.com/) can be applied to Power Platform / Dynamics 365 development.
 6. Be an inspiration for the Power Platform & Dynamics 365 communities regarding using GitHub to support open-source projects that could benefit others. 
 
 ### Non-goals
