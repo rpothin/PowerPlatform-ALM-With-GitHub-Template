@@ -2,12 +2,7 @@
     <h1 align="center">
         How to configure a "custom" deployment settings file?
     </h1>
-    <p align="center">
-        To cover configurations not managed today in the deployment settings file you will need to work with a "custom" deployment settings file.
-    </p>
 </p>
-
-## Custom deployment settings file
 
 Currently, canvas apps sharing need to be managed in a custom way because it is not covered in the ["out of the box" deployment settings file](https://docs.microsoft.com/en-us/power-platform/alm/conn-ref-env-variables-build-tools).
 
