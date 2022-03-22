@@ -176,5 +176,5 @@ You should now be ready to start your Power Platform / Dynamics 365 developments
 ![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
 
 <h3 align="center">
-  <a href="../README.md#-documentation">README - Documentation</a>
+  <a href="../README.md#-documentation">🏡 README - Documentation</a>
 </h3>
