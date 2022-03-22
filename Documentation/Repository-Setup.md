@@ -57,16 +57,16 @@
 2. Open the **Secrets > Actions** section
 3. Create the secrets below using the **New repository secret** button:
 
-| **Secret Name**                           | **Description**                                                                           | **Example**                          |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------ |
-| **APPLICATION_ID**                        | **Application (client) ID** of the considered app registration                            | 00000000-0000-0000-0000-000000000000 |
-| **CLIENT_SECRET**                         | **Secret** of the considered app registration                                             | *********************                |
-| **TENANT_ID**                             | **Directory (tenant) ID** of the considered app registration                              | 00000000-0000-0000-0000-000000000000 |
-| **DATAVERSE_VALIDATION_ENVIRONMENT_URL**  | URL of the Dataverse Validation environment                                               | https://validation.crm3.dynamics.com |
-| **DATAVERSE_VALIDATION_ENVIRONMENT_NAME** | Display name of the Dataverse Validation environment                                      | Validation                           |
-| **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**  | URL of the Dataverse Production environment                                               | https://production.crm3.dynamics.com |
-| **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME** | Display name of the Dataverse Production environment                                      | Production                           |
-| **SOLUTION_COMPONENTS_OWNER_EMAIL**       | Email of the user considered for the ownership of solution components (*ex: cloud flows*) | appcomponentsowner@email.com         |
+| **Secret Name**                           | **Description**                                                                                   | **Example**                          |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| **APPLICATION_ID**                        | **Application (client) ID** of the considered app registration                                    | 00000000-0000-0000-0000-000000000000 |
+| **CLIENT_SECRET**                         | **Secret** of the considered app registration                                                     | *********************                |
+| **TENANT_ID**                             | **Directory (tenant) ID** of the considered app registration                                      | 00000000-0000-0000-0000-000000000000 |
+| **DATAVERSE_VALIDATION_ENVIRONMENT_URL**  | URL of the Dataverse Validation environment                                                       | https://validation.crm3.dynamics.com |
+| **DATAVERSE_VALIDATION_ENVIRONMENT_NAME** | Display name of the Dataverse Validation environment                                              | Validation                           |
+| **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**  | URL of the Dataverse Production environment                                                       | https://production.crm3.dynamics.com |
+| **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME** | Display name of the Dataverse Production environment                                              | Production                           |
+| **SOLUTION_COMPONENTS_OWNER_EMAIL**       | Email of the user account considered for the ownership of solution components (*ex: cloud flows*) | appcomponentsowner@email.com         |
 
 ![Create_Secret](https://user-images.githubusercontent.com/23240245/136882520-ba598d65-7760-4504-b2df-9dfae930570d.gif)
 
