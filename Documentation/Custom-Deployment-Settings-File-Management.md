@@ -1,4 +1,11 @@
-### Custom deployment settings files configuration
+<p align="center">
+    <h1 align="center">
+        How to configure a "custom" deployment settings file?
+    </h1>
+    <p align="center">
+        To cover configurations not managed today in the deployment settings file you will need to work with a "custom" deployment settings file.
+    </p>
+</p>
 
 Currently, canvas apps sharing need to be managed in a custom way because it is not covered in the ["out of the box" deployment settings file](https://docs.microsoft.com/en-us/power-platform/alm/conn-ref-env-variables-build-tools).
 
@@ -27,3 +34,7 @@ Using this repository, you will need to configure files following the principles
 > - Valid options for the role of a group on a canvas app are: **CanView**, **CanViewWithShare**, **CanEdit** (*source [set-adminpowerapproleassignment](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/set-adminpowerapproleassignment)*)
 
 - the base of the name of custom deployment settings files is defined with the property `customDeploymentSettingsFileNameBase` in the global configuration file (`Configurations/configurations.json`)
+
+<h3 align="center">
+  <a href="../README.md#-documentation">README - Documentation</a>
+</h3>
