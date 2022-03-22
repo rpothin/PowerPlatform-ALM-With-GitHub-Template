@@ -78,10 +78,10 @@
 2. Click on **Labels**
 3. Create the labels below using the **New label** button:
 
-| **Label Name**      | **Description**                                | Usage                                                                               |
-| ------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **in progress**     | Work in progress                               | Involved in the trigger of the workspace initialization (*branch and environment*)  |
-| **dev env created** | Development environment created for this issue | Indicate that a Dataverse Dev environment has been created for the considered issue |
+| **Label Name**      | **Description**                                | Usage                                                                                           |
+| ------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| **in progress**     | Work in progress                               | Involved in the trigger of the workspace initialization (*branch and dev environment creation*) |
+| **dev env created** | Development environment created for this issue | Indicate that a Dataverse Dev environment has been created for the considered issue             |
 
 > *Note: You can change the name of the labels, but you will need to make some replacements in the GitHub workflows.*
 
