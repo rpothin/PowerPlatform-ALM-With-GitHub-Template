@@ -12,7 +12,7 @@
 
 ### Workflows
 
-- [**workspace-initialization.yml](../.github/workflows/workspace-initialization.yml):
+- [**workspace-initialization.yml**](../.github/workflows/workspace-initialization.yml):
    - Trigger: issue assigned or label added (*we only consider the `in progress` label - or the one you decided to use*)
    - Summary of actions:
       - create a branch
