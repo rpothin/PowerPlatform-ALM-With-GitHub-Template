@@ -4,9 +4,9 @@ All notable changes to this repository will be documented in this file.
 
 > The format is based on [Keep a Changelog](https://keepachangelog.com/en/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [⚒ Work in progress]
+<!-- ## [⚒ Work in progress]
 
-<!-- ### 🔨 Fixed
+### 🔨 Fixed
 
 - ...
 
@@ -22,7 +22,7 @@ All notable changes to this repository will be documented in this file.
 
 - ... -->
 
-## [0.3.0] - 2022-03-14
+## [0.3.0] - 2022-03-44 (⚒ Work in progress)
 
 > "Industrialize" our development flow for this repository template 🤖
 
@@ -153,6 +153,6 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the creation of a GitHub release for a Power Platform managed solution (*build with a JIT environment*)
 
 [⚒ Work in progress]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
-[0.3.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/milestone/1
+[0.3.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v0.1.0
