@@ -1,4 +1,8 @@
-## 🚀 Features
+<p align="center">
+    <h1 align="center">
+        What can you find in this repository?
+    </h1>
+</p>
 
 - **Workspace initialization** when an issue is assigned and a specific label added to it:
   - create a new branch dedicated to the issue
@@ -13,3 +17,7 @@
 - **Create a GitHub release** and **deploy the managed solution in it to a Power Platform Production environment**
 
 > *Note: Some of these features used a Just In Time (JIT) Power Platform Build environment to build a managed version of a solution based on an exported and unpacked unmanaged solution.*
+
+<h3 align="center">
+  <a href="../README.md#-documentation">🏡 README - Documentation</a>
+</h3>
