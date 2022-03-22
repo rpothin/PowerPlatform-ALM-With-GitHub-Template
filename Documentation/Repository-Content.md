@@ -14,7 +14,7 @@
 
 ## 🧾 Configurations
 
-- **
+- **Configurations/configurations.json**: global configurations file used to simplify the management of information required in the GitHub workflows ([details](./Repository-Setup.md#5---update-global-configurations))
 
 ## 🖼 Issue / Pull request templates
 
