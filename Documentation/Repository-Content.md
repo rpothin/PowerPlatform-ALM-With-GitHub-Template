@@ -1,6 +1,6 @@
 <p align="center">
     <h1 align="center">
-        What can you find in this repository?
+        What can be found in this repository?
     </h1>
 </p>
 
