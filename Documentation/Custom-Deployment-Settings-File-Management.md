@@ -1,6 +1,6 @@
 <p align="center">
     <h1 align="center">
-        How to configure a "custom" deployment settings file?
+        How to configure a custom deployment settings file?
     </h1>
 </p>
 
