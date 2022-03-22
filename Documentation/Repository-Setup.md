@@ -83,7 +83,7 @@
 | **in progress**     | Work in progress                               | Involved in the trigger of the workspace initialization (*branch and dev environment creation*) |
 | **dev env created** | Development environment created for this issue | Indicate that a Dataverse Dev environment has been created for the considered issue             |
 
-> *Note: You can change the name of the labels, but you will need to make some replacements in the GitHub workflows.*
+> *Note: You can change the name of the labels, but in that case you will need to make some replacements in the GitHub workflows.*
 
 ![Create_Label](https://user-images.githubusercontent.com/23240245/137238762-f0cd25a7-dc2d-4647-b33b-de6d41ab86a5.gif)
 
