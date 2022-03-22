@@ -31,7 +31,7 @@ Using this repository, you will need to configure custom deployment settings fil
 > - *Valid options for the role of a group on a canvas app are: **CanView**, **CanViewWithShare**, **CanEdit** (source [set-adminpowerapproleassignment](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/set-adminpowerapproleassignment))*
 
 - the base of the name of custom deployment settings files is defined in the property `customDeploymentSettingsFileNameBase` in the global configuration file (`Configurations/configurations.json`)
-- the name of the custom deployment settings files must respect the following format: `<customDeploymentSettingsFileNameBase>_<environmentName>` (*ex: "CustomDeploymentSettings_validation"*)
+- the name of the custom deployment settings files must respect the following format: `<customDeploymentSettingsFileNameBase>_<environmentName>` (*ex: `CustomDeploymentSettings_validation`*)
 
 <h3 align="center">
   <a href="../README.md#-documentation">🏡 README - Documentation</a>
