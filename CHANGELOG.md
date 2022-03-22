@@ -22,7 +22,7 @@ All notable changes to this repository will be documented in this file.
 
 - ... -->
 
-## [0.3.0] - 2022-03-44 (⚒ Work in progress)
+## [0.3.0] - 2022-03-24 (⚒ Work in progress)
 
 > "Industrialize" our development flow for this repository template 🤖
 
