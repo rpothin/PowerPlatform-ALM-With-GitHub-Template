@@ -111,10 +111,10 @@ All files in this repository are subject to the [MIT](LICENSE) license.
 
 ## 💡 Inspiration
 
-We would like to thank the open-source projects below that helped find some ideas on how to organize this project.
+We would like to thank the open-source projects below that helped us find some ideas on how to organize this project.
 
 - [budibase](https://github.com/Budibase/budibase/) - *for the inspiration for the format of this README*
-- [all-contributors](https://github.com/all-contributors/all-contributors) - *for making easier the management of the contributors list*
+- [all-contributors](https://github.com/all-contributors/all-contributors) - *to make the management of the contributors list easier*
 - [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog) - *for the inspiratation for the management of the changelog*
 - [contributor_covenant](https://github.com/EthicalSource/contributor_covenant) - *for the amazing code of conduct template they provide*
 - [coe-starter-kit](https://github.com/microsoft/coe-starter-kit) & [coe-alm-accelerator-templates](https://github.com/microsoft/coe-alm-accelerator-templates) - *for all the solutions and best practices shared around ALM for Power Platform development*
