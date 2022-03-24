@@ -12,7 +12,7 @@
 - [ ] A GitHub account - *if you don't have one it is really easy and fun to create it: [GitHub signup](https://github.com/signup)*
 - [ ] 2 Dataverse environments already created in your tenant: **Validation** and **Production**
 - [ ] An **app registration** registered in Azure Active Directory with (*at least*):
-  - the following permission (delegated type) : `Dynamics CRM.user_impersonation`
+  - the following permission (delegated type): `Dynamics CRM.user_impersonation`
   - the following supported account type option selected: **Accounts in this organizational directory only**
   - a client secret generated and stored somewhere safe
 - [ ] Run the [**New-PowerAppManagementApp**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/new-powerappmanagementapp) PowerShell command of the [**Microsoft.PowerApps.Administration.PowerShell**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell) PowerShell module specifying the **Application (client) ID** of the app registration mentioned in the previous point:
