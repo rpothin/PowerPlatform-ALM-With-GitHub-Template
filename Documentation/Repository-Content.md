@@ -26,13 +26,46 @@
       - export and unpack the considered solution
       - push the changes to the considered branch (*based on input value*)
 - - [**solution-quality-check-on-pr**](../.github/workflows/solution-quality-check-on-pr.yml):
-   - Trigger: pull request tarteging the main branch and with changes on specific folders
+   - Trigger: pull request tarteging the `main` branch and with changes on specific folders
    - Summary of actions:
       - create a just-in-time Dataverse Build environment
       - pack the considered solution
       - execute the solution checker on the considered solution and generate an execute condition if thresholds are not met
       - test the solution type conversion (unmanaged to managed) using the just-in-time Dataverse Build environment
       - delete the just-in-time Dataverse Build environment
+- [**import-solution-to-validation**](../.github/workflows/import-solution-to-validation.yml):
+   - Trigger: push to the `main` branch with changes on specific folders
+   - Summary of actions:
+      - create a just-in-time Dataverse Build environment
+      - pack the considered solution
+      - type conversion (unmanaged to managed) of the considered solution using the just-in-time Dataverse Build environment
+      - import the managed version of the considered solution to the Dataverse Validation environment
+      - delete the just-in-time Dataverse Build environment
+- [**create-deploy-release**](../.github/workflows/create-deploy-release.yml):
+   - Trigger: manual with inputs
+   - Summary of actions:
+      - create a branch for the considered release
+      - create a just-in-time Dataverse Build environment
+      - pack the considered solution
+      - type conversion (unmanaged to managed) of the considered solution using the just-in-time Dataverse Build environment
+      - delete the just-in-time Dataverse Build environment
+      - delete the release branch if deployment of the considered solution to the just-in-time Dataverse Build environment fails
+      - create a GitHub release as draft with the unmanaged and managed versions of the considered solution
+      - import the managed version of the considered solution to the Dataverse Production environment
+      - publish the GitHub release initialized earlier
+- [**clean-dev-workspace-when-issue-closed-or-deleted**](../.github/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml):
+   - Trigger: issue closed or deleted
+   - Summary of actions:
+      - delete branch created for the development regarding the considered issue
+      - delete the Dataverse Dev environment created for the considered issue
+      - add a comment to the issue to give a status on the workspace created for the development
+- [**PSScriptAnalyzer**](../.github/workflows/powershell-analysis.yml):
+   - Triggers:
+      - push to the `main` branch with changes on specific folders
+      - pull request tarteging the `main` branch and with changes on specific folders
+   - Summary of actions:
+      - run PSScriptAnalyzer on the PowerShell code in the repository
+      - upload the generated sarif file for analysis 
 
 ### PowerShell scripts
 
