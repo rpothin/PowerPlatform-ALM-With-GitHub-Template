@@ -13,13 +13,26 @@
 ### Workflows
 
 - [**workspace-initialization.yml**](../.github/workflows/workspace-initialization.yml):
-   - Trigger: issue assigned or label added (*we only consider the `in progress` label - or the one you decided to use*)
+   - Trigger: issue assigned or labeled (*we only consider the `in progress` label - or the one you decided to use*)
    - Summary of actions:
       - create a branch
       - create a Dataverse Dev environment
-      - add a team to the new Dataverse Dev environment to automatically give access to the development team
-      - import the solution to the new Dataverse Dev environment if there is one in the repository
+      - add developers to the new Dataverse Dev environment as System Administrators
+      - import the solution to the new Dataverse Dev environment, if there is one in the repository
       - add comments to the issue to give visibility on the progress of the initialization of the workspace
+- [**export-and-unpack-solution**](../.github/workflows/export-and-unpack-solution.yml):
+   - Trigger: manual with inputs
+   - Summary of actions:
+      - export and unpack the considered solution
+      - push the changes to the considered branch (*based on input value*)
+- - [**solution-quality-check-on-pr**](../.github/workflows/solution-quality-check-on-pr.yml):
+   - Trigger: pull request tarteging the main branch and with changes on specific folders
+   - Summary of actions:
+      - create a just-in-time Dataverse Build environment
+      - pack the considered solution
+      - execute the solution checker on the considered solution and generate an execute condition if thresholds are not met
+      - test the solution type conversion (unmanaged to managed) using the just-in-time Dataverse Build environment
+      - delete the just-in-time Dataverse Build environment
 
 ### PowerShell scripts
 
