@@ -69,6 +69,11 @@
 
 ### PowerShell scripts
 
+- [**Add-AADSecurityGroupTeamToDataverseEnvironment**](../Scripts/Add-AADSecurityGroupTeamToDataverseEnvironment.ps1): Add an Azure AD Security Group Team to a Dataverse environment
+- [**Add-UserToDataverseEnvironment**](../Scripts/Add-UserToDataverseEnvironment.ps1): Add a user to a Dataverse environment (*not used anymore - replaced by **Add-AADSecurityGroupTeamToDataverseEnvironment***)
+- [**Enable-CloudFlows**](../Scripts/Enable-CloudFlows.ps1): Turn on the Cloud Flows in a specific solution in a targeted Dataverse environment
+- [**Grant-GroupsAccessToCanvasApps**](../Scripts/Grant-GroupsAccessToCanvasApps.ps1): Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file
+
 ## 🧾 Configurations
 
 - [**Configurations/configurations.json**](../Configurations/configurations.json): global configurations file used to simplify the management of information required in the GitHub workflows ([details](./Repository-Setup.md#5---update-global-configurations))
