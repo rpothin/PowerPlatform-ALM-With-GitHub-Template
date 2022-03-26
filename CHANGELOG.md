@@ -63,6 +63,10 @@ All notable changes to this repository will be documented in this file.
    - **📖 Documentation** section added
    - Small updates in the existing sections
 - Small updates in the **CODE_OF_CONDUCT.md** file
+- Disabled blank issue in the configuration file for the issue in this repository
+- In the **create-deploy-release** workflow:
+   - Example of the expected format for the **solution_base_version** input added to the description
+   - Update of the release version format to be compliant with the semantic versioning
 
 ### ❌ Deleted
 
