@@ -4,9 +4,9 @@ All notable changes to this repository will be documented in this file.
 
 > The format is based on [Keep a Changelog](https://keepachangelog.com/en/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-<!-- ## [⚒ Work in progress]
+## [⚒ Work in progress]
 
-### 🔨 Fixed
+<!-- ### 🔨 Fixed
 
 - ...
 
@@ -22,7 +22,7 @@ All notable changes to this repository will be documented in this file.
 
 - ... -->
 
-## [0.3.0] - 2022-03-24 (⚒ Work in progress)
+## [0.3.0] - 2022-03-25
 
 > "Industrialize" our development flow for this repository template 🤖
 
@@ -31,14 +31,15 @@ All notable changes to this repository will be documented in this file.
 - Manage **pac/** folder in **.gitignore** file to ignore it during commits and remove the line that was handling this task from the **export-and-unpack-solution** workflow
 - Run **microsoft/powerplatform-actions/import-solution** action asynchronously with a maximum wait time of 10 minutes in all workflows where this action is used
 - Correction of PowerShell scripts to remediate code scanning alerts
-- **workspace-initialization-when-issue-assigned** workflow renamed **workspace-initialization**
+- **workspace-initialization-when-issue-assigned** workflow renamed **workspace-initialization** (*simplification*)
 - Add filter on paths to the trigger of the **solution-quality-check-on-pr** workflow
 
 ### 🚀 Added
 
-- Composite action **get-configurations** localized to the repository to extract configurations used in workflows from a configuration file (JSON)
-- Global configuration file (JSON) that contains information used in the workflows like the details of the Dataverse environments we create - *multiple configurations where added to the file during the work on this version*
+- Composite action **get-configurations** localized to the repository to extract configurations used in workflows from a JSON file
+- Global configuration file (JSON) that contains information used in the workflows like the details of the Dataverse environments we create - *multiple configurations where moved to this file during the work on the 0.3.0 version ([details](./Documentation/Repository-Setup.md#5---update-global-configurations))*
 - PowerShell script **Add-AADSecurityGroupTeamToDataverseEnvironment.ps1** for the creation of a security group team associated to an Azure AD security group in a Dataverse environment and the assignation of a security role
+- URL to the **Solutions** page of the Power Apps maker portal in the context of the new Dataverse Dev environment in the **workspace-initialization** workflow
 
 ### 🤖 Changed
 
@@ -46,16 +47,17 @@ All notable changes to this repository will be documented in this file.
 - Include the deployment settings file associated to the considered environment in the **microsoft/powerplatform-actions/import-solution** action in the following workflows: **create-deploy-release** and **import-solution-to-validation**
 - Calls to **Update-ConnectionReferences.ps1** PowerShell script removed from the following workflows: **create-deploy-release** and **import-solution-to-validation**
 - All workflows to used the composite action **get-configurations** localized to the repository to get the configurations they need
-- References to GitHub secrets replaced by configurations in the configuration file (JSON) removed from the README file
+- **Configuration** folder renamed **Configurations**
+- References to GitHub secrets replaced by configurations in the configuration file (JSON) removed from the **README.md** file
 - Creation of a user in the Dataverse environment replaced by the creation of a security group team in the **workspace-initialization** workflow
-- Update paths considered in the trigger of the **import-solution-to-validation** workflow
+- Update paths considered in the trigger of the **import-solution-to-validation** and **solution-quality-check-on-pr** workflows
 - Use the **environment-url** output of the **microsoft/powerplatform-actions/create-environment** action in the following workflows: **create-deploy-release**, **import-solution-to-validation** and **solution-quality-check-on-pr**
-- **Custom deployment settings files configuration** section added to the README file to explain how to manage the configuration file (JSON) for the sharing of the canvas apps to Azure AD security groups
+- **Custom deployment settings files configuration** section added to the **README.md** file to explain how to manage the configuration file (JSON) for the sharing of the canvas apps to Azure AD security groups
 
 ### ❌ Deleted
 
-- **Update-ConnectionReferences.ps1** PowerShell script replaced by deployment settings files management
-- **ConnectionsMapping-%.json** files removed replaced by deployment settings files
+- **Update-ConnectionReferences.ps1** PowerShell script deleted because replaced by deployment settings files management in the workflows
+- **ConnectionsMapping-%.json** files removed because replaced by deployment settings files management in the workflows
 - **Configuration/PowerPlatformALMWithGitHub** folder deleted - *it was forgotten during the cleaning of the elements related the demo solution in version 0.2.0*
 
 ## [0.2.0] - 2021-10-19
@@ -152,7 +154,7 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the deployment of a Power Platform solution to a QA environment after a build with a JIT environment on a push to the main branch
 - GitHub workflow for the creation of a GitHub release for a Power Platform managed solution (*build with a JIT environment*)
 
-[⚒ Work in progress]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
-[0.3.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...HEAD
+[⚒ Work in progress]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v0.1.0
