@@ -40,6 +40,10 @@ All notable changes to this repository will be documented in this file.
 - Global configuration file (JSON) that contains information used in the workflows like the details of the Dataverse environments we create - *multiple configurations where moved to this file during the work on the 0.3.0 version ([details](./Documentation/Repository-Setup.md#5---update-global-configurations))*
 - PowerShell script **Add-AADSecurityGroupTeamToDataverseEnvironment.ps1** for the creation of a security group team associated to an Azure AD security group in a Dataverse environment and the assignation of a security role
 - URL to the **Solutions** page of the Power Apps maker portal in the context of the new Dataverse Dev environment in the **workspace-initialization** workflow
+- **Documentation** folder with one markdown file per topic and with each file referenced in the **README.md** file
+   - **Repository-Setup.md**: a guide for the initialization of a repsitory from this repository template
+   - **Custom-Deployment-Settings-File-Management.md**: a guide to manage custom deployment settings file for canvas apps sharing the Azure AD security groups
+   - **Repository-Content.md**: a list of the elements in this repository
 
 ### 🤖 Changed
 
@@ -52,7 +56,13 @@ All notable changes to this repository will be documented in this file.
 - Creation of a user in the Dataverse environment replaced by the creation of a security group team in the **workspace-initialization** workflow
 - Update paths considered in the trigger of the **import-solution-to-validation** and **solution-quality-check-on-pr** workflows
 - Use the **environment-url** output of the **microsoft/powerplatform-actions/create-environment** action in the following workflows: **create-deploy-release**, **import-solution-to-validation** and **solution-quality-check-on-pr**
-- **Custom deployment settings files configuration** section added to the **README.md** file to explain how to manage the configuration file (JSON) for the sharing of the canvas apps to Azure AD security groups
+- Reorganization of the **README.md** file:
+   - **🚀 Features** section removed
+   - **📢 What is the PowerPlatform-ALM-With-GitHub-Template project?** and **🚀 Goals** sections added
+   - **✈️ How to use this repository template?** section removed (*replaced by a dedicated documentation page*)
+   - **📖 Documentation** section added
+   - Small updates in the existing sections
+- Small updates in the **CODE_OF_CONDUCT.md** file
 
 ### ❌ Deleted
 
