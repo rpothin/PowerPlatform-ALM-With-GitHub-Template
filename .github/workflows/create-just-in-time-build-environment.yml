@@ -49,7 +49,7 @@ on:
     outputs:
       build-environment-url:
         description: 'URL of the just-in-time Build environment created'
-        value: ${{ jobs.create-build-environment.outputs.create-build-environment }}
+        value: ${{ jobs.create-build-environment.outputs.build-environment-url }}
 
 jobs:
   # Job for the creation of a just in time Dataverse Build environment
