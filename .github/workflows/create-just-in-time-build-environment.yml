@@ -1,0 +1,96 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: create-just-in-time-build-environment
+# Reusable workflow to create a just-in-time Build environment
+
+# Workflow triggered by another workflow
+on:
+  workflow_call:
+    inputs:
+      current-date:
+        description: 'Current date in YYYYMMDD format'
+        required: true
+        type: string
+      build-environment-display-name-base:
+        description: 'Base of the display name of the just-in-time Build environment to create'
+        required: true
+        type: string
+      build-environment-domain-name-base:
+        description: 'Base of the domain name of the just-in-time Build environment to create'
+        required: true
+        type: string
+      environment-region:
+        description: 'Region considered for the just-in-time Build environment to create'
+        required: true
+        type: string
+      build-environment-sku-name:
+        description: 'Name of the SKU considered for the just-in-time Build environment to create'
+        required: true
+        type: string
+      environment-currency-name:
+        description: 'Name of the currency considered for the just-in-time Build environment to create'
+        required: true
+        type: string
+      environment-language-display-name:
+        description: 'Display name of the language considered for the just-in-time Build environment to create'
+        required: true
+        type: string
+    secrets:
+      application-id:
+        description: 'Application ID that will be used to create the just-in-time Build environment'
+        required: true
+      client-secret:
+        description: 'Client secret associated to the application ID that will be used to create the just-in-time Build environment'
+        required: true
+      tenant-id:
+        description: 'Tenant ID where the application ID that will be used to create the just-in-time Build environment is located'
+        required: true
+    outputs:
+      build-environment-url:
+        description: 'URL of the just-in-time Build environment created'
+        value: ${{ jobs.create-build-environment.outputs.create-build-environment }}
+
+jobs:
+  # Job for the creation of a just in time Dataverse Build environment
+  create-build-environment:
+    name: Create a just-in-time Build environment
+    runs-on: ubuntu-latest
+    outputs:
+      build-environment-url: ${{ steps.create-build-environment.outputs.environment-url }}
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+      # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
+      - name: Set dataverse_build_environment_display_name as env variable
+        run: |
+          $dataverseBuildEnvironmentDisplayName = "${{ inputs.build-environment-display-name-base }}${{ inputs.current-date }} - ${{ github.run_number }}"
+          
+          echo "dataverse_build_environment_display_name=$dataverseBuildEnvironmentDisplayName" >> $Env:GITHUB_ENV
+        shell: pwsh
+      
+      # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
+      - name: Set dataverse_build_environment_domain_name as env variable
+        id: dataverse_build_environment_domain_name
+        run: |
+          $dataverseBuildEnvironmentDomainName = "${{ inputs.build-environment-domain-name-base }}${{ inputs.current-date }}-${{ github.run_number }}"
+          
+          echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
+        shell: pwsh
+
+      # Create the just in time Dataverse Build environment
+      #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
+      - name: Create environment
+        id: create-build-environment
+        uses: microsoft/powerplatform-actions/create-environment@main
+        with:
+          app-id: ${{ secrets.application-id }}
+          client-secret: ${{ secrets.client-secret }}
+          tenant-id: ${{ secrets.tenant-id }}
+          name: ${{ env.dataverse_build_environment_display_name }}
+          region: ${{ inputs.environment-region }}
+          type: ${{ inputs.build-environment-sku-name }}
+          currency: ${{ inputs.environment-currency-name }}
+          language: ${{ inputs.environment-language-display-name }}
+          domain: ${{ env.dataverse_build_environment_domain_name }}
