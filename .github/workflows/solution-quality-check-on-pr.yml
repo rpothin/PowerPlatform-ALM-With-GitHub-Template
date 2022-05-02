@@ -23,11 +23,17 @@ on:
       - '!README.md'
 
 jobs:
-  # Job for the creation of a just in time Dataverse Build environment
-  create-build-environment:
+  # Job to initialize a variable for other jobs in the workflow
+  pre-job:
     runs-on: ubuntu-latest
     outputs:
-      build-environment-url: ${{ steps.create-build-environment.outputs.environment-url }}
+      current-date: ${{ steps.current_date.outputs.NOW }}
+      build-environment-display-name-base: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
+      build-environment-domain-name-base: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
+      environment-region: ${{ steps.get-configurations.outputs.environment-region }}
+      build-environment-sku-name: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
+      environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
+      environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
       solution-checker-output-directory: ${{ steps.get-configurations.outputs.solution-checker-output-directory }}
       solution-checker-geography: ${{ steps.get-configurations.outputs.solution-checker-geography }}
@@ -37,6 +43,12 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Set a current date environment variable in the following format: YYYYMMDD
+    - name: Set current date as env variable
+      id: current_date
+      run: echo "::set-output name=NOW::$(date +'%Y%m%d')"
+      shell: pwsh
+    
     # Action used to checkout the main branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
@@ -47,48 +59,26 @@ jobs:
       uses: ./.github/actions/get-configurations
       id: get-configurations
 
-    # Set a current date environment variable in the following format: YYYYMMDD
-    - name: Set current date as env variable
-      id: current_date
-      run: echo "NOW=$(date +'%Y%m%d')" >> $Env:GITHUB_ENV
-      shell: pwsh
-
-    # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
-    - name: Set dataverse_build_environment_display_name as env variable
-      run: |
-        $dataverseBuildEnvironmentDisplayName = "${{ steps.get-configurations.outputs.build-environment-display-name-base }}${{ env.NOW }} - ${{ github.run_number }}"
-        
-        echo "dataverse_build_environment_display_name=$dataverseBuildEnvironmentDisplayName" >> $Env:GITHUB_ENV
-      shell: pwsh
-    
-    # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
-    - name: Set dataverse_build_environment_domain_name as env variable
-      id: dataverse_build_environment_domain_name
-      run: |
-        $dataverseBuildEnvironmentDomainName = "${{ steps.get-configurations.outputs.build-environment-domain-name-base }}${{ env.NOW }}-${{ github.run_number }}"
-        
-        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
-      shell: pwsh
-
-    # Create the just in time Dataverse Build environment
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
-    - name: Create environment
-      id: create-build-environment
-      uses: microsoft/powerplatform-actions/create-environment@main
-      with:
-        app-id: ${{ secrets.APPLICATION_ID }}
-        client-secret: ${{ secrets.CLIENT_SECRET }}
-        tenant-id: ${{ secrets.TENANT_ID }}
-        name: ${{ env.dataverse_build_environment_display_name }}
-        region: ${{ steps.get-configurations.outputs.environment-region }}
-        type: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
-        currency: ${{ steps.get-configurations.outputs.environment-currency-name }}
-        language: ${{ steps.get-configurations.outputs.environment-language-display-name }}
-        domain: ${{ env.dataverse_build_environment_domain_name }}
+  # Job for the creation of a just in time Dataverse Build environment
+  create-build-environment:
+    needs: pre-job
+    uses: ./.github/workflows/create-just-in-time-build-environment.yml
+    with:
+      current-date: ${{ needs.pre-job.outputs.current-date }}
+      build-environment-display-name-base: ${{ needs.pre-job.outputs.build-environment-display-name-base }}
+      build-environment-domain-name-base: ${{ needs.pre-job.outputs.build-environment-domain-name-base }}
+      environment-region: ${{ needs.pre-job.outputs.environment-region }}
+      build-environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
+      environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
+      environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+    secrets:
+      application-id: ${{ secrets.APPLICATION_ID }}
+      client-secret: ${{ secrets.CLIENT_SECRET }}
+      tenant-id: ${{ secrets.TENANT_ID }}
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
-    needs: create-build-environment
+    needs: [pre-job, create-build-environment]
     environment:
       name: build
     runs-on: windows-latest
@@ -123,7 +113,7 @@ jobs:
     - name: Pack msapp files
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "${{ needs.create-build-environment.outputs.pac-cli-version }}"
+        $nugetPackageVersion = "${{ needs.pre-job.outputs.pac-cli-version }}"
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
@@ -168,20 +158,20 @@ jobs:
     # Invoke the solution checker
     - name: Invoke solution checker
       run: |
-        New-Item -ItemType Directory -Force -Path ${{ needs.create-build-environment.outputs.solution-checker-output-directory }}
+        New-Item -ItemType Directory -Force -Path ${{ needs.pre-job.outputs.solution-checker-output-directory }}
 
         Add-PowerAppsAccount -TenantID ${{ secrets.TENANT_ID }} -ApplicationId ${{ secrets.APPLICATION_ID }} -ClientSecret ${{ secrets.CLIENT_SECRET }}
         
-        $rulesets = Get-PowerAppsCheckerRulesets -Geography ${{ needs.create-build-environment.outputs.solution-checker-geography }}
+        $rulesets = Get-PowerAppsCheckerRulesets -Geography ${{ needs.pre-job.outputs.solution-checker-geography }}
         $rulesetToUse = $rulesets | where Name -NE 'AppSource Certification'
         
         $analyzeResult = Invoke-PowerAppsChecker `
-          -Geography ${{ needs.create-build-environment.outputs.solution-checker-geography }} `
+          -Geography ${{ needs.pre-job.outputs.solution-checker-geography }} `
           -ClientApplicationId '${{ secrets.APPLICATION_ID }}' `
           -TenantId '${{ secrets.TENANT_ID }}' `
           -Ruleset $rulesetToUse `
           -FileUnderAnalysis ${{ env.path_to_solution_zip_file }} `
-          -OutputDirectory "${{ needs.create-build-environment.outputs.solution-checker-output-directory }}" `
+          -OutputDirectory "${{ needs.pre-job.outputs.solution-checker-output-directory }}" `
           -ClientApplicationSecret (ConvertTo-SecureString -AsPlainText -Force -String '${{ secrets.CLIENT_SECRET }}')
       shell: powershell
 
@@ -191,12 +181,12 @@ jobs:
     # Extract the number of the Medium and High severity points from the results of the solution checker execution
     - name: Extract results of solution checker execution
       run:  |
-        Get-ChildItem "${{ needs.create-build-environment.outputs.solution-checker-output-directory }}" -Filter *.zip | Expand-Archive -DestinationPath '${{ needs.create-build-environment.outputs.solution-checker-output-directory }}' -Force
+        Get-ChildItem "${{ needs.pre-job.outputs.solution-checker-output-directory }}" -Filter *.zip | Expand-Archive -DestinationPath '${{ needs.pre-job.outputs.solution-checker-output-directory }}' -Force
 
-        $sarif_files = Get-ChildItem "${{ needs.create-build-environment.outputs.solution-checker-output-directory }}" -Filter *.sarif
+        $sarif_files = Get-ChildItem "${{ needs.pre-job.outputs.solution-checker-output-directory }}" -Filter *.sarif
 
         foreach ($sarif_file in $sarif_files) {
-          $SolutionCheckerResultJson = Get-Content -Path ${{ needs.create-build-environment.outputs.solution-checker-output-directory }}/$sarif_file
+          $SolutionCheckerResultJson = Get-Content -Path ${{ needs.pre-job.outputs.solution-checker-output-directory }}/$sarif_file
         }
 
         $SolutionCheckerResult = $SolutionCheckerResultJson | ConvertFrom-Json
@@ -225,7 +215,7 @@ jobs:
         
     # Add the new comment to the pull request if too many Medium or High severity points in the results of the solution checker execution
     - name: New comment on pull request if too many errors
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > needs.create-build-environment.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS > needs.create-build-environment.outputs.solution-checker-maximum-number-high-severity-points
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.pull_request.number }}
@@ -233,25 +223,25 @@ jobs:
           # ⚠ Too many Medium or High severity points in solution checker results!
 
           Details:
-          - NB_OF_HIGH_SEVERITY_POINTS: ${{ env.NB_OF_HIGH_SEVERITY_POINTS }} (Max: ${{ needs.create-build-environment.outputs.solution-checker-maximum-number-high-severity-points }})
-          - NB_OF_MEDIUM_SEVERITY_POINTS: ${{ env.NB_OF_MEDIUM_SEVERITY_POINTS }} (Max: ${{ needs.create-build-environment.outputs.solution-checker-maximum-number-medium-severity-points }})
+          - NB_OF_HIGH_SEVERITY_POINTS: ${{ env.NB_OF_HIGH_SEVERITY_POINTS }} (Max: ${{ needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points }})
+          - NB_OF_MEDIUM_SEVERITY_POINTS: ${{ env.NB_OF_MEDIUM_SEVERITY_POINTS }} (Max: ${{ needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points }})
     
     # Set solution_checker_status job output value to "KO" if too many Medium or High severity points in the results of the solution checker execution
     - name: Set solution_checker_status job output
       id: solution_checker_status
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > needs.create-build-environment.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS > needs.create-build-environment.outputs.solution-checker-maximum-number-high-severity-points
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points
       run: echo "::set-output name=status::KO"
 
     # Import the considered solution unmanaged package to the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to build env
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= needs.create-build-environment.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS <= needs.create-build-environment.outputs.solution-checker-maximum-number-high-severity-points
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS <= needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points
       uses: microsoft/powerplatform-actions/import-solution@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+        environment-url: ${{ needs.pre-job.outputs.build-environment-url }}
         solution-file: ${{ env.path_to_solution_zip_file }}
         force-overwrite: true
         publish-changes: true
@@ -263,13 +253,13 @@ jobs:
     # Export solution as managed from the just in time Dataverse Build environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/export-solution/action.yml
     - name: Export solution as managed
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= needs.create-build-environment.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS <= needs.create-build-environment.outputs.solution-checker-maximum-number-high-severity-points
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS <= needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points
       uses: microsoft/powerplatform-actions/export-solution@main
       with:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+        environment-url: ${{ needs.pre-job.outputs.build-environment-url }}
         solution-name: ${{ env.solution_name }}
         solution-output-file: out/ship/${{ env.solution_name }}.zip
         managed: true
@@ -277,7 +267,7 @@ jobs:
     # Upload the managed solution we got in the previous step to the GitHub artifact store
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
     - name: Upload the ready to ship solution to GH artifact store
-      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= needs.create-build-environment.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS <= needs.create-build-environment.outputs.solution-checker-maximum-number-high-severity-points
+      if: Env.NB_OF_MEDIUM_SEVERITY_POINTS <= needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS <= needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points
       uses: actions/upload-artifact@v2
       with:
         name: managedSolutions
@@ -300,7 +290,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+        environment-url: ${{ needs.pre-job.outputs.build-environment-url }}
         
     # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
     - name: Exit if too many notable points in solution checker results
