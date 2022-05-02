@@ -241,7 +241,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.pre-job.outputs.build-environment-url }}
+        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
         solution-file: ${{ env.path_to_solution_zip_file }}
         force-overwrite: true
         publish-changes: true
@@ -259,7 +259,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.pre-job.outputs.build-environment-url }}
+        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
         solution-name: ${{ env.solution_name }}
         solution-output-file: out/ship/${{ env.solution_name }}.zip
         managed: true
@@ -290,7 +290,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.pre-job.outputs.build-environment-url }}
+        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
         
     # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
     - name: Exit if too many notable points in solution checker results
