@@ -36,16 +36,10 @@ on:
         description: 'Display name of the language considered for the just-in-time Build environment to create'
         required: true
         type: string
-    secrets:
-      application-id:
-        description: 'Application ID that will be used to create the just-in-time Build environment'
-        required: true
-      client-secret:
-        description: 'Client secret associated to the application ID that will be used to create the just-in-time Build environment'
-        required: true
-      tenant-id:
-        description: 'Tenant ID where the application ID that will be used to create the just-in-time Build environment is located'
-        required: true
+    secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
     outputs:
       build-environment-url:
         description: 'URL of the just-in-time Build environment created'
@@ -85,9 +79,9 @@ jobs:
         id: create-build-environment
         uses: microsoft/powerplatform-actions/create-environment@main
         with:
-          app-id: ${{ secrets.application-id }}
-          client-secret: ${{ secrets.client-secret }}
-          tenant-id: ${{ secrets.tenant-id }}
+          app-id: ${{ secrets.APPLICATION_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+          tenant-id: ${{ secrets.TENANT_ID }}
           name: ${{ env.dataverse_build_environment_display_name }}
           region: ${{ inputs.environment-region }}
           type: ${{ inputs.build-environment-sku-name }}
