@@ -75,7 +75,7 @@ jobs:
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
       # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
-  
+
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
     needs: [pre-job, create-build-environment]
