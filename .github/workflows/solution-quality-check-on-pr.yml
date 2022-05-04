@@ -71,10 +71,6 @@ jobs:
       build-environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
       environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
-    secrets:
-      application-id: ${{ secrets.APPLICATION_ID }}
-      client-secret: ${{ secrets.CLIENT_SECRET }}
-      tenant-id: ${{ secrets.TENANT_ID }}
   
   # Job a for simple quality checks on the considered solution
   solution-quality-checks:
