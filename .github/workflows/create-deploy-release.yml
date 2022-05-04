@@ -379,7 +379,7 @@ jobs:
 
   # Job to import the managed solution generated in the previous job to the Dataverse Production environment
   import-solution-to-production:
-    needs: [create-release-branch, create-build-environment, build-managed-solution]
+    needs: [pre-job, create-release-branch, create-build-environment, build-managed-solution]
     environment:
       name: production
     runs-on: windows-latest
