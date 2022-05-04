@@ -22,10 +22,19 @@ env:
   
 jobs:
   # Job to initialize a variable for other jobs in the workflow
-  pre_job:
+  pre-job:
     runs-on: ubuntu-latest
     outputs:
       current-date: ${{ steps.current_date.outputs.NOW }}
+      build-environment-display-name-base: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
+      build-environment-domain-name-base: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
+      environment-region: ${{ steps.get-configurations.outputs.environment-region }}
+      build-environment-sku-name: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
+      environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
+      environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+      pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
+      deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}
+      custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
     env:
       RUNNER_DEBUG: 1
 
@@ -35,6 +44,16 @@ jobs:
       id: current_date
       run: echo "::set-output name=NOW::$(date +'%Y%m%d')"
       shell: pwsh
+    
+    # Action used to checkout the main branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    # Get configurations from a JSON file in the repository
+    - name: Get configurations
+      uses: ./.github/actions/get-configurations
+      id: get-configurations
 
   # Job for the creation of the release branch
   create-release-branch:
@@ -76,63 +95,24 @@ jobs:
 
   # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
-    needs: pre_job
-    runs-on: ubuntu-latest
-    outputs:
-      build-environment-url: ${{ steps.create-build-environment.outputs.environment-url }}
-      pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
-      deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}
-      custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
-    env:
-      RUNNER_DEBUG: 1
-
-    steps:
-    # Action used to checkout the main branch in the current repository
-    #   Community action: https://github.com/actions/checkout
-    - name: Checkout
-      uses: actions/checkout@v2
-    
-    # Get configurations from a JSON file in the repository
-    - name: Get configurations
-      uses: ./.github/actions/get-configurations
-      id: get-configurations
-
-    # Set a dataverse_build_environment_display_name environment variable for the Display Name of the just in time Dataverse Build environment
-    - name: Set dataverse_build_environment_display_name as env variable
-      run: |
-        $dataverseBuildEnvironmentDisplayName = "${{ steps.get-configurations.outputs.build-environment-display-name-base }}${{ needs.pre_job.outputs.current-date }} - ${{ github.run_number }}"
-        
-        echo "dataverse_build_environment_display_name=$dataverseBuildEnvironmentDisplayName" >> $Env:GITHUB_ENV
-      shell: pwsh
-    
-    # Set a dataverse_build_environment_domain_name environment variable for the Domain Name of the just in time Dataverse Build environment
-    - name: Set dataverse_build_environment_domain_name as env variable
-      id: dataverse_build_environment_domain_name
-      run: |
-        $dataverseBuildEnvironmentDomainName = "${{ steps.get-configurations.outputs.build-environment-domain-name-base }}${{ needs.pre_job.outputs.current-date }}-${{ github.run_number }}"
-        
-        echo "dataverse_build_environment_domain_name=$dataverseBuildEnvironmentDomainName" >> $Env:GITHUB_ENV
-      shell: pwsh
-
-    # Create the just in time Dataverse Build environment
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
-    - name: Create environment
-      id: create-build-environment
-      uses: microsoft/powerplatform-actions/create-environment@main
-      with:
-        app-id: ${{ secrets.APPLICATION_ID }}
-        client-secret: ${{ secrets.CLIENT_SECRET }}
-        tenant-id: ${{ secrets.TENANT_ID }}
-        name: ${{ env.dataverse_build_environment_display_name }}
-        region: ${{ steps.get-configurations.outputs.environment-region }}
-        type: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
-        currency: ${{ steps.get-configurations.outputs.environment-currency-name }}
-        language: ${{ steps.get-configurations.outputs.environment-language-display-name }}
-        domain: ${{ env.dataverse_build_environment_domain_name }}
+    needs: pre-job
+    uses: ./.github/workflows/create-just-in-time-build-environment.yml
+    with:
+      current-date: ${{ needs.pre-job.outputs.current-date }}
+      build-environment-display-name-base: ${{ needs.pre-job.outputs.build-environment-display-name-base }}
+      build-environment-domain-name-base: ${{ needs.pre-job.outputs.build-environment-domain-name-base }}
+      environment-region: ${{ needs.pre-job.outputs.environment-region }}
+      build-environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
+      environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
+      environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+    secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
   
   # Job to build a managed solution in the just in time Dataverse Build environment
   build-managed-solution:
-    needs: [create-release-branch, create-build-environment]
+    needs: [pre-job, create-release-branch, create-build-environment]
     environment:
       name: build
     runs-on: windows-latest
@@ -166,7 +146,7 @@ jobs:
     - name: Pack msapp files
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "${{ needs.create-build-environment.outputs.pac-cli-version }}"
+        $nugetPackageVersion = "${{ needs.pre-job.outputs.pac-cli-version }}"
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
@@ -438,7 +418,7 @@ jobs:
         run-asynchronously: true
         max-async-wait-time: 10
         use-deployment-settings-file: true
-        deployment-settings-file: Configurations/${{ env.solution_name }}/${{ needs.create-build-environment.outputs.deployment-settings-file-name-base }}_production.json
+        deployment-settings-file: Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.deployment-settings-file-name-base }}_production.json
 
     # Complementary steps after solution import
     #   - Turn on cloud flows
@@ -474,7 +454,7 @@ jobs:
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
           DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_URL }}"
           DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_NAME }}"
-          ConfigurationFilePath = "./Configurations/${{ env.solution_name }}/${{ needs.create-build-environment.outputs.custom-deployment-settings-file-name-base }}_production.json"
+          ConfigurationFilePath = "./Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_production.json"
         }
 
         Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
