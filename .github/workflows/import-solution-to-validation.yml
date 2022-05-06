@@ -30,6 +30,7 @@ jobs:
   pre-job:
     runs-on: ubuntu-latest
     outputs:
+      solution-name: ${{ env.solution_name }}
       current-date: ${{ steps.current_date.outputs.NOW }}
       build-environment-display-name-base: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
       build-environment-domain-name-base: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
@@ -82,6 +83,7 @@ jobs:
     needs: [pre-job, create-build-environment]
     uses: ./.github/workflows/build-managed-solution.yml
     with:
+      solution-name: ${{ needs.pre-job.outputs.solution-name }}
       pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
       build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
