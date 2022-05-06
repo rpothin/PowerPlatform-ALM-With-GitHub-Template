@@ -28,7 +28,8 @@
 - [**solution-quality-check-on-pr**](../.github/workflows/solution-quality-check-on-pr.yml):
    - Trigger: pull request tarteging the `main` branch and with changes on specific folders
    - Summary of actions:
-      - create a just-in-time Dataverse Build environment
+      - get and set variables
+      - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
       - pack the considered solution
       - execute the solution checker on the considered solution and generate an execute condition if thresholds are not met
       - test the solution type conversion (unmanaged to managed) using the just-in-time Dataverse Build environment
@@ -36,7 +37,8 @@
 - [**import-solution-to-validation**](../.github/workflows/import-solution-to-validation.yml):
    - Trigger: push to the `main` branch with changes on specific folders
    - Summary of actions:
-      - create a just-in-time Dataverse Build environment
+      - get and set variables
+      - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
       - pack the considered solution
       - type conversion (unmanaged to managed) of the considered solution using the just-in-time Dataverse Build environment
       - import the managed version of the considered solution to the Dataverse Validation environment
@@ -44,8 +46,9 @@
 - [**create-deploy-release**](../.github/workflows/create-deploy-release.yml):
    - Trigger: manual with inputs
    - Summary of actions:
+      - get and set variables
       - create a branch for the considered release
-      - create a just-in-time Dataverse Build environment
+      - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
       - pack the considered solution
       - type conversion (unmanaged to managed) of the considered solution using the just-in-time Dataverse Build environment
       - delete the just-in-time Dataverse Build environment
