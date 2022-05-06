@@ -25,7 +25,7 @@
    - Summary of actions:
       - export and unpack the considered solution
       - push the changes to the considered branch (*based on input value*)
-- - [**solution-quality-check-on-pr**](../.github/workflows/solution-quality-check-on-pr.yml):
+- [**solution-quality-check-on-pr**](../.github/workflows/solution-quality-check-on-pr.yml):
    - Trigger: pull request tarteging the `main` branch and with changes on specific folders
    - Summary of actions:
       - create a just-in-time Dataverse Build environment
@@ -59,13 +59,18 @@
       - delete branch created for the development regarding the considered issue
       - delete the Dataverse Dev environment created for the considered issue
       - add a comment to the issue to give a status on the workspace created for the development
+- [**create-just-in-time-build-environment**](../.github/workflows/create-just-in-time-build-environment.yml):
+   - Triggers: called by another workflow (*reusable workflow*)
+   - Summary of actions:
+      - set some variables: Build environment display name and Build environment domain name
+      - create the just-in-time Build environment
 - [**PSScriptAnalyzer**](../.github/workflows/powershell-analysis.yml):
    - Triggers:
       - push to the `main` branch with changes on specific folders
       - pull request tarteging the `main` branch and with changes on specific folders
    - Summary of actions:
       - run PSScriptAnalyzer on the PowerShell code in the repository
-      - upload the generated sarif file for analysis 
+      - upload the generated sarif file for analysis
 
 ### PowerShell scripts
 
