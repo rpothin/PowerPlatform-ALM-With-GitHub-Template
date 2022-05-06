@@ -8,10 +8,6 @@ name: build-managed-solution
 on:
   workflow_call:
     inputs:
-      solution-name:
-        description: 'Name of the considered solution (not the Display Name)'
-        required: true
-        type: string
       pac-cli-version:
         description: 'Considered version of PAC CLI for the pack of the canvas apps'
         required: true
@@ -42,7 +38,7 @@ jobs:
     steps:
       # Set a path_to_solution_zip_file environment variable for the absolute path of the folder where the solution unmanaged package will be generated
       - name: Set path_to_solution_zip_file as env variable
-        run: echo "path_to_solution_zip_file=out/Solutions/${{ inputs.solution-name }}.zip" >> $Env:GITHUB_ENV
+        run: echo "path_to_solution_zip_file=out/Solutions/${{ env.solution_name }}.zip" >> $Env:GITHUB_ENV
 
       # Action used to checkout the repository
       #   Community action: https://github.com/actions/checkout
@@ -53,7 +49,7 @@ jobs:
       #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
       - name: Flatten JSON files
         run: |
-          Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}" -Recurse -Filter *.json |
+          Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *.json |
           ForEach-Object {(Get-Content $_.FullName) -join ' ' | Set-Content $_.FullName}
         shell: pwsh
 
@@ -72,7 +68,7 @@ jobs:
 
           $pacPath = $pacNugetFolder.FullName + "/tools"
 
-          Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}" -Recurse -Filter *_src | 
+          Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
           ForEach-Object {     
             $unpackedPath = $_.FullName
             $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
@@ -95,7 +91,7 @@ jobs:
       # Set the solution version in the Solution.xml file
       - name: Set solution version
         run: |
-          $file = 'Solutions\${{ inputs.solution-name }}\Other\Solution.xml'
+          $file = 'Solutions\${{ env.solution_name }}\Other\Solution.xml'
           $regex = '<Version>[\s\S]*?<\/Version>'
           (Get-Content $file) -replace $regex, '<Version>1.0.${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
         shell: pwsh
@@ -105,7 +101,7 @@ jobs:
       - name: Pack solution
         uses: microsoft/powerplatform-actions/pack-solution@main
         with:
-          solution-folder: Solutions/${{ inputs.solution-name }}
+          solution-folder: Solutions/${{ env.solution_name }}
           solution-file: ${{ env.path_to_solution_zip_file }}
           solution-type: Unmanaged
 
@@ -135,8 +131,8 @@ jobs:
           client-secret: ${{ secrets.CLIENT_SECRET }}
           tenant-id: ${{ secrets.TENANT_ID }}
           environment-url: ${{ inputs.build-environment-url }}
-          solution-name: ${{ inputs.solution-name }}
-          solution-output-file: out/ship/${{ inputs.solution-name }}.zip
+          solution-name: ${{ env.solution_name }}
+          solution-output-file: out/ship/${{ env.solution_name }}.zip
           managed: true
 
       # Upload the managed solution we got in the previous step to the GitHub artifact store
@@ -145,4 +141,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: managedSolutions
-          path: out/ship/${{ inputs.solution-name }}.zip
+          path: out/ship/${{ env.solution_name }}.zip
