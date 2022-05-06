@@ -36,6 +36,10 @@ on:
         description: 'Display name of the language considered for the just-in-time Build environment to create'
         required: true
         type: string
+    #secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
     outputs:
       build-environment-url:
         description: 'URL of the just-in-time Build environment created'
