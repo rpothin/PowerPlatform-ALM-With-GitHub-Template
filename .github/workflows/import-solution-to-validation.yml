@@ -82,7 +82,7 @@ jobs:
     needs: [pre-job, create-build-environment]
     uses: ./.github/workflows/build-managed-solution.yml
     with:
-      solution-name: ${{ env.solution_name }}
+      solution-name: $solution_name
       pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
       build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
