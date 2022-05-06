@@ -24,6 +24,10 @@ on:
         description: 'URL of the Build environment used to generate the managed version of the solution'
         required: true
         type: string
+    #secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
 
 jobs:
   # Job to build a managed version of a solution using a just-in-time Build environment
