@@ -180,7 +180,7 @@ jobs:
           tenant-id: ${{ secrets.TENANT_ID }}
           environment-url: ${{ inputs.build-environment-url }}
           solution-name: ${{ inputs.solution-name }}
-          solution-output-file: out/ship/${{ inputs.solution-name }}.zip
+          solution-output-file: out/Solutions/${{ inputs.solution-name }}.zip
           managed: true
 
       # Upload the managed solution we got in the previous step to the GitHub artifact store
@@ -189,4 +189,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: managedSolutions
-          path: out/ship/${{ inputs.solution-name }}_managed.zip
+          path: out/Solutions/${{ inputs.solution-name }}_managed.zip
