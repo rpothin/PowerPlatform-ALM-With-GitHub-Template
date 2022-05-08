@@ -10,8 +10,8 @@ name: 6-create-deploy-release
 on:
   workflow_dispatch:
     inputs:
-      solution_base_version:
-        description: 'Base of the version of the solution to deploy (ex: 1_2)'
+      solution-major-version:
+        description: 'Majors version of the solution to deploy (ex: 1)'
         required: true
       github_release_body:
         description: 'Text for the body of the GitHub release'
@@ -70,7 +70,7 @@ jobs:
     - name: Set release version
       id: release_version
       run: |
-        $releaseVersion = '${{ github.event.inputs.solution_base_version }}_${{ needs.pre-job.outputs.current-date }}${{ github.run_number }}'
+        $releaseVersion = '${{ github.event.inputs.solution-major-version }}_${{ needs.pre-job.outputs.current-date }}_${{ github.run_number }}'
         echo "RELEASE_VERSION=$releaseVersion" >> $Env:GITHUB_ENV
         echo "::set-output name=release_version::$releaseVersion"
       shell: pwsh
@@ -79,9 +79,7 @@ jobs:
     - name: Set solution version
       id: solution_version
       run: |
-        $solutionBaseVersion = "${{ github.event.inputs.solution_base_version }}"
-        $solutionBaseVersion = $solutionBaseVersion.replace("_", ".")
-        $solutionVersion = $solutionBaseVersion + ".${{ needs.pre-job.outputs.current-date }}${{ github.run_number }}"
+        $solutionVersion = "${{ github.event.inputs.solution-major-version }}.${{ needs.pre-job.outputs.current-date }}.${{ github.run_number }}"
         echo "::set-output name=solution_version::$solutionVersion"
       shell: pwsh
     

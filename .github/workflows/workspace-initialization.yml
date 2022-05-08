@@ -246,7 +246,7 @@ jobs:
     - name: Set solution version variable
       if: ${{ env.SolutionsExist == 'true' }}
       run: |
-        $solutionVersion = '${{ env.NOW }}${{ github.run_number }}'
+        $solutionVersion = '${{ env.NOW }}.${{ github.run_number }}'
         echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
       shell: pwsh
 
@@ -256,7 +256,7 @@ jobs:
       run: |
         $file = 'Solutions\${{ env.solution_name }}\Other\Solution.xml'
         $regex = '<Version>[\s\S]*?<\/Version>'
-        (Get-Content $file) -replace $regex, '<Version>1.0.${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
+        (Get-Content $file) -replace $regex, '<Version>1.${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
       shell: pwsh
 
     # Pack the solution as unmanaged
