@@ -25,6 +25,7 @@ jobs:
   pre-job:
     runs-on: ubuntu-latest
     outputs:
+      solution-name: ${{ env.solution_name }}
       current-date: ${{ steps.current_date.outputs.NOW }}
       build-environment-display-name-base: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
       build-environment-domain-name-base: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
