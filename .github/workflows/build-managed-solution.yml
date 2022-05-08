@@ -12,6 +12,26 @@ on:
         description: 'Name of the considered solution (not the Display Name)'
         required: true
         type: string
+      solution-major-version:
+        description: 'Major version of the solution to build as managed'
+        default: 1
+        required: true
+        type: number
+      branch-to-checkout:
+        description: 'Branch to checkout to get the solution to build as managed'
+        default: 'main'
+        required: true
+        type: string
+      push-changes-to-branch:
+        description: 'Boolean to declare if changes need to be pushed to the considered branch'
+        default: false
+        required: true
+        type: boolean
+      upload-unmanaged-solution-to-github-artifact-store:
+        description: 'Boolean to declare if unamanged solution needs to be pushed to GitHub artifact store'
+        default: false
+        required: true
+        type: boolean
       pac-cli-version:
         description: 'Considered version of PAC CLI for the pack of the canvas apps'
         required: true
@@ -44,9 +64,12 @@ jobs:
       - name: Set path_to_solution_zip_file as env variable
         run: echo "path_to_solution_zip_file=out/Solutions/${{ inputs.solution-name }}.zip" >> $Env:GITHUB_ENV
 
-      # Action used to checkout the repository
+      # Action used to checkout the considered branch in the repository
       #   Community action: https://github.com/actions/checkout
-      - uses: actions/checkout@v2
+      - name: Checkout ${{ inputs.branch-to-checkout }} branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.branch-to-checkout }}
 
       # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
       # Flatten all the json files for packing
@@ -88,7 +111,7 @@ jobs:
       # Initialize the solution version
       - name: Set solution version variable
         run: |
-          $solutionVersion = '${{ inputs.current-date }}.${{ github.run_number }}'
+          $solutionVersion = '${{ inputs.solution-major-version }}.${{ inputs.current-date }}.${{ github.run_number }}'
           echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
         shell: pwsh
 
@@ -97,7 +120,19 @@ jobs:
         run: |
           $file = 'Solutions\${{ inputs.solution-name }}\Other\Solution.xml'
           $regex = '<Version>[\s\S]*?<\/Version>'
-          (Get-Content $file) -replace $regex, '<Version>1.${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
+          (Get-Content $file) -replace $regex, '<Version>${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
+        shell: pwsh
+
+      # Push update of solution version to Release branch
+      - name: Push changes to ${{ inputs.branch-to-checkout }} branch
+        if: ${{ inputs.push-changes-to-branch }}
+        run: |
+          git config --global user.name 'action@github.com'
+          git config --global user.email 'GitHub Action'
+
+          git add --all
+          git commit -m "Update version of ${{ inputs.solution-name }} solution to ${{ env.SOLUTION_VERSION }}"
+          git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin ${{ inputs.branch-to-checkout }}
         shell: pwsh
 
       # Pack the considered solution as unmanaged
@@ -108,6 +143,15 @@ jobs:
           solution-folder: Solutions/${{ inputs.solution-name }}
           solution-file: ${{ env.path_to_solution_zip_file }}
           solution-type: Unmanaged
+
+      # Upload the unmanaged solution we packed in the previous step to the GitHub artifact store
+      #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
+      - name: Upload the unmanaged solution to GH artifact store
+        if: ${{ inputs.upload-unmanaged-solution-to-github-artifact-store }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: unmanagedSolutions
+          path: ${{ env.path_to_solution_zip_file }}
 
       # Import the considered solution unmanaged package to the just in time Dataverse Build environment
       #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
