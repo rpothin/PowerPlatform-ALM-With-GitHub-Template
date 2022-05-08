@@ -39,8 +39,7 @@
    - Summary of actions:
       - get and set variables
       - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
-      - pack the considered solution
-      - type conversion (unmanaged to managed) of the considered solution using the just-in-time Dataverse Build environment
+      - build a managed version of the solution using the just-in-time Build environment (*using the **build-managed-solution** reusable workflow*)
       - import the managed version of the considered solution to the Dataverse Validation environment
       - delete the just-in-time Dataverse Build environment
 - [**create-deploy-release**](../.github/workflows/create-deploy-release.yml):
@@ -49,8 +48,7 @@
       - get and set variables
       - create a branch for the considered release
       - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
-      - pack the considered solution
-      - type conversion (unmanaged to managed) of the considered solution using the just-in-time Dataverse Build environment
+      - build a managed version of the solution using the just-in-time Build environment (*using the **build-managed-solution** reusable workflow*)
       - delete the just-in-time Dataverse Build environment
       - delete the release branch if deployment of the considered solution to the just-in-time Dataverse Build environment fails
       - create a GitHub release as draft with the unmanaged and managed versions of the considered solution
@@ -67,6 +65,14 @@
    - Summary of actions:
       - set some variables: Build environment display name and Build environment domain name
       - create the just-in-time Build environment
+- [**build-managed-solution**](../.github/workflows/build-managed-solution.yml):
+   - Triggers: called by another workflow (*reusable workflow*)
+   - Summary of actions:
+      - set some variables: path to packed solution (*zip*) and solution version
+      - update some elements of the unpacked solution in the repository: cloud flows JSON files, pack canvas apps and update solution version in Solution.xml file
+      - pack the solution from the considered branch in the repository
+      - import solution as unmanaged to just-in-time Build environment and export it as managed
+      - store packed solution(s) in GitHub artifact store for later user in calling workflow
 - [**PSScriptAnalyzer**](../.github/workflows/powershell-analysis.yml):
    - Triggers:
       - push to the `main` branch with changes on specific folders
