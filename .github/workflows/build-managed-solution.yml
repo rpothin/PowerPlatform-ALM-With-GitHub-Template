@@ -15,22 +15,22 @@ on:
       solution-major-version:
         description: 'Major version of the solution to build as managed'
         default: 1
-        required: true
+        required: false
         type: number
       branch-to-checkout:
         description: 'Branch to checkout to get the solution to build as managed'
         default: 'main'
-        required: true
+        required: false
         type: string
       push-changes-to-branch:
         description: 'Boolean to declare if changes need to be pushed to the considered branch'
         default: false
-        required: true
+        required: false
         type: boolean
       upload-unmanaged-solution-to-github-artifact-store:
         description: 'Boolean to declare if unamanged solution needs to be pushed to GitHub artifact store'
         default: false
-        required: true
+        required: false
         type: boolean
       pac-cli-version:
         description: 'Considered version of PAC CLI for the pack of the canvas apps'
