@@ -88,16 +88,7 @@ jobs:
       # Initialize the solution version
       - name: Set solution version variable
         run: |
-          $githubRunNumber = ${{ github.run_number }}
-
-          if ($githubRunNumber.Length -gt 2) {
-            $shortGithubRunNumber = $githubRunNumber.SubString($githubRunNumber.Length - 2,2)
-          }
-          else {
-            $shortGithubRunNumber = $githubRunNumber
-          }
-          
-          $solutionVersion = '${{ inputs.current-date }}$shortGithubRunNumber'
+          $solutionVersion = '${{ inputs.current-date }}${{ github.run_number }}'
           echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
         shell: pwsh
 
