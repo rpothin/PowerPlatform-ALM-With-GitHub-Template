@@ -189,4 +189,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: managedSolutions
-          path: out/ship/${{ inputs.solution-name }}.zip
+          path: out/ship/${{ inputs.solution-name }}_managed.zip
