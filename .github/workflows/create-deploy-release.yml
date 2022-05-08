@@ -106,7 +106,7 @@ jobs:
     with:
       solution-name: ${{ needs.pre-job.outputs.solution-name }}
       solution-major-version: ${{ github.event.inputs.solution-major-version }}
-      branch-to-checkout: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+      branch-to-checkout: release/${{ needs.pre-job.outputs.solution-name }}/${{ needs.create-release-branch.outputs.release_version }}
       push-changes-to-branch: true
       upload-unmanaged-solution-to-github-artifact-store: true
       pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
