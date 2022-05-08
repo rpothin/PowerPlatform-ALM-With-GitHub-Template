@@ -276,7 +276,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: managedSolutions
-        path: out/release/
+        path: out/managedSolutions/
 
     # Import the considered solution managed package to the Dataverse Production environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
@@ -287,7 +287,7 @@ jobs:
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
         environment-url: ${{ secrets.DATAVERSE_PRODUCTION_ENVIRONMENT_URL }}
-        solution-file: out/release/${{ env.solution_name }}_managed.zip
+        solution-file: out/managedSolutions/${{ env.solution_name }}_managed.zip
         force-overwrite: true
         publish-changes: true
         skip-dependency-check: false
