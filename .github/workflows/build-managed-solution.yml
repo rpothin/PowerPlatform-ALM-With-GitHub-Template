@@ -14,9 +14,9 @@ on:
         type: string
       solution-major-version:
         description: 'Major version of the solution to build as managed'
-        default: 1
+        default: '1'
         required: false
-        type: number
+        type: string
       branch-to-checkout:
         description: 'Branch to checkout to get the solution to build as managed'
         default: 'main'
