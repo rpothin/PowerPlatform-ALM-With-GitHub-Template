@@ -99,10 +99,10 @@ jobs:
     with:
       environment: 'validation'
       gh-artifact-store-name: 'managedSolutions'
-      packed-solution-file-name: '${{ env.solution_name }}_managed'
-      solution-name: ${{ env.solution_name }}
-      path-to-deployment-settings-file: 'Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.deployment-settings-file-name-base }}_validation.json'
-      path-to-custom-deployment-settings-file: './Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json'
+      packed-solution-file-name: '${{ needs.pre-job.outputs.solution-name }}_managed'
+      solution-name: ${{ needs.pre-job.outputs.solution-name }}
+      path-to-deployment-settings-file: 'Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.deployment-settings-file-name-base }}_validation.json'
+      path-to-custom-deployment-settings-file: './Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json'
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
