@@ -40,13 +40,6 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Action used to checkout the repository
-    #   Community action: https://github.com/actions/checkout
-    - name: Checkout branch ${{ needs.pre_job.outputs.development-branch-name }}
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ needs.pre_job.outputs.development-branch-name }}
-
     # Delete the Dev branch if exists
     - name: Delete Dev branch if exists
       run: |
