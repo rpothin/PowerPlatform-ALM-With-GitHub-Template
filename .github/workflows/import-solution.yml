@@ -12,14 +12,6 @@ on:
         description: 'Name of the considered GitHub environment for the import of the solution'
         required: true
         type: string
-      environment-url:
-        description: 'URL of the targeted Dataverse environment for the import of the considered solution'
-        required: true
-        type: string
-      environment-display-name:
-        description: 'Display name of the targeted Dataverse environment for the import of the considered solution'
-        required: true
-        type: string
       branch-to-checkout:
         description: 'Branch to checkout to get the elements for the solution import post deployment actions'
         default: 'main'
@@ -60,6 +52,8 @@ on:
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
       # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
+      # DATAVERSE_ENVIRONMENT_URL: URL of the targeted Dataverse environment
+      # DATAVERSE_ENVIRONMENT_DISPLAY_NAME: Display name of the targeted Dataverse environment
       # SOLUTION_COMPONENTS_OWNER_EMAIL: Email of the user account considered for the ownership of solution components (ex: cloud flows)
 
 jobs:
@@ -96,7 +90,7 @@ jobs:
           app-id: ${{ secrets.APPLICATION_ID }}
           client-secret: ${{ secrets.CLIENT_SECRET }}
           tenant-id: ${{ secrets.TENANT_ID }}
-          environment-url: ${{ inputs.environment-url }}
+          environment-url: ${{ secrets.DATAVERSE_ENVIRONMENT_URL }}
           solution-file: out/${{ inputs.gh-artifact-store-name }}/${{ inputs.packed-solution-file-name }}.zip
           force-overwrite: true
           publish-changes: true
@@ -121,7 +115,7 @@ jobs:
           $Params = @{
             ClientId = "${{ secrets.APPLICATION_ID }}"
             ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-            DataverseEnvironmentUrl = "${{ inputs.environment-url }}"
+            DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_ENVIRONMENT_URL }}"
             SolutionName = "${{ inputs.solution-name }}"
             SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
           }
@@ -138,8 +132,8 @@ jobs:
             TenantId = "${{ secrets.TENANT_ID }}"
             ClientId = "${{ secrets.APPLICATION_ID }}"
             ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-            DataverseEnvironmentUrl = "${{ inputs.environment-url }}"
-            DataverseEnvironmentDisplayName = "${{ inputs.environment-display-name }}"
+            DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_ENVIRONMENT_URL }}"
+            DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_ENVIRONMENT_DISPLAY_NAME }}"
             ConfigurationFilePath = "${{ inputs.path-to-custom-deployment-settings-file }}"
           }
 
