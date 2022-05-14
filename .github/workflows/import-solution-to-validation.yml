@@ -95,82 +95,21 @@ jobs:
   # Job to import the managed solution generated in the previous job to the Dataverse Validation environment
   import-solution-to-validation:
     needs: [pre-job, create-build-environment, build-managed-solution]
-    environment:
-      name: validation
-    runs-on: windows-latest
-    env:
-      RUNNER_DEBUG: 1
-
-    steps:
-    # Action used to checkout the repository
-    #   Community action: https://github.com/actions/checkout
-    - uses: actions/checkout@v2
-    
-    # Get the content of the GitHub artifact store we got in the previous job
-    #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
-    - name: Fetch the ready to ship solution from GH artifact store
-      uses: actions/download-artifact@v2
-      with:
-        name: managedSolutions
-        path: out/managedSolutions/
-
-    # Import the considered solution managed package to the Dataverse Validation environment
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
-    - name: Import solution to Validation
-      uses: microsoft/powerplatform-actions/import-solution@main
-      with:
-        app-id: ${{ secrets.APPLICATION_ID }}
-        client-secret: ${{ secrets.CLIENT_SECRET }}
-        tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}
-        solution-file: out/managedSolutions/${{ env.solution_name }}_managed.zip
-        force-overwrite: true
-        publish-changes: true
-        skip-dependency-check: false
-        run-asynchronously: true
-        max-async-wait-time: 10
-        use-deployment-settings-file: true
-        deployment-settings-file: Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.deployment-settings-file-name-base }}_validation.json
-
-    # Complementary steps after solution import
-    #   - Turn on cloud flows
-    #   - Share canvas apps to Azure AD groups
-    - name: Steps post solution import
-      run: |
-        echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
-        Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
-
-        echo "========== Install Microsoft.Xrm.Data.PowerShell module =========="
-        Install-Module Microsoft.Xrm.Data.PowerShell -Scope CurrentUser -Force
-
-        echo "==========  Set params =========="
-        $Params = @{
-          ClientId = "${{ secrets.APPLICATION_ID }}"
-          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}"
-          SolutionName = "${{ env.solution_name }}"
-          SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
-        }
-
-        echo "==========  Enable-CloudFlows =========="
-        Import-Module ./Scripts/Enable-CloudFlows.ps1 -Force
-
-        Enable-CloudFlows @Params -verbose
-
-        echo "==========  Grant-GroupsAccessToCanvasApps =========="
-        Import-Module ./Scripts/Grant-GroupsAccessToCanvasApps.ps1 -Force
-
-        $CanvasAppsAccessGrantParams = @{
-          TenantId = "${{ secrets.TENANT_ID }}"
-          ClientId = "${{ secrets.APPLICATION_ID }}"
-          ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}"
-          DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_NAME }}"
-          ConfigurationFilePath = "./Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json"
-        }
-
-        Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
-      shell: powershell
+    uses: ./.github/workflows/import-solution.yml
+    with:
+      environment: 'validation'
+      environment-url: ${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_URL }}
+      environment-display-name: ${{ secrets.DATAVERSE_VALIDATION_ENVIRONMENT_NAME }}
+      gh-artifact-store-name: 'managedSolutions'
+      packed-solution-file-name: '${{ env.solution_name }}_managed'
+      solution-name: ${{ env.solution_name }}
+      path-to-deployment-settings-file: 'Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.deployment-settings-file-name-base }}_validation.json'
+      path-to-custom-deployment-settings-file: './Configurations/${{ env.solution_name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json'
+    secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
+      # SOLUTION_COMPONENTS_OWNER_EMAIL: Email of the user account considered for the ownership of solution components (ex: cloud flows)
 
   # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
