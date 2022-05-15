@@ -40,7 +40,7 @@
       - get and set variables
       - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
       - build a managed version of the solution using the just-in-time Build environment (*using the **build-managed-solution** reusable workflow*)
-      - import the managed version of the considered solution to the Dataverse Validation environment
+      - import the managed version of the considered solution to the Dataverse Validation environment (*using the **import-solution** reusable workflow*)
       - delete the just-in-time Dataverse Build environment
 - [**create-deploy-release**](../.github/workflows/create-deploy-release.yml):
    - Trigger: manual with inputs
@@ -52,7 +52,7 @@
       - delete the just-in-time Dataverse Build environment
       - delete the release branch if deployment of the considered solution to the just-in-time Dataverse Build environment fails
       - create a GitHub release as draft with the unmanaged and managed versions of the considered solution
-      - import the managed version of the considered solution to the Dataverse Production environment
+      - import the managed version of the considered solution to the Dataverse Production environment (*using the **import-solution** reusable workflow*)
       - publish the GitHub release initialized earlier
 - [**clean-dev-workspace-when-issue-closed-or-deleted**](../.github/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml):
    - Trigger: issue closed or deleted
@@ -73,6 +73,12 @@
       - pack the solution from the considered branch in the repository
       - import solution as unmanaged to just-in-time Build environment and export it as managed
       - store packed solution(s) in GitHub artifact store for later user in calling workflow
+- [**import-solution**](../.github/workflows/import-solution.yml):
+   - Triggers: called by another workflow (*reusable workflow*)
+   - Summary of actions:
+      - get packed solution to import from GitHub artifact store
+      - import solution to considered environment
+      - execute post solution import steps (*turn on cloud flows and share canvas apps*)
 - [**PSScriptAnalyzer**](../.github/workflows/powershell-analysis.yml):
    - Triggers:
       - push to the `main` branch with changes on specific folders
