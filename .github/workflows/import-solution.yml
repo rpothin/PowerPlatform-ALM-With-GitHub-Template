@@ -34,15 +34,9 @@ on:
         default: 10
         required: false
         type: number
-      use-deployment-settings-file:
-        description: 'Does the solution import requires a deployment settings file'
-        default: true
-        required: false
-        type: boolean
       path-to-deployment-settings-file:
         description: 'Path to deployment settings file if one is considered for this solution import'
-        default: ''
-        required: false
+        required: true
         type: string
       path-to-custom-deployment-settings-file:
         description: 'Path to custom deployment settings file (for things like canvas apps sharing)'
@@ -97,7 +91,7 @@ jobs:
           skip-dependency-check: false
           run-asynchronously: true
           max-async-wait-time: ${{ inputs.max-async-wait-time }}
-          use-deployment-settings-file: ${{ inputs.use-deployment-settings-file }}
+          use-deployment-settings-file: true
           deployment-settings-file: ${{ inputs.path-to-deployment-settings-file }}
 
       # Complementary steps after solution import
