@@ -54,24 +54,34 @@
 
 ### 3 - Add secrets to repository
 
+#### Action secrets
+
 1. In the new repository, go to the **Settings** tab
 2. Open the **Secrets > Actions** section
 3. Create the secrets below using the **New repository secret** button:
 
-| **Secret Name**                           | **Description**                                                                                   | **Example**                          |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **APPLICATION_ID**                        | **Application (client) ID** of the considered app registration                                    | 00000000-0000-0000-0000-000000000000 |
-| **CLIENT_SECRET**                         | **Secret** of the considered app registration                                                     | *********************                |
-| **TENANT_ID**                             | **Directory (tenant) ID** of the considered app registration                                      | 00000000-0000-0000-0000-000000000000 |
-| **DATAVERSE_VALIDATION_ENVIRONMENT_URL**  | URL of the Dataverse Validation environment                                                       | https://validation.crm3.dynamics.com |
-| **DATAVERSE_VALIDATION_ENVIRONMENT_NAME** | Display name of the Dataverse Validation environment                                              | Validation                           |
-| **DATAVERSE_PRODUCTION_ENVIRONMENT_URL**  | URL of the Dataverse Production environment                                                       | https://production.crm3.dynamics.com |
-| **DATAVERSE_PRODUCTION_ENVIRONMENT_NAME** | Display name of the Dataverse Production environment                                              | Production                           |
-| **SOLUTION_COMPONENTS_OWNER_EMAIL**       | Email of the user account considered for the ownership of solution components (*ex: cloud flows*) | appcomponentsowner@email.com         |
+| **Secret Name**                     | **Description**                                                                                   | **Example**                          |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| **APPLICATION_ID**                  | **Application (client) ID** of the considered app registration                                    | 00000000-0000-0000-0000-000000000000 |
+| **CLIENT_SECRET**                   | **Secret** of the considered app registration                                                     | *********************                |
+| **TENANT_ID**                       | **Directory (tenant) ID** of the considered app registration                                      | 00000000-0000-0000-0000-000000000000 |
+| **SOLUTION_COMPONENTS_OWNER_EMAIL** | Email of the user account considered for the ownership of solution components (*ex: cloud flows*) | appcomponentsowner@email.com         |
 
 ![Create_Secret](https://user-images.githubusercontent.com/23240245/136882520-ba598d65-7760-4504-b2df-9dfae930570d.gif)
 
 > *Note: The GIF above is not up to date. We will update it in a future version.*
+
+#### Environment secrets
+
+1. In the new repository, go to the **Settings** tab
+2. Open the **Environments** section
+3. Click on the name of the environment where you want to add the secrets - in our case it will be **validation** and **production**
+4. Go to the botton of the environment page, and click on the **Add secret** button to register the secrets below:
+
+| **Secret Name**                        | **Description**                                      | **Example**                          |
+| -------------------------------------- | ---------------------------------------------------- | ------------------------------------ |
+| **DATAVERSE_ENVIRONMENT_URL**          | URL of the considered Dataverse environment          | https://validation.crm3.dynamics.com |
+| **DATAVERSE_ENVIRONMENT_DISPLAY_NAME** | Display name of the considered Dataverse environment | Validation                           |
 
 ### 4 - Add labels to repository
 
@@ -148,7 +158,7 @@ You will find below details regarding each configuration:
 | deploymentSettingsFileNameBase                                            | Left part of the name of the deployment settings file that will be used for the configuration of solutions                                                                                   | "DeploymentSettings"                       |
 | customDeploymentSettingsFileNameBase                                      | Left part of the name of the custom deployment settings file (*for points not covered by the out of the box deployment settings file*) that will be used for the configuration of solutions  | "CustomDeploymentSettings"                 |
 | solutionChecker </br> outputDirectory                                     | Absolute path considered to store the sarif file generated by the solution checker                                                                                                           | "solutionCheckerResults/"                  |
-| solutionChecker </br> geography                                           | "Region" considered for the execution of the solution checker </br> *- used to temporarily stores the data that you upload in Azure along with the reports that are generated*                 | Canada                                     |
+| solutionChecker </br> geography                                           | "Region" considered for the execution of the solution checker </br> *- used to temporarily stores the data that you upload in Azure along with the reports that are generated*               | Canada                                     |
 | solutionChecker </br> maximumNumberHighSeverityPoints                     | Maximum number of high severity points identified during the execution of the solution checker allowed to continue                                                                           | 0                                          |
 | solutionChecker </br> maximumNumberMediumSeverityPoints                   | Maximum number of medium severity points identified during the execution of the solution checker allowed to continue                                                                         | 5                                          |
 
