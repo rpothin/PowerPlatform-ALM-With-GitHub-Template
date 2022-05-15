@@ -60,6 +60,9 @@
       - delete branch created for the development regarding the considered issue
       - delete the Dataverse Dev environment created for the considered issue
       - add a comment to the issue to give a status on the workspace created for the development
+
+#### Reusable workflows
+
 - [**create-just-in-time-build-environment**](../.github/workflows/create-just-in-time-build-environment.yml):
    - Triggers: called by another workflow (*reusable workflow*)
    - Summary of actions:
@@ -79,6 +82,9 @@
       - get packed solution to import from GitHub artifact store
       - import solution to considered environment
       - execute post solution import steps (*turn on cloud flows and share canvas apps*)
+
+#### Other workflows
+
 - [**PSScriptAnalyzer**](../.github/workflows/powershell-analysis.yml):
    - Triggers:
       - push to the `main` branch with changes on specific folders
