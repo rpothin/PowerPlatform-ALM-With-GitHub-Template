@@ -73,9 +73,11 @@
 
 #### Environment secrets
 
+> *Note: The actions below need to be done for the **validation** and **production** environments.*
+
 1. In the new repository, go to the **Settings** tab
 2. Open the **Environments** section
-3. Click on the name of the environment where you want to add the secrets - in our case it will be **validation** and **production**
+3. Click on the name of the environment where you want to add the secrets
 4. Go to the botton of the environment page, and click on the **Add secret** button to register the secrets below:
 
 | **Secret Name**                        | **Description**                                      | **Example**                          |
