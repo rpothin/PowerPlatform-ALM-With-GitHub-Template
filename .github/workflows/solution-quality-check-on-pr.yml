@@ -89,6 +89,7 @@ jobs:
       pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
       build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+      upload-unmanaged-solution-to-github-artifact-store: true
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
