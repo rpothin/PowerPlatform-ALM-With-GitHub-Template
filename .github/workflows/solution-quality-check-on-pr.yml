@@ -98,8 +98,6 @@ jobs:
   solution-quality-checks:
     needs: [pre-job, create-build-environment, build-managed-solution]
     runs-on: windows-latest
-    outputs:
-      solution_checker_status: ${{ steps.solution_checker_status.outputs.status }}
     env:
       RUNNER_DEBUG: 1
 
@@ -194,15 +192,14 @@ jobs:
           - NB_OF_HIGH_SEVERITY_POINTS: ${{ env.NB_OF_HIGH_SEVERITY_POINTS }} (Max: ${{ needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points }})
           - NB_OF_MEDIUM_SEVERITY_POINTS: ${{ env.NB_OF_MEDIUM_SEVERITY_POINTS }} (Max: ${{ needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points }})
     
-    # Set solution_checker_status job output value to "KO" if too many Medium or High severity points in the results of the solution checker execution
-    - name: Set solution_checker_status job output
-      id: solution_checker_status
+    # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
+    - name: Exit if too many notable points in solution checker results
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points
-      run: echo "::set-output name=status::KO"
+      run: cd exit
 
   # Job to delete the just in time Dataverse Build environment
   delete-build-environment:
-    needs: [create-build-environment, build-managed-solution, solution-quality-checks]
+    needs: [create-build-environment, build-managed-solution]
     if: always()
     runs-on: ubuntu-latest
     env:
@@ -218,8 +215,3 @@ jobs:
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
         environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
-        
-    # Run a command that will failed if too many Medium or High severity points in the results of the solution checker execution to stop the run
-    - name: Exit if too many notable points in solution checker results
-      if: needs.solution-quality-checks.outputs.solution_checker_status == 'KO'
-      run: cd exit
