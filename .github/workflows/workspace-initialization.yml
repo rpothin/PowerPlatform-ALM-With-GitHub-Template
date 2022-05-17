@@ -42,7 +42,7 @@ jobs:
     # Action used to checkout the main branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
     
     # Get configurations from a JSON file in the repository
     - name: Get configurations
@@ -131,7 +131,7 @@ jobs:
     # Action used to checkout the new dev branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch ${{ needs.pre_job.outputs.development-branch-name }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
       with:
         ref: ${{ needs.pre_job.outputs.development-branch-name }}
     
@@ -171,7 +171,7 @@ jobs:
     # Action used to checkout the new dev branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch ${{ needs.pre_job.outputs.development-branch-name }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
       with:
         ref: ${{ needs.pre_job.outputs.development-branch-name }}
 
