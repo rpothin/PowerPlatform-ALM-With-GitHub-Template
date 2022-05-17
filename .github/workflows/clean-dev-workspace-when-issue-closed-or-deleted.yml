@@ -25,7 +25,7 @@ jobs:
     # Action used to checkout the main branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
     
     # Get configurations from a JSON file in the repository
     - name: Get configurations
@@ -43,7 +43,7 @@ jobs:
     # Action used to checkout the repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout main branch
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
 
     # Delete the Dev branch if exists
     - name: Delete Dev branch if exists

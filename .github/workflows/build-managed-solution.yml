@@ -67,7 +67,7 @@ jobs:
       # Action used to checkout the considered branch in the repository
       #   Community action: https://github.com/actions/checkout
       - name: Checkout ${{ inputs.branch-to-checkout }} branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.0.2
         with:
           ref: ${{ inputs.branch-to-checkout }}
 
