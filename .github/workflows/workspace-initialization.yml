@@ -9,6 +9,11 @@ on:
   issues:
     types: [assigned, labeled]
 
+# Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group
+concurrency:
+  group: workspace-initialization-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
 jobs:
   # Job to check for a duplicate run of this workflow
   pre_job:
@@ -30,15 +35,6 @@ jobs:
       RUNNER_DEBUG: 1
       
     steps:
-    # Skip run if duplicate found
-    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/skip-duplicate-actions
-    - name: Skip run if duplicate found
-      uses: fkirc/skip-duplicate-actions@master
-      id: skip_check
-      with:
-        concurrent_skipping: 'same_content_newer' # Only skip newer runs with the same content
-        skip_after_successful_duplicate: 'false' # Do not skip if an already finished duplicate run is found
-
     # Action used to checkout the main branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
