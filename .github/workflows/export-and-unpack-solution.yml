@@ -122,26 +122,6 @@ jobs:
         }
       shell: pwsh
 
-    # TEMPORARY until out-of-the-box unpack solution action supports formatting json files
-    # Update all the json files to be pretty-print / formatted so they are easier to read in source control
-    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml
-    - name: Format JSON files
-      run: |
-        Invoke-WebRequest -Uri https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe -OutFile  jq.exe
-
-        Get-ChildItem -Path "Solutions/${{ github.event.inputs.solution_name }}" -Recurse -Filter *.json | 
-        ForEach-Object {
-          # Skip canvas app folder because already handles in the previous step
-          if(-not $_.FullName.Contains('CanvasApps')) {
-            Write-Host $_.FullName
-            $formatted = .\jq.exe . $_.FullName --sort-keys
-            $formatted | Out-File $_.FullName -Encoding UTF8
-          }
-        }
-
-        del jq.exe
-      shell: pwsh
-
     # Delete out folder with solution exported in zip format
     - name: Delete exported solution (zip)
       run: |
