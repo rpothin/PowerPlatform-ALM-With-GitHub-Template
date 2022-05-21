@@ -22,6 +22,9 @@ on:
       - '!LICENSE'
       - '!README.md'
 
+# Concurrency configuration for the current workflow - Put new workflows in queue in pending state
+concurrency: import-solution-to-validation
+
 env:
   solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
 
