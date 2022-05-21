@@ -16,6 +16,11 @@ on:
         required: true
         default: 'PowerPlatformALMWithGitHub'
 
+# Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group and the considered issue number (input)
+concurrency:
+  group: export-and-unpack-solution-${{ github.event.inputs.issue_number }}
+  cancel-in-progress: true
+
 jobs:
   # Job for the export of the considered solution from the dev environment associated to the issue
   export-from-dev:

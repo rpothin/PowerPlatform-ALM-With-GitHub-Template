@@ -9,7 +9,7 @@ on:
   issues:
     types: [assigned, labeled]
 
-# Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group
+# Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group and the considered issue
 concurrency:
   group: workspace-initialization-${{ github.event.issue.number }}
   cancel-in-progress: true

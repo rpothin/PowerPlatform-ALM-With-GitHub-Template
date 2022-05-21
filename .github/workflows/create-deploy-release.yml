@@ -17,6 +17,9 @@ on:
         description: 'Text for the body of the GitHub release'
         required: true
 
+# Concurrency configuration for the current workflow - Put new workflows in queue in pending state
+concurrency: create-deploy-release
+
 env:
   solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
   
