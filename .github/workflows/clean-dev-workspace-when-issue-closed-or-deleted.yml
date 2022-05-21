@@ -11,7 +11,7 @@ on:
 
 jobs:
   # Job to get configurations used in the workflow
-  pre_job:
+  pre-job:
     runs-on: ubuntu-latest
     outputs:
       development-branch-name: ${{ steps.get-configurations.outputs.development-branch-name-base }}${{ github.event.issue.number }}
@@ -34,7 +34,7 @@ jobs:
 
   # Job to delete the Dev branch associated to the issue if it exists
   delete-dev-branch:
-    needs: pre_job
+    needs: pre-job
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -51,19 +51,19 @@ jobs:
         git config --global user.name 'action@github.com'
         git config --global user.email 'GitHub Action'
 
-        if (git ls-remote origin ${{ needs.pre_job.outputs.development-branch-name }}) {
-          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete ${{ needs.pre_job.outputs.development-branch-name }}
+        if (git ls-remote origin ${{ needs.pre-job.outputs.development-branch-name }}) {
+          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete ${{ needs.pre-job.outputs.development-branch-name }}
 
-          Write-Host "${{ needs.pre_job.outputs.development-branch-name }} branch deleted."
+          Write-Host "${{ needs.pre-job.outputs.development-branch-name }} branch deleted."
         }
         else {
-          Write-Host "${{ needs.pre_job.outputs.development-branch-name }} branch already deleted."
+          Write-Host "${{ needs.pre-job.outputs.development-branch-name }} branch already deleted."
         }
       shell: pwsh
 
   # Job to delete the Dataverse Dev environment associated to the issue
   delete-dataverse-dev-environment:
-    needs: pre_job
+    needs: pre-job
     if: |
       contains(github.event.issue.labels.*.name, 'dev env created') ||
       (github.event_name == 'issues' && github.event.action == 'deleted')
@@ -80,12 +80,12 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com
+        environment-url: https://${{ needs.pre-job.outputs.development-environment-domain-name }}.${{ needs.pre-job.outputs.environment-url-region-code }}.dynamics.com
   
   # Remove the 'dev env created' label and add a comment on the issue to notify that the Dataverse Dev environment has been deleted
   update-issue:
     if: ${{ github.event.issue.state == 'closed' }}
-    needs: [pre_job, delete-dev-branch, delete-dataverse-dev-environment]
+    needs: [pre-job, delete-dev-branch, delete-dataverse-dev-environment]
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -108,4 +108,4 @@ jobs:
 
           > The Dev branch associated to the issue has been deleted if it was still existing.
 
-          [**${{ needs.pre_job.outputs.development-environment-display-name }}**](https://${{ needs.pre_job.outputs.development-environment-domain-name }}.${{ needs.pre_job.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
+          [**${{ needs.pre-job.outputs.development-environment-display-name }}**](https://${{ needs.pre-job.outputs.development-environment-domain-name }}.${{ needs.pre-job.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
