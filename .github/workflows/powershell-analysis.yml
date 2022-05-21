@@ -36,6 +36,9 @@ on:
       - '!CONTRIBUTING.md'
       - '!LICENSE'
       - '!README.md'
+
+# Concurrency configuration for the current workflow - Put new workflows in queue in pending state
+concurrency: PSScriptAnalyzer
     
 jobs:
   build:

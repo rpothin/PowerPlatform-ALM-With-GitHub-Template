@@ -9,6 +9,9 @@ on:
   issues:
     types: [closed, deleted]
 
+# Concurrency configuration for the current workflow - Put new workflows for the considered issue in queue in pending state
+concurrency: clean-dev-workspace-${{ github.event.issue.number }}
+
 jobs:
   # Job to get configurations used in the workflow
   pre-job:

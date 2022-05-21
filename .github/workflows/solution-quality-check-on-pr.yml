@@ -22,6 +22,11 @@ on:
       - '!LICENSE'
       - '!README.md'
 
+# Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group and the considered pull request
+concurrency:
+  group: solution-quality-check-on-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
   solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
 
