@@ -35,7 +35,7 @@ Function Enable-CloudFlows {
             None.
 
         .EXAMPLE
-            PS> Enable-CloudFlows -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com" -MaximumTries 3
+            PS> Enable-CloudFlows -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com" -MaximumTries "3"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
@@ -81,12 +81,15 @@ Function Enable-CloudFlows {
         # Maximum tries allowed for the activation of the cloud flows
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [Int]$MaximumTries
+        [String]$MaximumTries
     )
 
     Begin{}
 
     Process{
+        # Set variables
+        [int]$maximumTriesForCloudFlowsActivation = $MaximumTries
+
         # Set generic connection (with service principal)
         Write-Verbose "Set generic connection (with service principal)."
         $connection = Connect-CrmOnline -ServerUrl $DataverseEnvironmentUrl -OAuthClientId $ClientId -ClientSecret $ClientSecret
@@ -158,13 +161,13 @@ Function Enable-CloudFlows {
             #   - No cloud flow activation failed
             #   - Maximum tries limit reached
             #   - No cloud flows in the "Draft" state found in the considered solution
-            if (!$cloudFlowActivationFailed || $cloudFlowsActivationTryIndex -eq $MaximumTries || $draftCloudFlows.Count -eq 0) {
+            if (!$cloudFlowActivationFailed || $cloudFlowsActivationTryIndex -eq $maximumTriesForCloudFlowsActivation || $draftCloudFlows.Count -eq 0) {
                 $cloudFlowsActivationContinue = $false
             }
 
             # Throw error if maximum tries limit reached and at least one cloud flow activation failed
-            if ($cloudFlowActivationFailed && $cloudFlowsActivationTryIndex -eq $MaximumTries) {
-                throw "Activation of all the cloud flows in the $SolutionName solution was not completed successfully in the maximum tries configured ($MaximumTries)."
+            if ($cloudFlowActivationFailed && $cloudFlowsActivationTryIndex -eq $maximumTriesForCloudFlowsActivation) {
+                throw "Activation of all the cloud flows in the $SolutionName solution was not completed successfully in the maximum tries configured ($maximumTriesForCloudFlowsActivation)."
             }
 
         } while ($cloudFlowsActivationContinue)

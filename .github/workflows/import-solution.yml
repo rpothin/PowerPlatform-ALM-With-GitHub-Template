@@ -45,7 +45,7 @@ on:
       maximum-tries-for-cloud-flows-activation:
         description: 'Maximum tries allowed for the activation of the cloud flows post solution deployment'
         required: true
-        type: number
+        type: string
     #secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
@@ -133,7 +133,7 @@ jobs:
             DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_ENVIRONMENT_URL }}"
             DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_ENVIRONMENT_DISPLAY_NAME }}"
             ConfigurationFilePath = "${{ inputs.path-to-custom-deployment-settings-file }}"
-            MaximumTries = ${{ inputs.maximum-tries-for-cloud-flows-activation }}
+            MaximumTries = "${{ inputs.maximum-tries-for-cloud-flows-activation }}"
           }
 
           Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
