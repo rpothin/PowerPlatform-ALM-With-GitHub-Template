@@ -157,7 +157,7 @@ Function Grant-GroupsAccessToCanvasApps {
                 if ($null -ne $group) {
                     # Get the Object ID of the considered group
                     Write-Verbose "Get group Object ID from the provided name."
-                    $groupObjectId = $group.objectId
+                    $groupObjectId = $group.id
 
                     # Get group Object ID
                     Set-AdminPowerAppRoleAssignment -PrincipalType Group -PrincipalObjectId $groupObjectId -RoleName $configuration.roleName -AppName $canvasAppId -EnvironmentName $dataverseEnvironmentName
