@@ -130,6 +130,7 @@ This file follows the format below:
     "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/",
     "deploymentSettingsFileNameBase": "DeploymentSettings",
     "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings",
+    "maximumTriesForCloudFlowsActivation": 3,
     "solutionChecker": {
         "outputDirectory": "solutionCheckerResults/",
         "geography": "Canada",
