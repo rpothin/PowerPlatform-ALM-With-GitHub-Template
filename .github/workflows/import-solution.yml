@@ -116,6 +116,7 @@ jobs:
             DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_ENVIRONMENT_URL }}"
             SolutionName = "${{ inputs.solution-name }}"
             SolutionComponentsOwnerEmail = "${{ secrets.SOLUTION_COMPONENTS_OWNER_EMAIL }}"
+            MaximumTries = "${{ inputs.maximum-tries-for-cloud-flows-activation }}"
           }
 
           echo "==========  Enable-CloudFlows =========="
@@ -133,7 +134,6 @@ jobs:
             DataverseEnvironmentUrl = "${{ secrets.DATAVERSE_ENVIRONMENT_URL }}"
             DataverseEnvironmentDisplayName = "${{ secrets.DATAVERSE_ENVIRONMENT_DISPLAY_NAME }}"
             ConfigurationFilePath = "${{ inputs.path-to-custom-deployment-settings-file }}"
-            MaximumTries = "${{ inputs.maximum-tries-for-cloud-flows-activation }}"
           }
 
           Grant-GroupsAccessToCanvasApps @CanvasAppsAccessGrantParams -verbose
