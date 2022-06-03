@@ -161,12 +161,12 @@ Function Enable-CloudFlows {
             #   - No cloud flow activation failed
             #   - Maximum tries limit reached
             #   - No cloud flows in the "Draft" state found in the considered solution
-            if (!$cloudFlowActivationFailed || $cloudFlowsActivationTryIndex -eq $maximumTriesForCloudFlowsActivation || $draftCloudFlows.Count -eq 0) {
+            if (!$cloudFlowActivationFailed -or ($cloudFlowsActivationTryIndex -eq $maximumTriesForCloudFlowsActivation) -or ($draftCloudFlows.Count -eq 0)) {
                 $cloudFlowsActivationContinue = $false
             }
 
             # Throw error if maximum tries limit reached and at least one cloud flow activation failed
-            if ($cloudFlowActivationFailed && $cloudFlowsActivationTryIndex -eq $maximumTriesForCloudFlowsActivation) {
+            if ($cloudFlowActivationFailed -and ($cloudFlowsActivationTryIndex -eq $maximumTriesForCloudFlowsActivation)) {
                 throw "Activation of all the cloud flows in the $SolutionName solution was not completed successfully in the maximum tries configured ($maximumTriesForCloudFlowsActivation)."
             }
 
