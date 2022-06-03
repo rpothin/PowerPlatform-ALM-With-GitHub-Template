@@ -60,6 +60,9 @@ outputs:
   custom-deployment-settings-file-name-base:
     description: "Base of the name for a custom deployment settings file"
     value: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
+  maximum-tries-for-cloud-flows-activation:
+    description: "Maximum tries allowed for the activation of the cloud flows post solution deployment"
+    value: ${{ steps.get-configurations.outputs.maximum-tries-for-cloud-flows-activation }}
   solution-checker-output-directory:
     description: "Output directory for the results of the execution of the solution checker"
     value: ${{ steps.get-configurations.outputs.solution-checker-output-directory }}
@@ -122,6 +125,7 @@ runs:
         $powerAppsMakerPortalBaseUrl = $configurations.powerAppsMakerPortalBaseUrl
         $deploymentSettingsFileNameBase = $configurations.deploymentSettingsFileNameBase
         $customDeploymentSettingsFileNameBase = $configurations.customDeploymentSettingsFileNameBase
+        $maximumTriesForCloudFlowsActivation = $configurations.maximumTriesForCloudFlowsActivation
 
         $solutionCheckerOutputDirectory = $configurations.solutionChecker.outputDirectory
         $solutionCheckerGeography = $configurations.solutionChecker.geography
@@ -149,6 +153,7 @@ runs:
         echo "::set-output name=powerapps-maker-portal-base-url::$powerAppsMakerPortalBaseUrl"
         echo "::set-output name=deployment-settings-file-name-base::$deploymentSettingsFileNameBase"
         echo "::set-output name=custom-deployment-settings-file-name-base::$customDeploymentSettingsFileNameBase"
+        echo "::set-output name=maximum-tries-for-cloud-flows-activation::$maximumTriesForCloudFlowsActivation"
         
         echo "::set-output name=solution-checker-output-directory::$solutionCheckerOutputDirectory"
         echo "::set-output name=solution-checker-geography::$solutionCheckerGeography"
