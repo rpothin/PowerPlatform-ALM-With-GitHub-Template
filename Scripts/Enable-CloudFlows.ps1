@@ -24,6 +24,10 @@ Function Enable-CloudFlows {
         .PARAMETER SolutionComponentsOwnerEmail
             Email of the user who will be set as owner of the components of the solution.
 
+        .PARAMETER MaximumTries
+            Maximum tries allowed for the activation of the cloud flows.
+            Parameter to cover the presence of multiple levels of child flows.
+
         .INPUTS
             None. You cannot pipe objects to Enable-CloudFlows.
 
@@ -31,7 +35,7 @@ Function Enable-CloudFlows {
             None.
 
         .EXAMPLE
-            PS> Enable-CloudFlows -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com"
+            PS> Enable-CloudFlows -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -SolutionName "Demo" -SolutionComponentsOwnerEmail "demo.user@demo.com" -MaximumTries 3
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
@@ -72,7 +76,12 @@ Function Enable-CloudFlows {
         # Email of the user who will be set as owner of the components of the solution
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [String]$SolutionComponentsOwnerEmail
+        [String]$SolutionComponentsOwnerEmail,
+
+        # Maximum tries allowed for the activation of the cloud flows
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [Int]$MaximumTries
     )
 
     Begin{}
@@ -113,17 +122,51 @@ Function Enable-CloudFlows {
     </entity>
 </fetch>
 "@;
-        $draftCloudFlows = (Get-CrmRecordsByFetch -conn $connection -Fetch $fetchDraftCloudFlows -Verbose).CrmRecords
 
-        # For each cloud flow in the considered solution
-        Write-Verbose "For each cloud flow in the considered solution..."
-        foreach ($draftCloudFlow in $draftCloudFlows) {
-            $cloudFlowId = $draftCloudFlow.workflowid
+        # Until all cloud flows are activated or the maximum tries limit is reached
+        $cloudFlowsActivationTryIndex = 0
+        do {
+            # Set variables
+            $cloudFlowsActivationContinue = $true
+            $cloudFlowActivationFailed = $false
 
-            # Turn on the cloud flow using the impersonation connection (automatically set the provided user as owner)
-            Write-Verbose "Turn on the following cloud flow: $cloudFlowId"
-            Set-CrmRecordState -conn $impersonationConnection -EntityLogicalName workflow -Id $cloudFlowId -StateCode Activated -StatusCode Activated
-        }
+            # Increment cloud flows activation try index
+            $cloudFlowsActivationTryIndex++
+
+            # Get the cloud (modern) flows in "Draft" state in the considered solution
+            $draftCloudFlows = (Get-CrmRecordsByFetch -conn $connection -Fetch $fetchDraftCloudFlows -Verbose).CrmRecords
+
+            # For each cloud (modern) flow in "Draft" state in the considered solution
+            Write-Verbose "For each cloud flow in the considered solution..."
+            foreach ($draftCloudFlow in $draftCloudFlows) {
+                $cloudFlowId = $draftCloudFlow.workflowid
+
+                # Turn on the cloud flow using the impersonation connection (automatically set the provided user as owner)
+                Write-Verbose "Try to turn on the following cloud flow: $cloudFlowId"
+                try {
+                    Set-CrmRecordState -conn $impersonationConnection -EntityLogicalName workflow -Id $cloudFlowId -StateCode Activated -StatusCode Activated -ErrorVariable cloudFlowStateUpdateError -ErrorAction Stop
+                    Write-Verbose "Following cloud flow successfully activated: $cloudFlowId"
+                }
+                catch {
+                    Write-Verbose "Error in the activation of the following cloud flow: $cloudFlowId - $cloudFlowStateUpdateError"
+                    $cloudFlowActivationFailed = $true
+                }
+            }
+
+            # Stop the do-while loop if at least one condition below is true
+            #   - No cloud flow activation failed
+            #   - Maximum tries limit reached
+            #   - No cloud flows in the "Draft" state found in the considered solution
+            if (!$cloudFlowActivationFailed || $cloudFlowsActivationTryIndex -eq $MaximumTries || $draftCloudFlows.Count -eq 0) {
+                $cloudFlowsActivationContinue = $false
+            }
+
+            # Throw error if maximum tries limit reached and at least one cloud flow activation failed
+            if ($cloudFlowActivationFailed && $cloudFlowsActivationTryIndex -eq $MaximumTries) {
+                throw "Activation of all the cloud flows in the $SolutionName solution was not completed successfully in the maximum tries configured ($MaximumTries)."
+            }
+
+        } while ($cloudFlowsActivationContinue)
     }
 
     End{}
