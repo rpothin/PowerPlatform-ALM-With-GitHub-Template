@@ -39,6 +39,7 @@ jobs:
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
       deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}
       custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
+      maximum-tries-for-cloud-flows-activation: ${{ steps.get-configurations.outputs.maximum-tries-for-cloud-flows-activation }}
     env:
       RUNNER_DEBUG: 1
 
@@ -267,6 +268,7 @@ jobs:
       solution-name: ${{ needs.pre-job.outputs.solution-name }}
       path-to-deployment-settings-file: 'Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.deployment-settings-file-name-base }}_production.json'
       path-to-custom-deployment-settings-file: './Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_production.json'
+      maximum-tries-for-cloud-flows-activation: ${{ needs.pre-job.outputs.maximum-tries-for-cloud-flows-activation }}
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
