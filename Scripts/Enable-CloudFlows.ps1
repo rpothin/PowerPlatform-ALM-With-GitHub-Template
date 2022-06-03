@@ -132,6 +132,7 @@ Function Enable-CloudFlows {
 
             # Increment cloud flows activation try index
             $cloudFlowsActivationTryIndex++
+            Write-Verbose "Cloud flows activation try $cloudFlowsActivationTryIndex"
 
             # Get the cloud (modern) flows in "Draft" state in the considered solution
             $draftCloudFlows = (Get-CrmRecordsByFetch -conn $connection -Fetch $fetchDraftCloudFlows -Verbose).CrmRecords
