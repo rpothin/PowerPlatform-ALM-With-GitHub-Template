@@ -188,7 +188,7 @@ jobs:
     # Add the new comment to the pull request if too many Medium or High severity points in the results of the solution checker execution
     - name: New comment on pull request if too many errors
       if: Env.NB_OF_MEDIUM_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-medium-severity-points || Env.NB_OF_HIGH_SEVERITY_POINTS > needs.pre-job.outputs.solution-checker-maximum-number-high-severity-points
-      uses: peter-evans/create-or-update-comment@v1
+      uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
