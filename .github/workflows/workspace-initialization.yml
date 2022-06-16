@@ -56,7 +56,7 @@ jobs:
     steps:
     # Create the new dev branch
     #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/create-branch
-    - uses: peterjgrainger/action-create-branch@v2.0.1
+    - uses: peterjgrainger/action-create-branch@v2.2.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
