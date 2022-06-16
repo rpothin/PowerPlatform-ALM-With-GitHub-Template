@@ -190,7 +190,7 @@ jobs:
       # Get the unmanaged solutions from the GitHub artifact store
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
       - name: Fetch the unmanaged solutions from GH artifact store
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: unmanagedSolutions
           path: out/unmanagedSolutions/
@@ -198,7 +198,7 @@ jobs:
       # Get the managed solutions from the GitHub artifact store
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
       - name: Fetch the managed solutions from GH artifact store
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: managedSolutions
           path: out/managedSolutions/
