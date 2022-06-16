@@ -64,7 +64,7 @@ jobs:
 
     # Add "Branch created" comment to the issue
     - name: Branch created comment on issue
-      uses: peter-evans/create-or-update-comment@v1
+      uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
@@ -107,7 +107,7 @@ jobs:
 
     # Add "Environment created" comment to the issue
     - name: Environment created comment on issue
-      uses: peter-evans/create-or-update-comment@v1
+      uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
@@ -276,7 +276,7 @@ jobs:
     # Add "Solution imported" comment to the issue
     - name: Solution imported comment on issue
       if: ${{ env.SolutionsExist == 'true' }}
-      uses: peter-evans/create-or-update-comment@v1
+      uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
@@ -292,7 +292,7 @@ jobs:
     steps:
     # Add "Workplace initialized" comment to the issue
     - name: Workplace initialized comment on issue
-      uses: peter-evans/create-or-update-comment@v1
+      uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
