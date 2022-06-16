@@ -139,7 +139,7 @@ jobs:
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
       - name: Upload the unmanaged solution to GH artifact store
         if: ${{ inputs.upload-unmanaged-solution-to-github-artifact-store }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: unmanagedSolutions
           path: ${{ env.path_to_solution_zip_file }}
@@ -177,7 +177,7 @@ jobs:
       # Upload the managed solution we got in the previous step to the GitHub artifact store
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
       - name: Upload the ready to ship solution to GH artifact store
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: managedSolutions
           path: out/Solutions/${{ inputs.solution-name }}_managed.zip
