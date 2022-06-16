@@ -111,7 +111,7 @@ jobs:
     # Get the content of the GitHub artifact store prepared in a previous job
     #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
     - name: Get solution from GH artifact store
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: unmanagedSolutions
         path: out/unmanagedSolutions/
