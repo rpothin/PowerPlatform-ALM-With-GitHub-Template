@@ -104,7 +104,7 @@ Function Add-AADSecurityGroupTeamToDataverseEnvironment {
         if ($azureAdGroupsCount -eq 1) {
             Write-Verbose "Only one Azure AD security group found for the provided name - We continue."
             Write-Verbose "Get the object id of the group found."
-            $azureAdSecurityGroupId = $azureAdGroups[0].objectId
+            $azureAdSecurityGroupId = $azureAdGroups[0].id
 
             # Connect to Microsoft.Xrm.Data.PowerShell with service principal
             Write-Verbose "Connect to Microsoft.Xrm.Data.PowerShell with service principal."
