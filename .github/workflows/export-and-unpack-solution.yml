@@ -68,7 +68,6 @@ jobs:
         solution-name: ${{ github.event.inputs.solution_name }}
         solution-output-file: out/exported/${{ github.event.inputs.solution_name }}.zip
         managed: false
-        process-canvas-apps: true
 
     # Unpack the unmanaged solution exported in the previous step
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/unpack-solution/action.yml
@@ -79,6 +78,7 @@ jobs:
         solution-folder: Solutions/${{ github.event.inputs.solution_name }}
         solution-type: 'Unmanaged'
         overwrite-files: true
+        process-canvas-apps: true
 
     # Reset the solution version in the Solution.xml file
     - name: Set solution version
