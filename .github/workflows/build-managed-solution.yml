@@ -71,34 +71,6 @@ jobs:
         with:
           ref: ${{ inputs.branch-to-checkout }}
 
-      # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
-      # Use temp exe from PowerShell to pack source files into msapp
-      #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
-      - name: Pack msapp files
-        run: |
-          $nugetPackage = "Microsoft.PowerApps.CLI"
-          $nugetPackageVersion = "${{ inputs.pac-cli-version }}"
-          $outFolder = "pac"
-
-          nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
-            
-          $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
-
-          $pacPath = $pacNugetFolder.FullName + "/tools"
-
-          Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}" -Recurse -Filter *_src | 
-          ForEach-Object {     
-            $unpackedPath = $_.FullName
-            $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
-
-            # Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
-
-            $env:PATH = $env:PATH + ";" + "$pacPath"
-            pac canvas pack --msapp $packedFileName --sources $unpackedPath
-            Remove-Item -Path $unpackedPath -Recurse
-          }
-        shell: pwsh
-
       # Initialize the solution version
       - name: Set solution version variable
         run: |
