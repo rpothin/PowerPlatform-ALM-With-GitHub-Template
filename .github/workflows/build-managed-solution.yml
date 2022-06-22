@@ -134,6 +134,7 @@ jobs:
           solution-folder: Solutions/${{ inputs.solution-name }}
           solution-file: ${{ env.path_to_solution_zip_file }}
           solution-type: Unmanaged
+          process-canvas-apps: true
 
       # Upload the unmanaged solution we packed in the previous step to the GitHub artifact store
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
