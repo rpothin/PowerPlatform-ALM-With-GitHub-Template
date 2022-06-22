@@ -112,22 +112,6 @@ jobs:
         pac solution create-settings --solution-zip out/exported/${{ github.event.inputs.solution_name }}.zip --settings-file Configurations/${{ github.event.inputs.solution_name }}/${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}Template.json
       shell: pwsh
 
-    # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
-    # Use temp exe from PowerShell to unpack canvas app source files into a folder
-    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/export-Solution.yml
-    - name: Unpack canvas app source files
-      run: |
-        Get-ChildItem -Path "Solutions/${{ github.event.inputs.solution_name }}" -Recurse -Filter *.msapp | 
-        ForEach-Object {
-            $unpackedPath = $_.FullName.Replace(".msapp", "_msapp_src")
-            
-            $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
-
-            pac canvas unpack --msapp $_.FullName --sources $unpackedPath
-            del $_.FullName
-        }
-      shell: pwsh
-
     # Delete out folder with solution exported in zip format
     - name: Delete exported solution (zip)
       run: |
