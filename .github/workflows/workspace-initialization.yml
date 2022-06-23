@@ -192,35 +192,6 @@ jobs:
         echo "SolutionsExist=$solutionsExist" >> $Env:GITHUB_ENV
       shell: pwsh
 
-    # TEMPORARY until out-of-the-box unpack solution action supports full unpack of .msapp files
-    # Use temp exe from PowerShell to pack source files into msapp
-    #   Source: https://github.com/microsoft/coe-alm-accelerator-templates/blob/main/Pipelines/Templates/build-Solution.yml
-    - name: Pack msapp files
-      if: ${{ env.SolutionsExist == 'true' }}
-      run: |
-        $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "${{ needs.pre-job.outputs.pac-cli-version }}"
-        $outFolder = "pac"
-
-        nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
-          
-        $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
-
-        $pacPath = $pacNugetFolder.FullName + "/tools"
-
-        Get-ChildItem -Path "Solutions/${{ env.solution_name }}" -Recurse -Filter *_src | 
-        ForEach-Object {     
-          $unpackedPath = $_.FullName
-          $packedFileName = $unpackedPath.Replace("_msapp_src", ".msapp")
-
-          # Utils\temp-canvas-packager\temp-canvas-packager.exe -pack $packedFileName $unpackedPath
-
-          $env:PATH = $env:PATH + ";" + "$pacPath"
-          pac canvas pack --msapp $packedFileName --sources $unpackedPath
-          Remove-Item -Path $unpackedPath -Recurse
-        }
-      shell: pwsh
-
     # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
       if: ${{ env.SolutionsExist == 'true' }}
@@ -254,6 +225,7 @@ jobs:
         solution-folder: Solutions/${{ env.solution_name }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         solution-type: Unmanaged
+        process-canvas-apps: true
 
     # Import the solution as unmanaged to the new Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
