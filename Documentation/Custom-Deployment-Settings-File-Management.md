@@ -11,18 +11,23 @@ Using this repository, you will need to configure custom deployment settings fil
 - the custom deployment settings files need to respect the format below:
 
 ```json
-[
-    {
-        "canvasAppName": "app1",
-        "groupName": "sg-app-viewers",
-        "roleName": "CanView"
-    },
-    {
-        "canvasAppName": "app2",
-        "groupName": "sg-app-makers",
-        "roleName": "CanEdit"
+{
+    "canvasApps": {
+        "sharing": [
+            {
+                "canvasAppName": "app1",
+                "groupName": "sg-app-viewers",
+                "roleName": "CanView"
+            },
+            {
+                "canvasAppName": "app2",
+                "groupName": "sg-app-makers",
+                "roleName": "CanEdit"
+            }
+        ],
+        "instrumentationKey": "00000000-0000-0000-0000-000000000000"
     }
-]
+}
 ```
 
 > *Notes:*
