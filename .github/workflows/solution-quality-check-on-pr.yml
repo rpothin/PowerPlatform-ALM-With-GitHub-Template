@@ -91,7 +91,7 @@ jobs:
     uses: ./.github/workflows/build-managed-solution.yml
     with:
       solution-name: ${{ needs.pre-job.outputs.solution-name }}
-      branch-to-checkout: $GITHUB_HEAD_REF
+      branch-to-checkout: ${GITHUB_HEAD_REF}
       pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
       build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
