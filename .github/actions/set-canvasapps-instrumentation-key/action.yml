@@ -1,0 +1,54 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: 'Set canvas apps instrumentation key'
+
+description: 'Set canvas apps instrumentation key based on a configuration for the considered environment'
+
+inputs:
+  path-to-custom-deployment-settings-file:
+    description: 'Path to custom deployment settings file (for things like canvas apps instrumentation key)'
+    required: true
+  solution-name:
+    description: 'Name of the considered solution (not the Display Name)'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    # Set canvas apps instrumentation key
+    - name: Set canvas apps instrumentation key
+      id: set-canvasapps-instrumentation-key
+      run:  |
+        # Set variables
+        Write-Host "Set variables"
+        $ConfigurationFilePath = "${{ inputs.path-to-custom-deployment-settings-file }}"
+
+        # Test the path provided to the file with the canvas apps instrumentation key
+        Write-Host "Test the path provided to the file with the canvas apps instrumentation key: $ConfigurationFilePath"
+        $testPathResult = Test-Path $ConfigurationFilePath
+        if(!$testPathResult) {
+          Write-Error -Message "Following path to configuration file not valid: $ConfigurationFilePath" -ErrorAction Stop
+        }
+
+        # Extract canvas apps instrumentation key from the configuration file
+        Write-Host "Get canvas apps instrumentation key from the configuration in the following location: $ConfigurationFilePath"
+        try {
+          Write-Host "Try to call the Get-Content command"
+          $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+
+          $canvasAppsInstrumentationKey = $configurations.canvasApps.instrumentationKey
+        }
+        catch {
+          Write-Error -Message "Error in the extraction of the canvas apps instrumentation key from the considered configuration file ($ConfigurationFilePath): $getConfigurationError" -ErrorAction Stop
+        }
+
+        # For all relevant canvas apps (with an "AppInsightsKey.json" file) in the considered solution, set canvas apps instrumentation key
+        Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}/CanvasApps/src" -Recurse -Filter AppInsightsKey.json | 
+        ForEach-Object {     
+          $appInsightsKeyFilePath = $_.FullName
+          $appInsightsKeyFileContent = Get-Content $appInsightsKeyFilePath | ConvertFrom-Json
+          $appInsightsKeyFileContent.InstrumentationKey = $canvasAppsInstrumentationKe
+          $appInsightsKeyFileContent | ConvertTo-Json | set-content $appInsightsKeyFilePath
+        }
+      shell: pwsh
