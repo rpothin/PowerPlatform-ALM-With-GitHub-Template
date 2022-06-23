@@ -108,6 +108,8 @@ Function Grant-GroupsAccessToCanvasApps {
                 Write-Verbose "Try to call the Get-Content command."
                 Write-Debug "Before the call to the Get-Content command..."
                 $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+
+                $canvasAppsSharingConfigurations = $configurations.canvasApps.sharing
             }
             catch {
                 Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
@@ -142,15 +144,15 @@ Function Grant-GroupsAccessToCanvasApps {
 
             # For each canvas app - Azure AD group mapping...
             Write-Verbose "For each canvas app - Azure AD group mapping..."
-            foreach ($configuration in $configurations) {
+            foreach ($canvasAppsSharingConfiguration in $canvasAppsSharingConfigurations) {
                 # List canvas app based on the provided name
                 Write-Verbose "List canvas app based on the provided name: "
-                $canvasApps = Get-CrmRecords -conn $connection -EntityLogicalName canvasapp -FilterAttribute "name" -FilterOperator "eq" -FilterValue $configuration.canvasAppName -Fields name
+                $canvasApps = Get-CrmRecords -conn $connection -EntityLogicalName canvasapp -FilterAttribute "name" -FilterOperator "eq" -FilterValue $canvasAppsSharingConfiguration.canvasAppName -Fields name
                 $canvasAppId = $canvasApps.CrmRecords[0].canvasappid
 
                 # Get the details of the considered group
                 Write-Verbose "Get group details from the provided name."
-                $group = az ad group show --group $configuration.groupName | ConvertFrom-Json
+                $group = az ad group show --group $canvasAppsSharingConfiguration.groupName | ConvertFrom-Json
 
                 # If group found, we continue
                 Write-Verbose "If group found, we continue."
@@ -160,7 +162,7 @@ Function Grant-GroupsAccessToCanvasApps {
                     $groupObjectId = $group.id
 
                     # Get group Object ID
-                    Set-AdminPowerAppRoleAssignment -PrincipalType Group -PrincipalObjectId $groupObjectId -RoleName $configuration.roleName -AppName $canvasAppId -EnvironmentName $dataverseEnvironmentName
+                    Set-AdminPowerAppRoleAssignment -PrincipalType Group -PrincipalObjectId $groupObjectId -RoleName $canvasAppsSharingConfiguration.roleName -AppName $canvasAppId -EnvironmentName $dataverseEnvironmentName
                 }
             }
         }
