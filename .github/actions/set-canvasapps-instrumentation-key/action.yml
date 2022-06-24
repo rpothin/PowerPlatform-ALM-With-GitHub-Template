@@ -38,6 +38,7 @@ runs:
           $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
 
           $canvasAppsInstrumentationKey = $configurations.canvasApps.instrumentationKey
+          Write-Host "Canvas apps instrumentation key: $canvasAppsInstrumentationKey"
         }
         catch {
           Write-Error -Message "Error in the extraction of the canvas apps instrumentation key from the considered configuration file ($ConfigurationFilePath): $getConfigurationError" -ErrorAction Stop
@@ -45,10 +46,18 @@ runs:
 
         # For all relevant canvas apps (with an "AppInsightsKey.json" file) in the considered solution, set canvas apps instrumentation key
         Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}/CanvasApps/src" -Recurse -Filter AppInsightsKey.json | 
-        ForEach-Object {     
+        ForEach-Object {
           $appInsightsKeyFilePath = $_.FullName
+          Write-Host "Set canvas apps instrumentation key for the following canvas app: $appInsightsKeyFilePath"
+
           $appInsightsKeyFileContent = Get-Content $appInsightsKeyFilePath | ConvertFrom-Json
-          $appInsightsKeyFileContent.InstrumentationKey = $canvasAppsInstrumentationKe
+          Write-Host "Canvas apps instrumentation key configuration before update:"
+          $appInsightsKeyFileContent
+
+          $appInsightsKeyFileContent.InstrumentationKey = $canvasAppsInstrumentationKey
+          Write-Host "Canvas apps instrumentation key configuration after update:"
+          $appInsightsKeyFileContent
+
           $appInsightsKeyFileContent | ConvertTo-Json | set-content $appInsightsKeyFilePath
         }
       shell: pwsh
