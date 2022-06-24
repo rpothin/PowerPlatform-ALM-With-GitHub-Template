@@ -3,7 +3,7 @@
 
 name: 'Set canvas apps instrumentation key'
 
-description: 'Set canvas apps instrumentation key based on a configuration for the considered environment'
+description: 'Set canvas apps instrumentation key based on a configuration for the considered solution and the considered environment'
 
 inputs:
   path-to-custom-deployment-settings-file:

@@ -44,6 +44,7 @@ jobs:
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
+      custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
       solution-checker-output-directory: ${{ steps.get-configurations.outputs.solution-checker-output-directory }}
       solution-checker-geography: ${{ steps.get-configurations.outputs.solution-checker-geography }}
       solution-checker-maximum-number-high-severity-points: ${{ steps.get-configurations.outputs.solution-checker-maximum-number-high-severity-points }}
@@ -96,6 +97,7 @@ jobs:
       current-date: ${{ needs.pre-job.outputs.current-date }}
       build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
       upload-unmanaged-solution-to-github-artifact-store: true
+      path-to-custom-deployment-settings-file: './Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json'
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
