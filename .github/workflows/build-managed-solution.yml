@@ -44,6 +44,10 @@ on:
         description: 'URL of the Build environment used to generate the managed version of the solution'
         required: true
         type: string
+      path-to-custom-deployment-settings-file:
+        description: 'Path to custom deployment settings file (for things like canvas apps sharing)'
+        required: true
+        type: string
     #secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
@@ -97,6 +101,13 @@ jobs:
           git commit -m "Update version of ${{ inputs.solution-name }} solution to ${{ env.SOLUTION_VERSION }}"
           git  -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin ${{ inputs.branch-to-checkout }}
         shell: pwsh
+
+      # Set canvas apps instrumentation key for the considered solution
+      - name: Set canvas apps instrumentation key
+        uses: ./.github/actions/set-canvasapps-instrumentation-key
+        with:
+          path-to-custom-deployment-settings-file: ${{ inputs.path-to-custom-deployment-settings-file }}
+          solution-name: ${{ inputs.solution-name }}
 
       # Pack the considered solution as unmanaged
       #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
