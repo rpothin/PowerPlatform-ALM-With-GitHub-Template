@@ -51,13 +51,25 @@ runs:
           Write-Host "Set canvas apps instrumentation key for the following canvas app: $appInsightsKeyFilePath"
 
           $appInsightsKeyFileContent = Get-Content $appInsightsKeyFilePath | ConvertFrom-Json
-          Write-Host "Canvas apps instrumentation key configuration before update:"
-          $appInsightsKeyFileContent
+          Write-Host "Canvas apps instrumentation key configuration before update: $appInsightsKeyFileContent"
 
           $appInsightsKeyFileContent.InstrumentationKey = $canvasAppsInstrumentationKey
-          Write-Host "Canvas apps instrumentation key configuration after update:"
-          $appInsightsKeyFileContent
+          Write-Host "Canvas apps instrumentation key configuration after update: $appInsightsKeyFileContent"
 
           $appInsightsKeyFileContent | ConvertTo-Json | set-content $appInsightsKeyFilePath
+        }
+      shell: pwsh
+
+    # Check - Temp for test
+    - name: Check
+      run:  |
+        # For all relevant canvas apps (with an "AppInsightsKey.json" file) in the considered solution, set canvas apps instrumentation key
+        Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}/CanvasApps/src" -Recurse -Filter AppInsightsKey.json | 
+        ForEach-Object {
+          $appInsightsKeyFilePath = $_.FullName
+          Write-Host "Set canvas apps instrumentation key for the following canvas app: $appInsightsKeyFilePath"
+
+          $appInsightsKeyFileContent = Get-Content $appInsightsKeyFilePath | ConvertFrom-Json
+          Write-Host "Canvas apps instrumentation key configuration: $appInsightsKeyFileContent"
         }
       shell: pwsh
