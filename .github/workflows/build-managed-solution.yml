@@ -32,10 +32,6 @@ on:
         default: false
         required: false
         type: boolean
-      pac-cli-version:
-        description: 'Considered version of PAC CLI for the pack of the canvas apps'
-        required: true
-        type: string
       current-date:
         description: 'Current date in YYYYMMDD format'
         required: true
