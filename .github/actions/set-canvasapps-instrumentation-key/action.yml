@@ -64,7 +64,7 @@ runs:
     - name: PowerApps CLI setup
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "1.10.4"
+        $nugetPackageVersion = "1.16.6"
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
