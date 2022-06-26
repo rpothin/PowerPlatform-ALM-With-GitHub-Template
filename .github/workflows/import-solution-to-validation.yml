@@ -41,7 +41,6 @@ jobs:
       build-environment-sku-name: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
-      pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
       deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}
       custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
       maximum-tries-for-cloud-flows-activation: ${{ steps.get-configurations.outputs.maximum-tries-for-cloud-flows-activation }}
@@ -88,7 +87,6 @@ jobs:
     uses: ./.github/workflows/build-managed-solution.yml
     with:
       solution-name: ${{ needs.pre-job.outputs.solution-name }}
-      pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
       build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
       path-to-custom-deployment-settings-file: './Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json'

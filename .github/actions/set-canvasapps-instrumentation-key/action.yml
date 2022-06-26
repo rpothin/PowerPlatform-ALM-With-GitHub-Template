@@ -60,7 +60,7 @@ runs:
         }
       shell: pwsh
 
-    # Check - Temp for test
+    # Manual pac solution pack with processCanvasApps
     - name: Check
       run:  |
         # For all relevant canvas apps (with an "AppInsightsKey.json" file) in the considered solution, set canvas apps instrumentation key
