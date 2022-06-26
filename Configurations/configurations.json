@@ -17,7 +17,7 @@
         }
     },
     "developmentBranchNameBase": "work/",
-    "pacCliVersion": "1.10.4",
+    "pacCliVersion": "1.16.6",
     "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/",
     "deploymentSettingsFileNameBase": "DeploymentSettings",
     "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings",

@@ -43,6 +43,7 @@ jobs:
       build-environment-sku-name: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+      pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
       custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
       solution-checker-output-directory: ${{ steps.get-configurations.outputs.solution-checker-output-directory }}
       solution-checker-geography: ${{ steps.get-configurations.outputs.solution-checker-geography }}
@@ -92,6 +93,7 @@ jobs:
     with:
       solution-name: ${{ needs.pre-job.outputs.solution-name }}
       branch-to-checkout: ${{ github.head_ref }}
+      pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
       build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
       upload-unmanaged-solution-to-github-artifact-store: true

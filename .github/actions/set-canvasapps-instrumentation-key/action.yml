@@ -12,6 +12,9 @@ inputs:
   solution-name:
     description: 'Name of the considered solution (not the Display Name)'
     required: true
+  pac-cli-version:
+      description: 'Considered version of PAC CLI for the pack of the canvas apps'
+      required: true
 
 runs:
   using: "composite"
@@ -64,7 +67,7 @@ runs:
     - name: PowerApps CLI setup
       run: |
         $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "1.16.6"
+        $nugetPackageVersion = "${{ inputs.pac-cli-version }}"
         $outFolder = "pac"
 
         nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
