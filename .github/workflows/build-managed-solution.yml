@@ -32,6 +32,10 @@ on:
         default: false
         required: false
         type: boolean
+      pac-cli-version:
+        description: 'Considered version of PAC CLI for the pack of the canvas apps'
+        required: true
+        type: string
       current-date:
         description: 'Current date in YYYYMMDD format'
         required: true
@@ -104,6 +108,7 @@ jobs:
         with:
           path-to-custom-deployment-settings-file: ${{ inputs.path-to-custom-deployment-settings-file }}
           solution-name: ${{ inputs.solution-name }}
+          pac-cli-version: ${{ inputs.pac-cli-version }}
 
       # Pack the considered solution as unmanaged
       #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
