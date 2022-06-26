@@ -60,16 +60,30 @@ runs:
         }
       shell: pwsh
 
-    # Manual pac solution pack with processCanvasApps
-    - name: Check
-      run:  |
-        # For all relevant canvas apps (with an "AppInsightsKey.json" file) in the considered solution, set canvas apps instrumentation key
-        Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}/CanvasApps/src" -Recurse -Filter AppInsightsKey.json | 
-        ForEach-Object {
-          $appInsightsKeyFilePath = $_.FullName
-          Write-Host "Set canvas apps instrumentation key for the following canvas app: $appInsightsKeyFilePath"
+    # "Microsoft.PowerApps.CLI" setup
+    - name: PowerApps CLI setup
+      run: |
+        $nugetPackage = "Microsoft.PowerApps.CLI"
+        $nugetPackageVersion = "${{ steps.get-configurations.outputs.pac-cli-version }}"
+        $outFolder = "pac"
 
-          $appInsightsKeyFileContent = Get-Content $appInsightsKeyFilePath | ConvertFrom-Json
-          Write-Host "Canvas apps instrumentation key configuration: $appInsightsKeyFileContent"
-        }
+        nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+        
+        $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
+
+        $pacPath = $pacNugetFolder.FullName + "/tools"
+
+        echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
+      shell: pwsh
+
+    # Manual pac solution pack with processCanvasApps
+    - name: Pack solution
+      run:  |
+        $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
+
+        cd Solutions/${{ inputs.solution-name }}
+
+        pac solution pack --zipfile ${{ inputs.solution-name }}.zip --processCanvasApps
+
+        Remove-Item Solutions/${{ inputs.solution-name }}/${{ inputs.solution-name }}.zip
       shell: pwsh
