@@ -66,6 +66,7 @@ runs:
     # "Microsoft.PowerApps.CLI" setup
     - name: PowerApps CLI setup
       run: |
+        # "Microsoft.PowerApps.CLI" setup
         $nugetPackage = "Microsoft.PowerApps.CLI"
         $nugetPackageVersion = "${{ inputs.pac-cli-version }}"
         $outFolder = "pac"
@@ -84,7 +85,9 @@ runs:
       run:  |
         $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
 
+        # Go to the solution folder
         cd Solutions/${{ inputs.solution-name }}
 
+        # Execute pac solution pack to generate the latest version of the the msapp files
         pac solution pack --zipfile ${{ inputs.solution-name }}.zip --processCanvasApps
       shell: pwsh
