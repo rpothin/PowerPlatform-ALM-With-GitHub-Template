@@ -63,6 +63,7 @@ runs:
         }
       shell: pwsh
 
+    # ⚠ WOARKAROUND regarding a potential issue in the pack of canvas apps with the current version of the out of the box action
     # "Microsoft.PowerApps.CLI" setup
     - name: PowerApps CLI setup
       run: |
