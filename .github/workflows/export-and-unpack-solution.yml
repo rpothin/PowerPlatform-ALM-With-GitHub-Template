@@ -80,6 +80,18 @@ jobs:
         overwrite-files: true
         process-canvas-apps: true
 
+    # ⚠ WOARKAROUND regarding a potential issue in the unpack of canvas apps with the current version of the action
+    # Unpack the unmanaged solution exported in the previous step
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/unpack-solution/action.yml
+    - name: Unpack unmanaged solution
+      uses: microsoft/powerplatform-actions/unpack-solution@main
+      with:
+        solution-file: out/exported/${{ github.event.inputs.solution_name }}.zip
+        solution-folder: Solutions/${{ github.event.inputs.solution_name }}
+        solution-type: 'Unmanaged'
+        overwrite-files: true
+        process-canvas-apps: true
+
     # Reset the solution version in the Solution.xml file
     - name: Set solution version
       run: |
