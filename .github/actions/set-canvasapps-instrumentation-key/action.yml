@@ -90,5 +90,5 @@ runs:
         cd Solutions/${{ inputs.solution-name }}
 
         # Execute pac solution pack to generate the latest version of the the msapp files
-        pac solution pack --zipfile ${{ inputs.solution-name }}.zip --processCanvasApps
+        # pac solution pack --zipfile ${{ inputs.solution-name }}.zip --processCanvasApps
       shell: pwsh
