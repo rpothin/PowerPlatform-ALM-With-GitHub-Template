@@ -34,6 +34,7 @@ Using this repository, you will need to configure custom deployment settings fil
 > - *You can find the name of a canvas app in the objects of a solution in the [Power Apps maker portal](https://make.powerapps.com/) in the **Name** column*
 > - *You can find the name of the Azure AD group you want to consider in the [**Groups** section of **Azure AD**](https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupsManagementMenuBlade/AllGroups)*
 > - *Valid options for the role of a group on a canvas app are: **CanView**, **CanViewWithShare**, **CanEdit** (source [set-adminpowerapproleassignment](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/set-adminpowerapproleassignment))*
+> - *You can find the instrumentation key of the considered Azure Application Insights in the header of the Overview page of the resource in the Azure portal*
 
 - the base of the name of custom deployment settings files is defined in the property `customDeploymentSettingsFileNameBase` in the global configuration file (`Configurations/configurations.json`)
 - the name of the custom deployment settings files must respect the following format: `<customDeploymentSettingsFileNameBase>_<environmentName>` (*ex: `CustomDeploymentSettings_validation`*)
