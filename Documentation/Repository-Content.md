@@ -8,7 +8,8 @@
 
 ### Actions
 
-- [**get-configurations**](../.github/actions/get-configurations/action.yml): action to extract configuration from a JSON file respecting the format described [here](./Repository-Setup.md#5---update-global-configurations) 
+- [**get-configurations**](../.github/actions/get-configurations/action.yml): action to extract configuration from a JSON file respecting the format described [here](./Repository-Setup.md#5---update-global-configurations)
+- [**set-canvasapps-instrumentation-key**](../.github/actions/set-canvasapps-instrumentation-key/action.yml): action to set an Azure Application Insights Instrumentation Key we get from the considered custom deployment settings file (*format described [here](./Custom-Deployment-Settings-File-Management.md)*) in the source code of the canvas apps of the considered solution before packing for deployment
 
 ### Workflows
 
