@@ -1,0 +1,105 @@
+# Copyright (c) 2020 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: create-dataverse-environment
+# Reusable workflow to create a Dataverse environment
+
+# Workflow triggered by another workflow
+on:
+  workflow_call:
+    inputs:
+      environment-display-name:
+        description: 'Display name of the Dataverse environment to create'
+        required: true
+        type: string
+      environment-region:
+        description: 'Region of the Dataverse environment to create'
+        required: true
+        type: string
+      environment-sku-name:
+        description: 'Type / SKU name of the Dataverse environment to create'
+        required: true
+        type: string
+      environment-currency-name :
+        description: 'Name of the default currency of the Dataverse environment to create'
+        required: true
+        type: string
+      environment-language-display-name:
+        description: 'Display name of the default language of the Dataverse environment to create'
+        required: true
+        type: string
+      environment-domain-name:
+        description: 'Domain name of the Dataverse environment to create'
+        required: true
+        type: string
+      update-issue:
+        description: 'Flag that indicates if you want to update the considered issue (add label and comment)'
+        required: false
+        type: boolean
+        default: false
+      issue-number:
+        description: 'Number of the considered issue'
+        required: false
+        type: string
+        default: ''
+      power-apps-maker-base-url:
+        description: 'Base of the URL of the Power Apps portal'
+        required: false
+        type: string
+        default: 'https://make.powerapps.com/environments/'
+    outputs:
+      environment-url:
+        description: "URL of the new Dataverse environment"
+        value: ${{ jobs.create-dataverse-environment.outputs.environment-url }}
+      powerappsmaker-environment-url:
+        description: "URL of the Power Apps maker portal with the new Dataverse environment selected"
+        value: ${{ jobs.create-dataverse-environment.outputs.powerappsmaker-environment-url }}
+    #secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
+
+jobs:
+  # Job for the creation of a new Dataverse environment
+  create-dataverse-environment:
+    name: Create Dataverse environment
+    runs-on: windows-latest
+    outputs:
+      environment-url: ${{ steps.create-environment.outputs.environment-url }}
+      powerappsmaker-environment-url: ${{ inputs.power-apps-maker-base-url }}${{ steps.create-environment.outputs.environment-id }}/solutions
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Create the new Dataverse Dev environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
+    - name: Create environment
+      id: create-environment
+      uses: microsoft/powerplatform-actions/create-environment@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        name: ${{ inputs.environment-display-name }}
+        region: ${{ inputs.environment-region }}
+        type: ${{ inputs.environment-sku-name }}
+        currency: ${{ inputs.environment-currency-name }}
+        language: ${{ inputs.environment-language-display-name }}
+        domain: ${{ inputs.environment-domain-name }}
+
+    # Add the 'dev env created' label to the current issue
+    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
+    - name: Add 'dev env created' label
+      if: ${{ inputs.update-issue }}
+      uses: andymckay/labeler@master
+      with:
+        add-labels: 'dev env created'
+
+    # Add "Environment created" comment to the issue
+    - name: Environment created comment on issue
+      if: ${{ inputs.update-issue }}
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        issue-number: ${{ inputs.issue-number }}
+        body: |
+          🎉 Environment created!
