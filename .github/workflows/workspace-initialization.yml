@@ -73,51 +73,26 @@ jobs:
   create-dataverse-dev-environment:
     needs: pre-job
     if: ${{ needs.pre-job.outputs.should_skip != 'true' }}
-    runs-on: windows-latest
-    outputs:
-      development-environment-url: ${{ steps.create-dev-environment.outputs.environment-url }}
-      powerappsmaker-development-environment-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}${{ steps.create-dev-environment.outputs.environment-id }}/solutions
-    env:
-      RUNNER_DEBUG: 1
-
-    steps:
-    # Create the new Dataverse Dev environment
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
-    - name: Create environment
-      id: create-dev-environment
-      uses: microsoft/powerplatform-actions/create-environment@main
-      with:
-        app-id: ${{ secrets.APPLICATION_ID }}
-        client-secret: ${{ secrets.CLIENT_SECRET }}
-        tenant-id: ${{ secrets.TENANT_ID }}
-        name: ${{ needs.pre-job.outputs.development-environment-display-name }}
-        region: ${{ needs.pre-job.outputs.environment-region }}
-        type: ${{ needs.pre-job.outputs.development-environment-sku-name }}
-        currency: ${{ needs.pre-job.outputs.environment-currency-name }}
-        language: ${{ needs.pre-job.outputs.environment-language-display-name }}
-        domain: ${{ needs.pre-job.outputs.development-environment-domain-name }}
-
-    # Add the 'dev env created' label to the current issue
-    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
-    - name: Add 'dev env created' label
-      uses: andymckay/labeler@master
-      with:
-        add-labels: 'dev env created'
-
-    # Add "Environment created" comment to the issue
-    - name: Environment created comment on issue
-      uses: peter-evans/create-or-update-comment@v2
-      with:
-        issue-number: ${{ github.event.issue.number }}
-        body: |
-          🎉 Environment created!
+    uses: ./.github/workflows/create-dataverse-environment.yml
+    with:
+      environment-display-name: ${{ needs.pre-job.outputs.development-environment-display-name }}
+      environment-region: ${{ needs.pre-job.outputs.environment-region }}
+      environment-sku-name: ${{ needs.pre-job.outputs.development-environment-sku-name }}
+      environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
+      environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+      environment-domain-name: ${{ needs.pre-job.outputs.development-environment-domain-name }}
+      power-apps-maker-base-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}
+    secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
 
   # Job to add the developers to the new Development Dataverse environment
   add-developers-to-dev-environment:
     needs: [pre-job, create-issue-development-branch, create-dataverse-dev-environment]
     environment:
       name: development
-      url: ${{ needs.create-dataverse-dev-environment.outputs.powerappsmaker-development-environment-url }}
+      url: ${{ needs.create-dataverse-dev-environment.outputs.power-apps-maker-environment-url }}
     runs-on: windows-latest
     env:
       RUNNER_DEBUG: 1
@@ -141,7 +116,7 @@ jobs:
           TenantId = "${{ secrets.TENANT_ID }}"
           ClientId = "${{ secrets.APPLICATION_ID }}"
           ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-          DataverseEnvironmentUrl = "${{ needs.create-dataverse-dev-environment.outputs.development-environment-url }}"
+          DataverseEnvironmentUrl = "${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"
           AzureADSecurityGroupName = "${{ needs.pre-job.outputs.developers-azure-ad-group-name }}"
         }
 
@@ -156,7 +131,7 @@ jobs:
     needs: [pre-job, create-dataverse-dev-environment, add-developers-to-dev-environment]
     environment:
       name: development
-      url: ${{ needs.create-dataverse-dev-environment.outputs.powerappsmaker-development-environment-url }}
+      url: ${{ needs.create-dataverse-dev-environment.outputs.power-apps-maker-environment-url }}
     runs-on: windows-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
@@ -235,7 +210,7 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-dataverse-dev-environment.outputs.development-environment-url }}
+        environment-url: ${{ needs.create-dataverse-dev-environment.outputs.environment-url }}
         solution-file: out/Solutions/${{ env.solution_name }}.zip
         force-overwrite: true
         publish-changes: true
@@ -271,5 +246,5 @@ jobs:
 
           - Branch: [**${{ needs.pre-job.outputs.development-branch-name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ needs.pre-job.outputs.development-branch-name }})
           - Dataverse Dev environment created:
-             - [**Power Apps Maker Portal - ${{ needs.pre-job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.powerappsmaker-development-environment-url }})
-             - [**${{ needs.pre-job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.development-environment-url }})
+             - [**Power Apps Maker Portal - ${{ needs.pre-job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.power-apps-maker-environment-url }})
+             - [**${{ needs.pre-job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.environment-url }})

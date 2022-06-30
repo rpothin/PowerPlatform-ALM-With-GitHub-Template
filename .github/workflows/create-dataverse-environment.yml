@@ -20,7 +20,7 @@ on:
         description: 'Type / SKU name of the Dataverse environment to create'
         required: true
         type: string
-      environment-currency-name :
+      environment-currency-name:
         description: 'Name of the default currency of the Dataverse environment to create'
         required: true
         type: string
@@ -51,9 +51,9 @@ on:
       environment-url:
         description: "URL of the new Dataverse environment"
         value: ${{ jobs.create-dataverse-environment.outputs.environment-url }}
-      powerappsmaker-environment-url:
+      power-apps-maker-environment-url:
         description: "URL of the Power Apps maker portal with the new Dataverse environment selected"
-        value: ${{ jobs.create-dataverse-environment.outputs.powerappsmaker-environment-url }}
+        value: ${{ jobs.create-dataverse-environment.outputs.power-apps-maker-environment-url }}
     #secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
@@ -66,7 +66,7 @@ jobs:
     runs-on: windows-latest
     outputs:
       environment-url: ${{ steps.create-environment.outputs.environment-url }}
-      powerappsmaker-environment-url: ${{ inputs.power-apps-maker-base-url }}${{ steps.create-environment.outputs.environment-id }}/solutions
+      power-apps-maker-environment-url: ${{ inputs.power-apps-maker-base-url }}${{ steps.create-environment.outputs.environment-id }}/solutions
     env:
       RUNNER_DEBUG: 1
 
