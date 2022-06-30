@@ -82,6 +82,8 @@ jobs:
       environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
       environment-domain-name: ${{ needs.pre-job.outputs.development-environment-domain-name }}
       power-apps-maker-base-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}
+      update-issue: true
+      issue-number: ${{ github.event.issue.number }}
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
