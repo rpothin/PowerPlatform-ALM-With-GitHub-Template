@@ -10,8 +10,14 @@ on:
     inputs:
       environment-display-name:
         description: 'Display name of the Dataverse environment to create'
-        required: true
+        required: false
         type: string
+        default: ''
+      environment-display-name-base:
+        description: 'Base of the display name of the Dataverse environment to create'
+        required: false
+        type: string
+        default: ''
       environment-region:
         description: 'Region of the Dataverse environment to create'
         required: true
@@ -30,10 +36,16 @@ on:
         type: string
       environment-domain-name:
         description: 'Domain name of the Dataverse environment to create'
-        required: true
+        required: false
         type: string
+        default: ''
+      environment-domain-name-base:
+        description: 'Base of the domain name of the Dataverse environment to create'
+        required: false
+        type: string
+        default: ''
       update-issue:
-        description: 'Flag that indicates if you want to update the considered issue (add label and comment)'
+        description: 'Flag regarding the update of the considered issue (add label and comment)'
         required: false
         type: boolean
         default: false
@@ -47,6 +59,20 @@ on:
         required: false
         type: string
         default: 'https://make.powerapps.com/environments/'
+      dynamic-environment-name:
+        description: 'Flag regarding the dynamic construction of the display and domain name of the Dataverse environment to create (based on the current date provided)'
+        required: false
+        type: boolean
+        default: false
+      current-date:
+        description: 'Current date in YYYYMMDD format'
+        required: false
+        type: string
+        default: ''
+    #secrets: inherit
+      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
+      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
+      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
     outputs:
       environment-url:
         description: "URL of the new Dataverse environment"
@@ -54,10 +80,6 @@ on:
       power-apps-maker-environment-url:
         description: "URL of the Power Apps maker portal with the new Dataverse environment selected"
         value: ${{ jobs.create-dataverse-environment.outputs.power-apps-maker-environment-url }}
-    #secrets: inherit
-      # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
-      # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
-      # TENANT_ID: Tenant ID where the application ID that will be used to create the just-in-time Build environment is located
 
 jobs:
   # Job for the creation of a new Dataverse environment
@@ -71,35 +93,85 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Create the new Dataverse Dev environment
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
-    - name: Create environment
-      id: create-environment
-      uses: microsoft/powerplatform-actions/create-environment@main
-      with:
-        app-id: ${{ secrets.APPLICATION_ID }}
-        client-secret: ${{ secrets.CLIENT_SECRET }}
-        tenant-id: ${{ secrets.TENANT_ID }}
-        name: ${{ inputs.environment-display-name }}
-        region: ${{ inputs.environment-region }}
-        type: ${{ inputs.environment-sku-name }}
-        currency: ${{ inputs.environment-currency-name }}
-        language: ${{ inputs.environment-language-display-name }}
-        domain: ${{ inputs.environment-domain-name }}
+      # Set a dataverse_environment_dynamic_display_name environment variable for the display name of the Dataverse environment to create
+      - name: Set dataverse_environment_dynamic_display_name as env variable
+        if: ${{ inputs.dynamic-environment-name }}
+        run: |
+          $dataverseEnvironmentDynamicDisplayName = "${{ inputs.environment-display-name-base }}${{ inputs.current-date }} - ${{ github.run_number }}"
+          
+          echo "dataverse_environment_dynamic_display_name=$dataverseEnvironmentDynamicDisplayName" >> $Env:GITHUB_ENV
+        shell: pwsh
+      
+      # Set a dataverse_environment_dynamic_domain_name environment variable for the domain name of the Dataverse environment to create
+      - name: Set dataverse_environment_dynamic_domain_name as env variable
+        if: ${{ inputs.dynamic-environment-name }}
+        run: |
+          $dataverseEnvironmentDynamicDomainName = "${{ inputs.environment-domain-name-base }}${{ inputs.current-date }}-${{ github.run_number }}"
+          
+          echo "dataverse_environment_dynamic_domain_name=$dataverseEnvironmentDynamicDomainName" >> $Env:GITHUB_ENV
+        shell: pwsh
 
-    # Add the 'dev env created' label to the current issue
-    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
-    - name: Add 'dev env created' label
-      if: ${{ inputs.update-issue }}
-      uses: andymckay/labeler@master
-      with:
-        add-labels: 'dev env created'
+      # Set dataverse_environment_display_name and dataverse_environment_domain_name environment variables
+      - name: Set dataverse_environment_display_name and dataverse_environment_domain_name as env variables
+        run: |
+          echo "==========  Set dataverse_environment_display_name env variable =========="
+          $dataverseEnvironmentDisplayName = ${{ inputs.environment-display-name }}
 
-    # Add "Environment created" comment to the issue
-    - name: Environment created comment on issue
-      if: ${{ inputs.update-issue }}
-      uses: peter-evans/create-or-update-comment@v2
-      with:
-        issue-number: ${{ inputs.issue-number }}
-        body: |
-          🎉 Environment created!
+          if ($dataverseEnvironmentDisplayName -eq '') {
+            $dataverseEnvironmentDynamicDisplayName = ${{ env.dataverse_environment_dynamic_display_name }}
+            echo "Dynamic display name: $dataverseEnvironmentDynamicDisplayName"
+
+            echo "dataverse_environment_display_name=$dataverseEnvironmentDynamicDisplayName" >> $Env:GITHUB_ENV
+          } else {
+            echo "Provided display name: $dataverseEnvironmentDisplayName"
+
+            echo "dataverse_environment_display_name=$dataverseEnvironmentDisplayName" >> $Env:GITHUB_ENV
+          }
+
+          echo "==========  Set dataverse_environment_domain_name env variable =========="
+          $dataverseEnvironmentDomainName = ${{ inputs.environment-domain-name }}
+
+          if ($dataverseEnvironmentDomainName -eq '') {
+            $dataverseEnvironmentDynamicDomainName = ${{ env.dataverse_environment_dynamic_domain_name }}
+            echo "Dynamic domain name: $dataverseEnvironmentDynamicDomainName"
+
+            echo "dataverse_environment_domain_name=$dataverseEnvironmentDynamicDomainName" >> $Env:GITHUB_ENV
+          } else {
+            echo "Provided domain name: $dataverseEnvironmentDomainName"
+
+            echo "dataverse_environment_domain_name=$dataverseEnvironmentDomainName" >> $Env:GITHUB_ENV
+          }
+        shell: pwsh
+      
+      # Create the new Dataverse Dev environment
+      #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
+      - name: Create environment
+        id: create-environment
+        uses: microsoft/powerplatform-actions/create-environment@main
+        with:
+          app-id: ${{ secrets.APPLICATION_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          name: ${{ env.dataverse_environment_display_name }}
+          region: ${{ inputs.environment-region }}
+          type: ${{ inputs.environment-sku-name }}
+          currency: ${{ inputs.environment-currency-name }}
+          language: ${{ inputs.environment-language-display-name }}
+          domain: ${{ env.dataverse_environment_domain_name }}
+
+      # Add the 'dev env created' label to the current issue
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
+      - name: Add 'dev env created' label
+        if: ${{ inputs.update-issue }}
+        uses: andymckay/labeler@master
+        with:
+          add-labels: 'dev env created'
+
+      # Add "Environment created" comment to the issue
+      - name: Environment created comment on issue
+        if: ${{ inputs.update-issue }}
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ inputs.issue-number }}
+          body: |
+            🎉 Environment created!
