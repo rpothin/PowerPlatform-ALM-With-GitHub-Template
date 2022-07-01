@@ -115,10 +115,10 @@ jobs:
       - name: Set dataverse_environment_display_name and dataverse_environment_domain_name as env variables
         run: |
           echo "==========  Set dataverse_environment_display_name env variable =========="
-          $dataverseEnvironmentDisplayName = ${{ inputs.environment-display-name }}
+          $dataverseEnvironmentDisplayName = "${{ inputs.environment-display-name }}"
 
           if ($dataverseEnvironmentDisplayName -eq '') {
-            $dataverseEnvironmentDynamicDisplayName = ${{ env.dataverse_environment_dynamic_display_name }}
+            $dataverseEnvironmentDynamicDisplayName = "${{ env.dataverse_environment_dynamic_display_name }}"
             echo "Dynamic display name: $dataverseEnvironmentDynamicDisplayName"
 
             echo "dataverse_environment_display_name=$dataverseEnvironmentDynamicDisplayName" >> $Env:GITHUB_ENV
@@ -129,10 +129,10 @@ jobs:
           }
 
           echo "==========  Set dataverse_environment_domain_name env variable =========="
-          $dataverseEnvironmentDomainName = ${{ inputs.environment-domain-name }}
+          $dataverseEnvironmentDomainName = "${{ inputs.environment-domain-name }}"
 
           if ($dataverseEnvironmentDomainName -eq '') {
-            $dataverseEnvironmentDynamicDomainName = ${{ env.dataverse_environment_dynamic_domain_name }}
+            $dataverseEnvironmentDynamicDomainName = "${{ env.dataverse_environment_dynamic_domain_name }}"
             echo "Dynamic domain name: $dataverseEnvironmentDynamicDomainName"
 
             echo "dataverse_environment_domain_name=$dataverseEnvironmentDynamicDomainName" >> $Env:GITHUB_ENV
