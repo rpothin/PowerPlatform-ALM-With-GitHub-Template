@@ -68,15 +68,16 @@ jobs:
   # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
     needs: pre-job
-    uses: ./.github/workflows/create-just-in-time-build-environment.yml
+    uses: ./.github/workflows/create-dataverse-environment.yml
     with:
-      current-date: ${{ needs.pre-job.outputs.current-date }}
-      build-environment-display-name-base: ${{ needs.pre-job.outputs.build-environment-display-name-base }}
-      build-environment-domain-name-base: ${{ needs.pre-job.outputs.build-environment-domain-name-base }}
+      environment-display-name-base: ${{ needs.pre-job.outputs.build-environment-display-name-base }}
+      environment-domain-name-base: ${{ needs.pre-job.outputs.build-environment-domain-name-base }}
       environment-region: ${{ needs.pre-job.outputs.environment-region }}
-      build-environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
+      environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
       environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+      dynamic-environment-name: true
+      current-date: ${{ needs.pre-job.outputs.current-date }}
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
