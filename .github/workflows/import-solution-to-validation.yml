@@ -91,7 +91,7 @@ jobs:
       solution-name: ${{ needs.pre-job.outputs.solution-name }}
       pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
-      build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+      build-environment-url: ${{ needs.create-build-environment.outputs.environment-url }}
       path-to-custom-deployment-settings-file: './Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json'
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
@@ -135,4 +135,4 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+        environment-url: ${{ needs.create-build-environment.outputs.environment-url }}
