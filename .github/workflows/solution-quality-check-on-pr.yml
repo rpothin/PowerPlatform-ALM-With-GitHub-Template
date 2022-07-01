@@ -72,15 +72,16 @@ jobs:
   # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
     needs: pre-job
-    uses: ./.github/workflows/create-just-in-time-build-environment.yml
+    uses: ./.github/workflows/create-dataverse-environment.yml
     with:
-      current-date: ${{ needs.pre-job.outputs.current-date }}
-      build-environment-display-name-base: ${{ needs.pre-job.outputs.build-environment-display-name-base }}
-      build-environment-domain-name-base: ${{ needs.pre-job.outputs.build-environment-domain-name-base }}
+      environment-display-name-base: ${{ needs.pre-job.outputs.build-environment-display-name-base }}
+      environment-domain-name-base: ${{ needs.pre-job.outputs.build-environment-domain-name-base }}
       environment-region: ${{ needs.pre-job.outputs.environment-region }}
-      build-environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
+      environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
       environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+      dynamic-environment-name: true
+      current-date: ${{ needs.pre-job.outputs.current-date }}
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
@@ -95,7 +96,7 @@ jobs:
       branch-to-checkout: ${{ github.head_ref }}
       pac-cli-version: ${{ needs.pre-job.outputs.pac-cli-version }}
       current-date: ${{ needs.pre-job.outputs.current-date }}
-      build-environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+      build-environment-url: ${{ needs.create-build-environment.outputs.environment-url }}
       upload-unmanaged-solution-to-github-artifact-store: true
       path-to-custom-deployment-settings-file: './Configurations/${{ needs.pre-job.outputs.solution-name }}/${{ needs.pre-job.outputs.custom-deployment-settings-file-name-base }}_validation.json'
     secrets: inherit
@@ -223,4 +224,4 @@ jobs:
         app-id: ${{ secrets.APPLICATION_ID }}
         client-secret: ${{ secrets.CLIENT_SECRET }}
         tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-build-environment.outputs.build-environment-url }}
+        environment-url: ${{ needs.create-build-environment.outputs.environment-url }}

@@ -64,11 +64,12 @@
 
 #### Reusable workflows
 
-- [**create-just-in-time-build-environment**](../.github/workflows/create-just-in-time-build-environment.yml):
+- [**create-dataverse-environment**](../.github/workflows/create-dataverse-environment.yml):
    - Triggers: called by another workflow (*reusable workflow*)
    - Summary of actions:
-      - set some variables: Build environment display name and Build environment domain name
+      - set some variables for dynamic display and domain name (*based on a condition on the value of an input*)
       - create the just-in-time Build environment
+      - update considered issue (*based on a condition on the value of an input*)
 - [**build-managed-solution**](../.github/workflows/build-managed-solution.yml):
    - Triggers: called by another workflow (*reusable workflow*)
    - Summary of actions:
