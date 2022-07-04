@@ -34,7 +34,7 @@ Function Grant-GroupsAccessToCanvasApps {
             None.
 
         .EXAMPLE
-            PS> Grant-GroupsAccessToCanvasApps -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -DataverseEnvironmentDisplayName "Demo" -ConfigurationFilePath ".\CanvasAppsGroupsAccessMapping.json"
+            PS> Grant-GroupsAccessToCanvasApps -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DataverseEnvironmentUrl "https://demo.crm3.dynamics.com/" -DataverseEnvironmentDisplayName "Demo" -ConfigurationFilePath ".\CanvasAppsGroupsAccessMapping.json"
 
         .LINK
             README.md: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/blob/main/README.md
