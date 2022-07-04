@@ -76,7 +76,6 @@ jobs:
       environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
       environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
-      dynamic-environment-name: true
       environment-name-unique-identifier: ${{ needs.pre-job.outputs.current-date }}
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment

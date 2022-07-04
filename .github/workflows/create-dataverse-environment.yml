@@ -44,11 +44,6 @@ on:
         required: false
         type: string
         default: ''
-      update-issue:
-        description: 'Flag regarding the update of the considered issue (add label and comment)'
-        required: false
-        type: boolean
-        default: false
       issue-number:
         description: 'Number of the considered issue'
         required: false
@@ -59,11 +54,6 @@ on:
         required: false
         type: string
         default: 'https://make.powerapps.com/environments/'
-      dynamic-environment-name:
-        description: 'Flag regarding the dynamic construction of the display and domain name of the Dataverse environment to create (based on the current date provided)'
-        required: false
-        type: boolean
-        default: false
       environment-name-unique-identifier:
         description: 'Unique identifier for the display and domain name of the Dataverse environment to create, like the current date in YYYYMMDD format'
         required: false
@@ -95,7 +85,7 @@ jobs:
     steps:
       # Set a dataverse_environment_dynamic_display_name environment variable for the display name of the Dataverse environment to create
       - name: Set dataverse_environment_dynamic_display_name as env variable
-        if: ${{ inputs.dynamic-environment-name }}
+        if: ${{ inputs.environment-name-unique-identifier != '' }}
         run: |
           $dataverseEnvironmentDynamicDisplayName = "${{ inputs.environment-display-name-base }}${{ inputs.environment-name-unique-identifier }} - ${{ github.run_number }}"
           
@@ -104,7 +94,7 @@ jobs:
       
       # Set a dataverse_environment_dynamic_domain_name environment variable for the domain name of the Dataverse environment to create
       - name: Set dataverse_environment_dynamic_domain_name as env variable
-        if: ${{ inputs.dynamic-environment-name }}
+        if: ${{ inputs.environment-name-unique-identifier != '' }}
         run: |
           $dataverseEnvironmentDynamicDomainName = "${{ inputs.environment-domain-name-base }}${{ inputs.environment-name-unique-identifier }}-${{ github.run_number }}"
           
@@ -162,14 +152,14 @@ jobs:
       # Add the 'dev env created' label to the current issue
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
       - name: Add 'dev env created' label
-        if: ${{ inputs.update-issue }}
+        if: ${{ inputs.issue-number != '' }}
         uses: andymckay/labeler@master
         with:
           add-labels: 'dev env created'
 
       # Add "Environment created" comment to the issue
       - name: Environment created comment on issue
-        if: ${{ inputs.update-issue }}
+        if: ${{ inputs.issue-number != '' }}
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ inputs.issue-number }}
