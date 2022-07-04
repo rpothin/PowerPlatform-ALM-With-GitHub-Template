@@ -35,7 +35,7 @@ Function New-DataverseEnvironment {
             Specifies the description of the Dataverse environment to create.
 
         .PARAMETER ConfigurationFilePath
-            Specifies the path to the configuration file to use for the creation of the Dataverse environment with the following information: location (canada), currency name (CAD), language code (1033) and Dynamics 365 templates (D365_Sales) 
+            Specifies the path to the configuration file to use for the creation of the Dataverse environment with the following information: location (ex: canada), currency name (ex: CAD), language display name (ex: English) - and in a near future Dynamics 365 templates (ex: D365_Sales) 
 
         .INPUTS
             None. You cannot pipe objects to New-DataverseEnvironment.
@@ -44,7 +44,7 @@ Function New-DataverseEnvironment {
             Object. New-DataverseEnvironment returns the details of the Dataverse environment found or created.
 
         .EXAMPLE
-            PS> New-DataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DisplayName "Demonstration" -DomainName "demonstration" -ConfigurationFilePath ".\DataverseEnvironmentConfiguration.txt"
+            PS> New-DataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DisplayName "Demonstration" -DomainName "demonstration" -ConfigurationFilePath ".\DataverseEnvironmentConfiguration.json"
             EnvironmentName                            : 00000000-0000-0000-0000-000000000000
             DisplayName                                : Example (example)
             Description                                :
@@ -69,7 +69,7 @@ Function New-DataverseEnvironment {
             Type                                       : Created
 
         .EXAMPLE
-            PS> New-DataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DisplayName "Demonstration" -DomainName "demonstration" -Sku "Sandbox" -SecurityGroupId "00000000-0000-0000-0000-000000000000" -Description "Demonstration" -ConfigurationFilePath ".\DataverseEnvironmentConfiguration.txt"
+            PS> New-DataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DisplayName "Demonstration" -DomainName "demonstration" -Sku "Sandbox" -SecurityGroupId "00000000-0000-0000-0000-000000000000" -Description "Demonstration" -ConfigurationFilePath ".\DataverseEnvironmentConfiguration.json"
             EnvironmentName                            : 00000000-0000-0000-0000-000000000000
             DisplayName                                : Example (example)
             Description                                :
@@ -197,6 +197,10 @@ Function New-DataverseEnvironment {
                 $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
 
                 $dataverseEnvironmentConfigurations = $configurations.environment
+
+                # Get language code from display name
+                $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName canada -Filter $dataverseEnvironmentConfigurations.languageDisplayName
+                $languageCode = $languages[0].LanguageName
             }
             catch {
                 Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
@@ -235,7 +239,7 @@ Function New-DataverseEnvironment {
                 DomainName = $DomainName
                 EnvironmentSku = $Sku
                 SecurityGroupId = $SecurityGroupId
-                LanguageName = $dataverseEnvironmentConfigurations.languageCode # Missing for now in global configuration file
+                LanguageName = $languageCode
                 CurrencyName = $dataverseEnvironmentConfigurations.currencyName
                 # Templates = $templates - Not used for now
             }
