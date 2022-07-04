@@ -64,8 +64,8 @@ on:
         required: false
         type: boolean
         default: false
-      current-date:
-        description: 'Current date in YYYYMMDD format'
+      environment-name-unique-identifier:
+        description: 'Unique identifier for the display and domain name of the Dataverse environment to create, like the current date in YYYYMMDD format'
         required: false
         type: string
         default: ''
@@ -97,7 +97,7 @@ jobs:
       - name: Set dataverse_environment_dynamic_display_name as env variable
         if: ${{ inputs.dynamic-environment-name }}
         run: |
-          $dataverseEnvironmentDynamicDisplayName = "${{ inputs.environment-display-name-base }}${{ inputs.current-date }} - ${{ github.run_number }}"
+          $dataverseEnvironmentDynamicDisplayName = "${{ inputs.environment-display-name-base }}${{ inputs.environment-name-unique-identifier }} - ${{ github.run_number }}"
           
           echo "dataverse_environment_dynamic_display_name=$dataverseEnvironmentDynamicDisplayName" >> $Env:GITHUB_ENV
         shell: pwsh
@@ -106,7 +106,7 @@ jobs:
       - name: Set dataverse_environment_dynamic_domain_name as env variable
         if: ${{ inputs.dynamic-environment-name }}
         run: |
-          $dataverseEnvironmentDynamicDomainName = "${{ inputs.environment-domain-name-base }}${{ inputs.current-date }}-${{ github.run_number }}"
+          $dataverseEnvironmentDynamicDomainName = "${{ inputs.environment-domain-name-base }}${{ inputs.environment-name-unique-identifier }}-${{ github.run_number }}"
           
           echo "dataverse_environment_dynamic_domain_name=$dataverseEnvironmentDynamicDomainName" >> $Env:GITHUB_ENV
         shell: pwsh

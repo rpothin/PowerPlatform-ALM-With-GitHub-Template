@@ -81,7 +81,7 @@ jobs:
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
       environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
       dynamic-environment-name: true
-      current-date: ${{ needs.pre-job.outputs.current-date }}
+      environment-name-unique-identifier: ${{ needs.pre-job.outputs.current-date }}
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
       # CLIENT_SECRET: Client secret associated to the application ID that will be used to create the just-in-time Build environment
