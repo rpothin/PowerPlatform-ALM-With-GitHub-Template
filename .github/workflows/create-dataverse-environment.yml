@@ -20,20 +20,23 @@ on:
         default: ''
       environment-region:
         description: 'Region of the Dataverse environment to create'
-        required: true
+        required: false
         type: string
+        default: ''
       environment-sku-name:
         description: 'Type / SKU name of the Dataverse environment to create'
         required: true
         type: string
       environment-currency-name:
         description: 'Name of the default currency of the Dataverse environment to create'
-        required: true
+        required: false
         type: string
+        default: ''
       environment-language-display-name:
         description: 'Display name of the default language of the Dataverse environment to create'
-        required: true
+        required: false
         type: string
+        default: ''
       environment-domain-name:
         description: 'Domain name of the Dataverse environment to create'
         required: false
@@ -44,6 +47,21 @@ on:
         required: false
         type: string
         default: ''
+      environment-security-group-id:
+        description: 'ID of the Azure AD security group used to secure the access to the Dataverse environment to create'
+        required: false
+        type: string
+        default: ''
+      environment-description:
+        description: 'Dataverse for the Dataverse environment to create'
+        required: false
+        type: string
+        default: ''
+      path-to-environment-configuration-file:
+        description: 'Path to the configuration file with details for the creation of the Dataverse environment (region, language, currency...)'
+        required: false
+        type: string
+        default: './Configurations/configurations.json'
       issue-number:
         description: 'Number of the considered issue'
         required: false
@@ -133,10 +151,11 @@ jobs:
           }
         shell: pwsh
       
-      # Create the new Dataverse Dev environment
+      # Create the new Dataverse environment
       #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
       - name: Create environment
         id: create-environment
+        if: ${{ inputs.environment-security-group-id == '' }}
         uses: microsoft/powerplatform-actions/create-environment@main
         with:
           app-id: ${{ secrets.APPLICATION_ID }}
@@ -148,6 +167,32 @@ jobs:
           currency: ${{ inputs.environment-currency-name }}
           language: ${{ inputs.environment-language-display-name }}
           domain: ${{ env.dataverse_environment_domain_name }}
+
+      # Custom creation of a new Dataverse environment using PowerShell script
+      - name: Steps post solution import
+        if: ${{ inputs.environment-security-group-id != '' }}
+        run: |
+          echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
+          Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
+
+          echo "==========  Set params =========="
+          $Params = @{
+            TenantId = "${{ secrets.TENANT_ID }}"
+            ClientId = "${{ secrets.APPLICATION_ID }}"
+            ClientSecret = "${{ secrets.CLIENT_SECRET }}"
+            DisplayName = ${{ env.dataverse_environment_display_name }}
+            DomainName = ${{ env.dataverse_environment_domain_name }}
+            Sku = ${{ inputs.environment-sku-name }}
+            SecurityGroupId = ${{ inputs.environment-security-group-id }}
+            Description = ${{ inputs.environment-description }}
+            ConfigurationFilePath = ${{ inputs.path-to-environment-configuration-file }}"
+          }
+
+          echo "==========  New-DataverseEnvironment =========="
+          Import-Module ./Scripts/New-DataverseEnvironment.ps1 -Force
+
+          New-DataverseEnvironment @Params -verbose
+        shell: powershell
 
       # Add the 'dev env created' label to the current issue
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
