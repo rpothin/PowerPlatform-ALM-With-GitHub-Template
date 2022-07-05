@@ -35,7 +35,7 @@ Function New-DataverseEnvironment {
             Specifies the description of the Dataverse environment to create.
 
         .PARAMETER ConfigurationFilePath
-            Specifies the path to the configuration file to use for the creation of the Dataverse environment with the following information: location (ex: canada), currency name (ex: CAD), language display name (ex: English) - and in a near future Dynamics 365 templates (ex: D365_Sales) 
+            Specifies the path to the configuration file to use for the creation of the Dataverse environment with the following information: location (ex: canada), currency name (ex: CAD), language display name (ex: English) - and in a near future Dynamics 365 templates (ex: D365_Sales)
 
         .INPUTS
             None. You cannot pipe objects to New-DataverseEnvironment.
