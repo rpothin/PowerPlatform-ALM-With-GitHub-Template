@@ -206,7 +206,7 @@ Function New-DataverseEnvironment {
                 # Get language code from display name
                 Write-Verbose "Get language code for following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
                 $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName $dataverseEnvironmentRegion -Filter $dataverseEnvironmentLanguageDisplayName
-                
+
                 try {
                     $languageCode = $languages[0].LanguageName
                 }
