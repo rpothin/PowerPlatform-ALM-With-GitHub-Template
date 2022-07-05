@@ -183,7 +183,7 @@ Function New-DataverseEnvironment {
             $configurationFilePathValidated = $true
         }
         else {
-            Write-Verbose "Error in the path provided for the configuration: $ConfigurationFilePath"
+            Throw "Error in the path provided for the configuration: $ConfigurationFilePath"
             $configurationFilePathValidated = $false
         }
 
@@ -204,97 +204,79 @@ Function New-DataverseEnvironment {
                 $dataverseEnvironmentLanguageDisplayName = $dataverseEnvironmentConfigurations.languageDisplayName
             }
             catch {
-                Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
-                $dataverseEnvironment = [PSCustomObject]@{
-                    Error = "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
-                }
+                Throw "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
             }
         }
 
-        # If no error in previous steps, we continue
-        if (-not ($null -eq $dataverseEnvironment.Error)) {
-            # Connect to Power Apps with service principal
-            Write-Verbose "Connect to Power Apps with service principal."
-            Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
+        # Connect to Power Apps with service principal
+        Write-Verbose "Connect to Power Apps with service principal."
+        Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
 
-            # Get language code from language display name for the considered region
-            Write-Verbose "Get language code for following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-            $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName $dataverseEnvironmentRegion -Filter $dataverseEnvironmentLanguageDisplayName
+        # Get language code from language display name for the considered region
+        Write-Verbose "Get language code for following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+        $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName $dataverseEnvironmentRegion -Filter $dataverseEnvironmentLanguageDisplayName
 
+        try {
+            $languageCode = $languages[0].LanguageName
+        }
+        catch {
+            Throw "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+        }
+
+        # Search for an existing Dataverse environment with the display name provided
+        Write-Verbose "Search Dataverse environments with the following display name: $DisplayName"
+        Write-Debug "Before the call to the Get-AdminPowerAppEnvironment command..."
+        $dataverseEnvironments = Get-AdminPowerAppEnvironment *$displayNameForSearch*
+
+        # Number of environments found
+        $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure-Object
+        $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
+
+        # Case only one Dataverse environment found for the provided display name
+        if ($dataverseEnvironmentsCount -eq 1) {
+            Write-Verbose "Only one Dataverse environment found - Do nothing"
+            $dataverseEnvironment = $dataverseEnvironments[0]
+            $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Existing"
+        }
+
+        # Case no Dataverse environment found for the provided display name
+        if ($dataverseEnvironmentsCount -eq 0 -and $dataverseConfigurationExtracted) {
+            Write-Verbose "No Dataverse environment found - Create a new one"
+            # Initialise parameters to call the New-AdminPowerAppEnvironment command
+            Write-Verbose "Initialize parameters to call the New-AdminPowerAppEnvironment command."
+            $NewAdminPowerAppEnvironmentParams = @{
+                DisplayName = $DisplayName
+                LocationName = $dataverseEnvironmentRegion
+                Description = $Description
+                DomainName = $DomainName
+                EnvironmentSku = $Sku
+                SecurityGroupId = $SecurityGroupId
+                LanguageName = $languageCode
+                CurrencyName = $dataverseEnvironmentCurrencyName
+                # Templates = $templates - Not used for now
+            }
+
+            # Call to New-AdminPowerAppEnvironment command
             try {
-                $languageCode = $languages[0].LanguageName
+                Write-Verbose "Try to call the New-AdminPowerAppEnvironment command."
+                Write-Debug "Before the call to the New-AdminPowerAppEnvironment command..."
+                $dataverseEnvironment = New-AdminPowerAppEnvironment @NewAdminPowerAppEnvironmentParams -ProvisionDatabase -WaitUntilFinished 1 -ErrorVariable dataverseEnvironmentCreationError -ErrorAction Stop
+                $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Created"
             }
             catch {
-                Write-Verbose "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-                $dataverseEnvironment = [PSCustomObject]@{
-                    Error = "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-                }
+                Throw "Error in the creation of the Dataverse environment: $dataverseEnvironmentCreationError"
             }
 
-            # Search for an existing Dataverse environment with the display name provided
-            Write-Verbose "Search Dataverse environments with the following display name: $DisplayName"
-            Write-Debug "Before the call to the Get-AdminPowerAppEnvironment command..."
-            $dataverseEnvironments = Get-AdminPowerAppEnvironment *$displayNameForSearch*
-
-            # Number of environments found
-            $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure-Object
-            $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
-
-            # Case only one Dataverse environment found for the provided display name
-            if ($dataverseEnvironmentsCount -eq 1) {
-                Write-Verbose "Only one Dataverse environment found - Do nothing"
-                $dataverseEnvironment = $dataverseEnvironments[0]
-                $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Existing"
+            if (-not ($null -eq $dataverseEnvironment.error)) {
+                $errorCode = $dataverseEnvironment.error.code
+                $errorMessage = $dataverseEnvironment.error.message
+                Throw "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
             }
+        }
 
-            # Case no Dataverse environment found for the provided display name
-            if ($dataverseEnvironmentsCount -eq 0 -and $dataverseConfigurationExtracted) {
-                Write-Verbose "No Dataverse environment found - Create a new one"
-                # Initialise parameters to call the New-AdminPowerAppEnvironment command
-                Write-Verbose "Initialize parameters to call the New-AdminPowerAppEnvironment command."
-                $NewAdminPowerAppEnvironmentParams = @{
-                    DisplayName = $DisplayName
-                    LocationName = $dataverseEnvironmentRegion
-                    Description = $Description
-                    DomainName = $DomainName
-                    EnvironmentSku = $Sku
-                    SecurityGroupId = $SecurityGroupId
-                    LanguageName = $languageCode
-                    CurrencyName = $dataverseEnvironmentCurrencyName
-                    # Templates = $templates - Not used for now
-                }
-
-                # Call to New-AdminPowerAppEnvironment command
-                try {
-                    Write-Verbose "Try to call the New-AdminPowerAppEnvironment command."
-                    Write-Debug "Before the call to the New-AdminPowerAppEnvironment command..."
-                    $dataverseEnvironment = New-AdminPowerAppEnvironment @NewAdminPowerAppEnvironmentParams -ProvisionDatabase -WaitUntilFinished 1 -ErrorVariable dataverseEnvironmentCreationError -ErrorAction Stop
-                    $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Created"
-                }
-                catch {
-                    Write-Verbose "Error in the creation of the Dataverse environment: $dataverseEnvironmentCreationError"
-                    $dataverseEnvironment = [PSCustomObject]@{
-                        Error = "Error in the creation of the Dataverse environment: $dataverseEnvironmentCreationError"
-                    }
-                }
-
-                if (-not ($null -eq $dataverseEnvironment.error)) {
-                    $errorCode = $dataverseEnvironment.error.code
-                    $errorMessage = $dataverseEnvironment.error.message
-                    Write-Verbose "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
-                    $dataverseEnvironment = [PSCustomObject]@{
-                        Error = "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
-                    }
-                }
-            }
-
-            # Case multiple Dataverse environments found for the provided display name
-            if ($dataverseEnvironmentsCount -gt 1) {
-                Write-Verbose "Multiple Dataverse environment corresponding to the following display name: $DisplayName"
-                $dataverseEnvironment = [PSCustomObject]@{
-                    Error = "Multiple Dataverse environment corresponding to the following display name: $DisplayName"
-                }
-            }
+        # Case multiple Dataverse environments found for the provided display name
+        if ($dataverseEnvironmentsCount -gt 1) {
+            Throw "Multiple Dataverse environment corresponding to the following display name: $DisplayName"
         }
 
         # Return the considered Dataverse environment (found or created)
