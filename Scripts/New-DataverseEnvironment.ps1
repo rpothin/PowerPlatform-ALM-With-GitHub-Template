@@ -105,7 +105,7 @@ Function New-DataverseEnvironment {
             * You can get the list of all supported currencies for a location by using the "Get-AdminPowerAppCdsDatabaseCurrencies" (Microsoft.PowerApps.Administration.PowerShell) command
     #>
 
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     [OutputType([psobject])]
     Param (
         # ID of the tenant where the targeted Dataverse environment is
@@ -131,25 +131,25 @@ Function New-DataverseEnvironment {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$DisplayName,
-        
+
         # Display name of the Dataverse environment to create
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [String]$DomainName,
-        
+
         # Sku (Production, Sandbox or Trial) of the Dataverse environment to create
         [Parameter()]
         [ValidateSet("Production", "Sandbox", "Trial")]
         [String]$Sku = "Sandbox",
-        
+
         # Security group ID that will be use to restrict the access to the Dataverse environment to create
         [Parameter()]
         [String]$SecurityGroupId,
-        
+
         # Description of the Dataverse environment to create
         [Parameter()]
         [String]$Description,
-        
+
         # Path to the configuration file to use for the creation of the Dataverse environment
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -161,7 +161,7 @@ Function New-DataverseEnvironment {
     Process{
         #region VariablesInitialization
         Write-Verbose "Variables initialization."
-        
+
         # Variable from DisplayName parameter with some "cleaning"
         $DisplayName = $DisplayName.Trim()
         $DisplayName = $DisplayName -replace '\s+', ' '
@@ -174,7 +174,7 @@ Function New-DataverseEnvironment {
 
         # Set SecurityGroupId to empty string if not provided
         $SecurityGroupId = if($SecurityGroupId -eq $null) { '' } else { $SecurityGroupId }
-        
+
         #endregion VariablesInitialization
 
         # Test the path provided to the file with the configuration
@@ -217,7 +217,7 @@ Function New-DataverseEnvironment {
         $dataverseEnvironments = Get-AdminPowerAppEnvironment *$displayNameForSearch*
 
         # Number of environments found
-        $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure
+        $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure-Object
         $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
 
         # Case only one Dataverse environment found for the provided display name
@@ -258,7 +258,7 @@ Function New-DataverseEnvironment {
                 }
             }
 
-            if (-not ($dataverseEnvironment.error -eq $null)) {
+            if (-not ($null -eq $dataverseEnvironment.error)) {
                 $errorCode = $dataverseEnvironment.error.code
                 $errorMessage = $dataverseEnvironment.error.message
                 Write-Verbose "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
