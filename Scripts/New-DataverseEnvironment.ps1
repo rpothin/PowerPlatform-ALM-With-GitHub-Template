@@ -202,20 +202,6 @@ Function New-DataverseEnvironment {
                 $dataverseEnvironmentRegion = $dataverseEnvironmentConfigurations.region
                 $dataverseEnvironmentCurrencyName = $dataverseEnvironmentConfigurations.currencyName
                 $dataverseEnvironmentLanguageDisplayName = $dataverseEnvironmentConfigurations.languageDisplayName
-
-                # Get language code from display name
-                Write-Verbose "Get language code for following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-                $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName $dataverseEnvironmentRegion -Filter $dataverseEnvironmentLanguageDisplayName
-
-                try {
-                    $languageCode = $languages[0].LanguageName
-                }
-                catch {
-                    Write-Verbose "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-                    $dataverseEnvironment = [PSCustomObject]@{
-                        Error = "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-                    }
-                }
             }
             catch {
                 Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
@@ -230,6 +216,20 @@ Function New-DataverseEnvironment {
             # Connect to Power Apps with service principal
             Write-Verbose "Connect to Power Apps with service principal."
             Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
+
+            # Get language code from language display name for the considered region
+            Write-Verbose "Get language code for following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+            $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName $dataverseEnvironmentRegion -Filter $dataverseEnvironmentLanguageDisplayName
+
+            try {
+                $languageCode = $languages[0].LanguageName
+            }
+            catch {
+                Write-Verbose "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+                $dataverseEnvironment = [PSCustomObject]@{
+                    Error = "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+                }
+            }
 
             # Search for an existing Dataverse environment with the display name provided
             Write-Verbose "Search Dataverse environments with the following display name: $DisplayName"
