@@ -95,8 +95,8 @@ jobs:
     name: Create Dataverse environment
     runs-on: windows-latest
     outputs:
-      environment-url: ${{ steps.create-environment.outputs.environment-url }}
-      power-apps-maker-environment-url: ${{ inputs.power-apps-maker-base-url }}${{ steps.create-environment.outputs.environment-id }}/solutions
+      environment-url: ${{ steps.job-outputs-definition.outputs.environment-url }}
+      power-apps-maker-environment-url: ${{ steps.job-outputs-definition.outputs.power-apps-maker-environment-url }}
     env:
       RUNNER_DEBUG: 1
 
@@ -132,29 +132,25 @@ jobs:
           $dataverseEnvironmentDisplayName = "${{ inputs.environment-display-name }}"
 
           if ($dataverseEnvironmentDisplayName -eq '') {
-            $dataverseEnvironmentDynamicDisplayName = "${{ env.dataverse_environment_dynamic_display_name }}"
-            echo "Dynamic display name: $dataverseEnvironmentDynamicDisplayName"
-
-            echo "dataverse_environment_display_name=$dataverseEnvironmentDynamicDisplayName" >> $Env:GITHUB_ENV
+            $dataverseEnvironmentDisplayName = "${{ env.dataverse_environment_dynamic_display_name }}"
+            echo "Dynamic display name: $dataverseEnvironmentDisplayName"
           } else {
             echo "Provided display name: $dataverseEnvironmentDisplayName"
-
-            echo "dataverse_environment_display_name=$dataverseEnvironmentDisplayName" >> $Env:GITHUB_ENV
           }
+          
+          echo "dataverse_environment_display_name=$dataverseEnvironmentDisplayName" >> $Env:GITHUB_ENV
 
           echo "==========  Set dataverse_environment_domain_name env variable =========="
           $dataverseEnvironmentDomainName = "${{ inputs.environment-domain-name }}"
 
           if ($dataverseEnvironmentDomainName -eq '') {
-            $dataverseEnvironmentDynamicDomainName = "${{ env.dataverse_environment_dynamic_domain_name }}"
-            echo "Dynamic domain name: $dataverseEnvironmentDynamicDomainName"
-
-            echo "dataverse_environment_domain_name=$dataverseEnvironmentDynamicDomainName" >> $Env:GITHUB_ENV
+            $dataverseEnvironmentDomainName = "${{ env.dataverse_environment_dynamic_domain_name }}"
+            echo "Dynamic domain name: $dataverseEnvironmentDomainName"
           } else {
             echo "Provided domain name: $dataverseEnvironmentDomainName"
-
-            echo "dataverse_environment_domain_name=$dataverseEnvironmentDomainName" >> $Env:GITHUB_ENV
           }
+          
+          echo "dataverse_environment_domain_name=$dataverseEnvironmentDomainName" >> $Env:GITHUB_ENV
         shell: pwsh
       
       # Create the new Dataverse environment
@@ -197,8 +193,43 @@ jobs:
           echo "==========  New-DataverseEnvironment =========="
           Import-Module ./Scripts/New-DataverseEnvironment.ps1 -Force
 
-          New-DataverseEnvironment @Params -verbose
+          $dataverseEnvironmentDetails = New-DataverseEnvironment @Params -verbose
+
+          $dataverseEnvironmentDetails
+
+          echo "==========  Set environment variables for job outputs definition =========="
+          $dataverseEnvironmentUrl = $dataverseEnvironmentDetails.Internal.properties.linkedEnvironmentMetadata.instanceUrl
+          echo "dataverse_environment_url=$dataverseEnvironmentUrl" >> $Env:GITHUB_ENV
+
+          $dataverseEnvironmentId = $dataverseEnvironmentDetails.EnvironmentName
+          $powerAppsMakerEnvironmentUrl = "${{ inputs.power-apps-maker-base-url }}$dataverseEnvironmentId/solutions"
+          echo "power-apps-maker-environment-url=$powerAppsMakerEnvironmentUrl" >> $Env:GITHUB_ENV
         shell: powershell
+
+      # Set environment-url and power-apps-maker-environment-url job outputs
+      - name: Set environment-url and power-apps-maker-environment-url job outputs
+        id: job-outputs-definition
+        run: |
+          echo "==========  Set environment-url job output =========="
+          $dataverseEnvironmentUrl = "${{ steps.create-environment.outputs.environment-url }}"
+
+          if ($dataverseEnvironmentUrl -eq '') {
+            $dataverseEnvironmentUrl = "${{ env.dataverse_environment_url }}"
+          }
+          
+          echo "Dataverse environment URL: $dataverseEnvironmentUrl"
+          echo "::set-output name=environment-url::$dataverseEnvironmentUrl"
+
+          echo "==========  Set power-apps-maker-environment-url job output =========="
+          $powerAppsMakerEnvironmentUrl = "${{ inputs.power-apps-maker-base-url }}${{ steps.create-environment.outputs.environment-id }}/solutions"
+
+          if ($powerAppsMakerEnvironmentUrl -eq '') {
+            $powerAppsMakerEnvironmentUrl = "${{ env.power-apps-maker-environment-url }}"
+          }
+
+          echo "Power Apps Maker Environment URL: $powerAppsMakerEnvironmentUrl"
+          echo "::set-output name=power-apps-maker-environment-url::$powerAppsMakerEnvironmentUrl"
+        shell: pwsh
 
       # Add the 'dev env created' label to the current issue
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
