@@ -180,31 +180,28 @@ Function New-DataverseEnvironment {
         # Test the path provided to the file with the configuration
         Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
         if (Test-Path $ConfigurationFilePath) {
-            $configurationFilePathValidated = $true
+            # Do nothing
         }
         else {
             Throw "Error in the path provided for the configuration: $ConfigurationFilePath"
         }
 
-        # Continue only if the path provided for the file with the configuration is correct
-        if ($configurationFilePathValidated) {
-            # Extract configuration from the file
-            Write-Verbose "Get content from file with the configuration in following location: $ConfigurationFilePath"
-            try {
-                Write-Verbose "Try to call the Get-Content command."
-                Write-Debug "Before the call to the Get-Content command..."
-                $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+        # Extract configuration from the file
+        Write-Verbose "Get content from file with the configuration in following location: $ConfigurationFilePath"
+        try {
+            Write-Verbose "Try to call the Get-Content command."
+            Write-Debug "Before the call to the Get-Content command..."
+            $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
 
-                # Get Dataverse environment configuration
-                Write-Verbose "Extract region and currency name from configuration."
-                $dataverseEnvironmentConfigurations = $configurations.environment
-                $dataverseEnvironmentRegion = $dataverseEnvironmentConfigurations.region
-                $dataverseEnvironmentCurrencyName = $dataverseEnvironmentConfigurations.currencyName
-                $dataverseEnvironmentLanguageDisplayName = $dataverseEnvironmentConfigurations.languageDisplayName
-            }
-            catch {
-                Throw "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
-            }
+            # Get Dataverse environment configuration
+            Write-Verbose "Extract region and currency name from configuration."
+            $dataverseEnvironmentConfigurations = $configurations.environment
+            $dataverseEnvironmentRegion = $dataverseEnvironmentConfigurations.region
+            $dataverseEnvironmentCurrencyName = $dataverseEnvironmentConfigurations.currencyName
+            $dataverseEnvironmentLanguageDisplayName = $dataverseEnvironmentConfigurations.languageDisplayName
+        }
+        catch {
+            Throw "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
         }
 
         # Connect to Power Apps with service principal
@@ -239,7 +236,7 @@ Function New-DataverseEnvironment {
         }
 
         # Case no Dataverse environment found for the provided display name
-        if ($dataverseEnvironmentsCount -eq 0 -and $dataverseConfigurationExtracted) {
+        if ($dataverseEnvironmentsCount -eq 0) {
             Write-Verbose "No Dataverse environment found - Create a new one"
             # Initialise parameters to call the New-AdminPowerAppEnvironment command
             Write-Verbose "Initialize parameters to call the New-AdminPowerAppEnvironment command."
