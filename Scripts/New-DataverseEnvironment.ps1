@@ -196,11 +196,26 @@ Function New-DataverseEnvironment {
                 Write-Debug "Before the call to the Get-Content command..."
                 $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
 
+                # Get Dataverse environment configuration
+                Write-Verbose "Extract region and currency name from configuration."
                 $dataverseEnvironmentConfigurations = $configurations.environment
+                $dataverseEnvironmentRegion = $dataverseEnvironmentConfigurations.region
+                $dataverseEnvironmentCurrencyName = $dataverseEnvironmentConfigurations.currencyName
+                $dataverseEnvironmentLanguageDisplayName = $dataverseEnvironmentConfigurations.languageDisplayName
 
                 # Get language code from display name
-                $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName canada -Filter $dataverseEnvironmentConfigurations.languageDisplayName
-                $languageCode = $languages[0].LanguageName
+                Write-Verbose "Get language code for following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+                $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName $dataverseEnvironmentRegion -Filter $dataverseEnvironmentLanguageDisplayName
+                
+                try {
+                    $languageCode = $languages[0].LanguageName
+                }
+                catch {
+                    Write-Verbose "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+                    $dataverseEnvironment = [PSCustomObject]@{
+                        Error = "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
+                    }
+                }
             }
             catch {
                 Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
@@ -234,13 +249,13 @@ Function New-DataverseEnvironment {
             Write-Verbose "Initialize parameters to call the New-AdminPowerAppEnvironment command."
             $NewAdminPowerAppEnvironmentParams = @{
                 DisplayName = $DisplayName
-                LocationName = $dataverseEnvironmentConfigurations.region
+                LocationName = $dataverseEnvironmentRegion
                 Description = $Description
                 DomainName = $DomainName
                 EnvironmentSku = $Sku
                 SecurityGroupId = $SecurityGroupId
                 LanguageName = $languageCode
-                CurrencyName = $dataverseEnvironmentConfigurations.currencyName
+                CurrencyName = $dataverseEnvironmentCurrencyName
                 # Templates = $templates - Not used for now
             }
 
