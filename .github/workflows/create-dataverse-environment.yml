@@ -169,7 +169,7 @@ jobs:
           domain: ${{ env.dataverse_environment_domain_name }}
 
       # Custom creation of a new Dataverse environment using PowerShell script
-      - name: Steps post solution import
+      - name: Create environment (custom)
         if: ${{ inputs.environment-security-group-id != '' }}
         run: |
           echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
@@ -185,7 +185,7 @@ jobs:
             Sku = ${{ inputs.environment-sku-name }}
             SecurityGroupId = ${{ inputs.environment-security-group-id }}
             Description = ${{ inputs.environment-description }}
-            ConfigurationFilePath = ${{ inputs.path-to-environment-configuration-file }}"
+            ConfigurationFilePath = "${{ inputs.path-to-environment-configuration-file }}"
           }
 
           echo "==========  New-DataverseEnvironment =========="
