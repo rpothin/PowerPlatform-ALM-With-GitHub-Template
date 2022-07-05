@@ -105,7 +105,7 @@ Function New-DataverseEnvironment {
             * You can get the list of all supported currencies for a location by using the "Get-AdminPowerAppCdsDatabaseCurrencies" (Microsoft.PowerApps.Administration.PowerShell) command
     #>
 
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding()]
     [OutputType([psobject])]
     Param (
         # ID of the tenant where the targeted Dataverse environment is
