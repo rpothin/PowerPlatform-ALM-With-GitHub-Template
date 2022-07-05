@@ -170,16 +170,16 @@ Function New-DataverseEnvironment {
         $displayNameForSearch = $DisplayName.Replace(" ", "*")
 
         # Set Description to empty string if not provided
-        $Description = if($Description -eq $null) { '' } else { $Description }
+        $Description = if ($Description -eq $null) { '' } else { $Description }
 
         # Set SecurityGroupId to empty string if not provided
-        $SecurityGroupId = if($SecurityGroupId -eq $null) { '' } else { $SecurityGroupId }
+        $SecurityGroupId = if ($SecurityGroupId -eq $null) { '' } else { $SecurityGroupId }
 
         #endregion VariablesInitialization
 
         # Test the path provided to the file with the configuration
         Write-Verbose "Test the path provided to the file with the configuration: $ConfigurationFilePath"
-        if(Test-Path $ConfigurationFilePath) {
+        if (Test-Path $ConfigurationFilePath) {
             $configurationFilePathValidated = $true
         }
         else {
@@ -219,75 +219,81 @@ Function New-DataverseEnvironment {
             }
             catch {
                 Write-Verbose "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
-            }
-        }
-
-        # Connect to Power Apps with service principal
-        Write-Verbose "Connect to Power Apps with service principal."
-        Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
-
-        # Search for an existing Dataverse environment with the display name provided
-        Write-Verbose "Search Dataverse environments with the following display name: $DisplayName"
-        Write-Debug "Before the call to the Get-AdminPowerAppEnvironment command..."
-        $dataverseEnvironments = Get-AdminPowerAppEnvironment *$displayNameForSearch*
-
-        # Number of environments found
-        $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure-Object
-        $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
-
-        # Case only one Dataverse environment found for the provided display name
-        if($dataverseEnvironmentsCount -eq 1) {
-            Write-Verbose "Only one Dataverse environment found - Do nothing"
-            $dataverseEnvironment = $dataverseEnvironments[0]
-            $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Existing"
-        }
-
-        # Case no Dataverse environment found for the provided display name
-        if($dataverseEnvironmentsCount -eq 0 -and $dataverseConfigurationExtracted) {
-            Write-Verbose "No Dataverse environment found - Create a new one"
-            # Initialise parameters to call the New-AdminPowerAppEnvironment command
-            Write-Verbose "Initialize parameters to call the New-AdminPowerAppEnvironment command."
-            $NewAdminPowerAppEnvironmentParams = @{
-                DisplayName = $DisplayName
-                LocationName = $dataverseEnvironmentRegion
-                Description = $Description
-                DomainName = $DomainName
-                EnvironmentSku = $Sku
-                SecurityGroupId = $SecurityGroupId
-                LanguageName = $languageCode
-                CurrencyName = $dataverseEnvironmentCurrencyName
-                # Templates = $templates - Not used for now
-            }
-
-            # Call to New-AdminPowerAppEnvironment command
-            try {
-                Write-Verbose "Try to call the New-AdminPowerAppEnvironment command."
-                Write-Debug "Before the call to the New-AdminPowerAppEnvironment command..."
-                $dataverseEnvironment = New-AdminPowerAppEnvironment @NewAdminPowerAppEnvironmentParams -ProvisionDatabase -WaitUntilFinished 1 -ErrorVariable dataverseEnvironmentCreationError -ErrorAction Stop
-                $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Created"
-            }
-            catch {
-                Write-Verbose "Error in the creation of the Dataverse environment: $dataverseEnvironmentCreationError"
                 $dataverseEnvironment = [PSCustomObject]@{
-                    Error = "Error in the creation of the Dataverse environment: $dataverseEnvironmentCreationError"
-                }
-            }
-
-            if (-not ($null -eq $dataverseEnvironment.error)) {
-                $errorCode = $dataverseEnvironment.error.code
-                $errorMessage = $dataverseEnvironment.error.message
-                Write-Verbose "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
-                $dataverseEnvironment = [PSCustomObject]@{
-                    Error = "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
+                    Error = "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
                 }
             }
         }
 
-        # Case multiple Dataverse environments found for the provided display name
-        if($dataverseEnvironmentsCount -gt 1) {
-            Write-Verbose "Multiple Dataverse environment corresponding to the following display name: $DisplayName"
-            $dataverseEnvironment = [PSCustomObject]@{
-                Error = "Multiple Dataverse environment corresponding to the following display name: $DisplayName"
+        # If no error in previous steps, we continue
+        if (-not ($null -eq $dataverseEnvironment.Error)) {
+            # Connect to Power Apps with service principal
+            Write-Verbose "Connect to Power Apps with service principal."
+            Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
+
+            # Search for an existing Dataverse environment with the display name provided
+            Write-Verbose "Search Dataverse environments with the following display name: $DisplayName"
+            Write-Debug "Before the call to the Get-AdminPowerAppEnvironment command..."
+            $dataverseEnvironments = Get-AdminPowerAppEnvironment *$displayNameForSearch*
+
+            # Number of environments found
+            $dataverseEnvironmentsMeasure = $dataverseEnvironments | Measure-Object
+            $dataverseEnvironmentsCount = $dataverseEnvironmentsMeasure.count
+
+            # Case only one Dataverse environment found for the provided display name
+            if ($dataverseEnvironmentsCount -eq 1) {
+                Write-Verbose "Only one Dataverse environment found - Do nothing"
+                $dataverseEnvironment = $dataverseEnvironments[0]
+                $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Existing"
+            }
+
+            # Case no Dataverse environment found for the provided display name
+            if ($dataverseEnvironmentsCount -eq 0 -and $dataverseConfigurationExtracted) {
+                Write-Verbose "No Dataverse environment found - Create a new one"
+                # Initialise parameters to call the New-AdminPowerAppEnvironment command
+                Write-Verbose "Initialize parameters to call the New-AdminPowerAppEnvironment command."
+                $NewAdminPowerAppEnvironmentParams = @{
+                    DisplayName = $DisplayName
+                    LocationName = $dataverseEnvironmentRegion
+                    Description = $Description
+                    DomainName = $DomainName
+                    EnvironmentSku = $Sku
+                    SecurityGroupId = $SecurityGroupId
+                    LanguageName = $languageCode
+                    CurrencyName = $dataverseEnvironmentCurrencyName
+                    # Templates = $templates - Not used for now
+                }
+
+                # Call to New-AdminPowerAppEnvironment command
+                try {
+                    Write-Verbose "Try to call the New-AdminPowerAppEnvironment command."
+                    Write-Debug "Before the call to the New-AdminPowerAppEnvironment command..."
+                    $dataverseEnvironment = New-AdminPowerAppEnvironment @NewAdminPowerAppEnvironmentParams -ProvisionDatabase -WaitUntilFinished 1 -ErrorVariable dataverseEnvironmentCreationError -ErrorAction Stop
+                    $dataverseEnvironment | Add-Member -MemberType NoteProperty -Name "Type" -Value "Created"
+                }
+                catch {
+                    Write-Verbose "Error in the creation of the Dataverse environment: $dataverseEnvironmentCreationError"
+                    $dataverseEnvironment = [PSCustomObject]@{
+                        Error = "Error in the creation of the Dataverse environment: $dataverseEnvironmentCreationError"
+                    }
+                }
+
+                if (-not ($null -eq $dataverseEnvironment.error)) {
+                    $errorCode = $dataverseEnvironment.error.code
+                    $errorMessage = $dataverseEnvironment.error.message
+                    Write-Verbose "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
+                    $dataverseEnvironment = [PSCustomObject]@{
+                        Error = "Error in the creation of the Dataverse environment: $errorCode | $errorMessage"
+                    }
+                }
+            }
+
+            # Case multiple Dataverse environments found for the provided display name
+            if ($dataverseEnvironmentsCount -gt 1) {
+                Write-Verbose "Multiple Dataverse environment corresponding to the following display name: $DisplayName"
+                $dataverseEnvironment = [PSCustomObject]@{
+                    Error = "Multiple Dataverse environment corresponding to the following display name: $DisplayName"
+                }
             }
         }
 
