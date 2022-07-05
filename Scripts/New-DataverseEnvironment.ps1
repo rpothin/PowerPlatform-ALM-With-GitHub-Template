@@ -184,7 +184,6 @@ Function New-DataverseEnvironment {
         }
         else {
             Throw "Error in the path provided for the configuration: $ConfigurationFilePath"
-            $configurationFilePathValidated = $false
         }
 
         # Continue only if the path provided for the file with the configuration is correct
