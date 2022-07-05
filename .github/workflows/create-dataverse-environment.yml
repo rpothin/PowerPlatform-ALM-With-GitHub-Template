@@ -199,10 +199,12 @@ jobs:
 
           echo "==========  Set environment variables for job outputs definition =========="
           $dataverseEnvironmentUrl = $dataverseEnvironmentDetails.Internal.properties.linkedEnvironmentMetadata.instanceUrl
+          $dataverseEnvironmentUrl
           echo "dataverse_environment_url=$dataverseEnvironmentUrl" >> $Env:GITHUB_ENV
 
           $dataverseEnvironmentId = $dataverseEnvironmentDetails.EnvironmentName
           $powerAppsMakerEnvironmentUrl = "${{ inputs.power-apps-maker-base-url }}$dataverseEnvironmentId/solutions"
+          $powerAppsMakerEnvironmentUrl
           echo "power-apps-maker-environment-url=$powerAppsMakerEnvironmentUrl" >> $Env:GITHUB_ENV
         shell: powershell
 
@@ -221,7 +223,7 @@ jobs:
           echo "::set-output name=environment-url::$dataverseEnvironmentUrl"
 
           echo "==========  Set power-apps-maker-environment-url job output =========="
-          $powerAppsMakerEnvironmentUrl = "${{ inputs.power-apps-maker-base-url }}${{ steps.create-environment.outputs.environment-id }}/solutions"
+          $powerAppsMakerEnvironmentUrl = "${{ env.power-apps-maker-environment-url }}"
 
           if ($powerAppsMakerEnvironmentUrl -eq '') {
             $powerAppsMakerEnvironmentUrl = "${{ env.power-apps-maker-environment-url }}"
