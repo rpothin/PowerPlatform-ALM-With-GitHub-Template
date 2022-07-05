@@ -180,11 +180,11 @@ jobs:
             TenantId = "${{ secrets.TENANT_ID }}"
             ClientId = "${{ secrets.APPLICATION_ID }}"
             ClientSecret = "${{ secrets.CLIENT_SECRET }}"
-            DisplayName = ${{ env.dataverse_environment_display_name }}
+            DisplayName = "${{ env.dataverse_environment_display_name }}"
             DomainName = ${{ env.dataverse_environment_domain_name }}
             Sku = ${{ inputs.environment-sku-name }}
             SecurityGroupId = ${{ inputs.environment-security-group-id }}
-            Description = ${{ inputs.environment-description }}
+            Description = "${{ inputs.environment-description }}"
             ConfigurationFilePath = "${{ inputs.path-to-environment-configuration-file }}"
           }
 
