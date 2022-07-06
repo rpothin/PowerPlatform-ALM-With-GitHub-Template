@@ -146,10 +146,6 @@ Function New-DataverseEnvironment {
         [Parameter()]
         [String]$AzureADSecurityGroupName,
 
-        # Security group ID that will be use to restrict the access to the Dataverse environment to create
-        [Parameter()]
-        [String]$SecurityGroupId,
-
         # Description of the Dataverse environment to create
         [Parameter()]
         [String]$Description,
@@ -173,11 +169,11 @@ Function New-DataverseEnvironment {
         # Variable dedicated to the search of the Dataverse environment
         $displayNameForSearch = $DisplayName.Replace(" ", "*")
 
-        # Set Description to empty string if not provided
-        $Description = if ($Description -eq $null) { '' } else { $Description }
-
         # Set AzureADSecurityGroupName to empty string if not provided
-        $AzureADSecurityGroupName = if ($AzureADSecurityGroupName -eq $null) { '' } else { $AzureADSecurityGroupName }
+        $AzureADSecurityGroupName = if ($null -eq $AzureADSecurityGroupName) { '' } else { $AzureADSecurityGroupName }
+
+        # Set Description to empty string if not provided
+        $Description = if ($null -eq $Description) { '' } else { $Description }
 
         #endregion VariablesInitialization
 
