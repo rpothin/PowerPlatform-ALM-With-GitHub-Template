@@ -28,8 +28,8 @@ Function New-DataverseEnvironment {
         .PARAMETER Sku
             Specifies the Sku (Production, Sandbox or Trial) of the Dataverse environment to create.
 
-        .PARAMETER SecurityGroupId
-            Specifies the security group ID that will be use to restrict the access to the Dataverse environment to create.
+        .PARAMETER AzureADSecurityGroupName
+            Name of the Azure AD Security Group to use to restrict the access to the Dataverse environment to create.
 
         .PARAMETER Description
             Specifies the description of the Dataverse environment to create.
@@ -69,7 +69,7 @@ Function New-DataverseEnvironment {
             Type                                       : Created
 
         .EXAMPLE
-            PS> New-DataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DisplayName "Demonstration" -DomainName "demonstration" -Sku "Sandbox" -SecurityGroupId "00000000-0000-0000-0000-000000000000" -Description "Demonstration" -ConfigurationFilePath ".\DataverseEnvironmentConfiguration.json"
+            PS> New-DataverseEnvironment -TenantId "00000000-0000-0000-0000-000000000000" -ClientId "00000000-0000-0000-0000-000000000000" -ClientSecret "clientSecretSample" -DisplayName "Demonstration" -DomainName "demonstration" -Sku "Sandbox" -AzureADSecurityGroupName "SG-POWERPLATFORM-DEVELOPERS-DEMO" -Description "Demonstration" -ConfigurationFilePath ".\DataverseEnvironmentConfiguration.json"
             EnvironmentName                            : 00000000-0000-0000-0000-000000000000
             DisplayName                                : Example (example)
             Description                                :
@@ -142,6 +142,10 @@ Function New-DataverseEnvironment {
         [ValidateSet("Production", "Sandbox", "Trial")]
         [String]$Sku = "Sandbox",
 
+        # Name of the Azure AD Security Group to use to restrict the access to the Dataverse environment to create
+        [Parameter()]
+        [String]$AzureADSecurityGroupName,
+
         # Security group ID that will be use to restrict the access to the Dataverse environment to create
         [Parameter()]
         [String]$SecurityGroupId,
@@ -172,8 +176,8 @@ Function New-DataverseEnvironment {
         # Set Description to empty string if not provided
         $Description = if ($Description -eq $null) { '' } else { $Description }
 
-        # Set SecurityGroupId to empty string if not provided
-        $SecurityGroupId = if ($SecurityGroupId -eq $null) { '' } else { $SecurityGroupId }
+        # Set AzureADSecurityGroupName to empty string if not provided
+        $AzureADSecurityGroupName = if ($AzureADSecurityGroupName -eq $null) { '' } else { $AzureADSecurityGroupName }
 
         #endregion VariablesInitialization
 
@@ -202,6 +206,30 @@ Function New-DataverseEnvironment {
         }
         catch {
             Throw "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
+        }
+
+        # If AzureADSecurityGroupName provided, get its ID
+        $azureADSecurityGroupId = ''
+
+        if ($AzureADSecurityGroupName -ne '') {
+            # Connect to Azure CLI with service principal
+            Write-Verbose "Connect to Azure CLI with service principal."
+            az login --service-principal -u $ClientId -p $ClientSecret --tenant $TenantId --allow-no-subscriptions
+
+            # Search the considered Azure AD security group based on the provided name
+            Write-Verbose "Search the considered Azure AD security group based on the provided name: $AzureADSecurityGroupName"
+            $azureAdGroups = az ad group list --filter "displayname eq '$AzureADSecurityGroupName'" | ConvertFrom-Json
+
+            # Number of groups found
+            $azureAdGroupsMeasure = $azureAdGroups | Measure-Object
+            $azureAdGroupsCount = $azureAdGroupsMeasure.Count
+
+            # Case only one Azure AD security group found for the provided name
+            if ($azureAdGroupsCount -eq 1) {
+                Write-Verbose "Only one Azure AD security group found for the provided name - We continue."
+                Write-Verbose "Get the object id of the group found."
+                $azureAdSecurityGroupId = $azureAdGroups[0].id
+            }
         }
 
         # Connect to Power Apps with service principal
@@ -246,7 +274,7 @@ Function New-DataverseEnvironment {
                 Description = $Description
                 DomainName = $DomainName
                 EnvironmentSku = $Sku
-                SecurityGroupId = $SecurityGroupId
+                SecurityGroupId = $azureAdSecurityGroupId
                 LanguageName = $languageCode
                 CurrencyName = $dataverseEnvironmentCurrencyName
                 # Templates = $templates - Not used for now
