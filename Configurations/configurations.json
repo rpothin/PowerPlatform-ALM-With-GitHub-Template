@@ -8,12 +8,15 @@
             "displayNameBase": "xxx - ",
             "domainNameBase": "xxx-",
             "skuName": "Sandbox",
-            "developersAzureAdGroupName": "sg-xxx"
+            "developersAzureAdGroupName": "sg-xxx",
+            "descriptionBase": "Environment for development on the following issue: "
         },
         "buildEnvironment": {
             "displayNameBase": "xxx - ",
             "domainNameBase": "xxx-",
-            "skuName": "Sandbox"
+            "skuName": "Sandbox",
+            "azureAdGroupName": "sg-xxx",
+            "descriptionBase": "Development for the following build of solution: "
         }
     },
     "developmentBranchNameBase": "work/",
