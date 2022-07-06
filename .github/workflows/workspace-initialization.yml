@@ -29,6 +29,7 @@ jobs:
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
       development-environment-sku-name: ${{ steps.get-configurations.outputs.development-environment-sku-name }}
       developers-azure-ad-group-name: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
+      development-environment-description: '${{ steps.get-configurations.outputs.development-environment-description-base }}#${{ github.event.issue.number }} (${{ github.server.url }}/${{ github.repository }}/issues/${{ github.event.issue.number }})'
       powerapps-maker-portal-base-url: ${{ steps.get-configurations.outputs.powerapps-maker-portal-base-url }}
     env:
       RUNNER_DEBUG: 1
@@ -79,7 +80,7 @@ jobs:
       environment-sku-name: ${{ needs.pre-job.outputs.development-environment-sku-name }}
       environment-domain-name: ${{ needs.pre-job.outputs.development-environment-domain-name }}
       environment-security-group-name: '${{ needs.pre-job.outputs.developers-azure-ad-group-name }}'
-      environment-description: 'Develpment environment for GitHub tests' # Put a base in configuration file
+      environment-description: '${{ needs.pre-job.outputs.development-environment-description }}'
       power-apps-maker-base-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}
       issue-number: ${{ github.event.issue.number }}
     secrets: inherit
