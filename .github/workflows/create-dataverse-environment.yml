@@ -47,8 +47,8 @@ on:
         required: false
         type: string
         default: ''
-      environment-security-group-id:
-        description: 'ID of the Azure AD security group used to secure the access to the Dataverse environment to create'
+      environment-security-group-name:
+        description: 'Name of the Azure AD security group used to restrict the access to the Dataverse environment to create'
         required: false
         type: string
         default: ''
@@ -104,7 +104,7 @@ jobs:
       # Action used to checkout the main branch in the current repository
       #   Community action: https://github.com/actions/checkout
       - name: Checkout
-        if: ${{ inputs.environment-security-group-id != '' }}
+        if: ${{ inputs.environment-security-group-name != '' }}
         uses: actions/checkout@v3.0.2
 
       # Set a dataverse_environment_dynamic_display_name environment variable for the display name of the Dataverse environment to create
@@ -157,7 +157,7 @@ jobs:
       #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/create-environment/action.yml
       - name: Create environment
         id: create-environment
-        if: ${{ inputs.environment-security-group-id == '' }}
+        if: ${{ inputs.environment-security-group-name == '' }}
         uses: microsoft/powerplatform-actions/create-environment@main
         with:
           app-id: ${{ secrets.APPLICATION_ID }}
@@ -172,7 +172,7 @@ jobs:
 
       # Custom creation of a new Dataverse environment using PowerShell script
       - name: Create environment (custom)
-        if: ${{ inputs.environment-security-group-id != '' }}
+        if: ${{ inputs.environment-security-group-name != '' }}
         run: |
           echo "========== Install Microsoft.PowerApps.Administration.PowerShel module =========="
           Install-Module -Name Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser -Force
@@ -185,7 +185,7 @@ jobs:
             DisplayName = "${{ env.dataverse_environment_display_name }}"
             DomainName = "${{ env.dataverse_environment_domain_name }}"
             Sku = "${{ inputs.environment-sku-name }}"
-            SecurityGroupId = "${{ inputs.environment-security-group-id }}"
+            AzureADSecurityGroupName = "${{ inputs.environment-security-group-name }}"
             Description = "${{ inputs.environment-description }}"
             ConfigurationFilePath = "${{ inputs.path-to-environment-configuration-file }}"
           }

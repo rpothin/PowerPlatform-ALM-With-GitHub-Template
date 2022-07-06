@@ -78,7 +78,7 @@ jobs:
       environment-display-name: ${{ needs.pre-job.outputs.development-environment-display-name }}
       environment-sku-name: ${{ needs.pre-job.outputs.development-environment-sku-name }}
       environment-domain-name: ${{ needs.pre-job.outputs.development-environment-domain-name }}
-      environment-security-group-id: 'bfd977e2-f5ad-46e9-bdf4-4514d1c7510b' # Put in configuration file
+      environment-security-group-name: 'sg-raphael-test-canvasapp-access' # Put in configuration file
       environment-description: 'Develpment environment for GitHub tests' # Put a base in configuration file
       power-apps-maker-base-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}
       issue-number: ${{ github.event.issue.number }}
