@@ -34,8 +34,11 @@ outputs:
     description: "Name of the SKU for a development environment"
     value: ${{ steps.get-configurations.outputs.development-environment-sku-name }}
   developers-azure-ad-group-name:
-    description: "Base of the display name of a development environment"
+    description: "Name of the Azure AD group where the developers are member of"
     value: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
+  development-environment-description-base:
+    description: "Base of the description for a development environment"
+    value: ${{ steps.get-configurations.outputs.development-environment-description-base }}
   build-environment-display-name-base:
     description: "Base of the display name for a build environment"
     value: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
@@ -45,6 +48,12 @@ outputs:
   build-environment-sku-name:
     description: "Name of the SKU for a build environment"
     value: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
+  build-environment-azure-ad-group-name:
+    description: "Name of the Azure AD group used to restrict the access to a build environment"
+    value: ${{ steps.get-configurations.outputs.build-environment-azure-ad-group-name }}
+  build-environment-description-base:
+    description: "Base of the description for a build environment"
+    value: ${{ steps.get-configurations.outputs.build-environment-description-base }}
   development-branch-name-base:
     description: "Base of the name for a development branch"
     value: ${{ steps.get-configurations.outputs.development-branch-name-base }}
@@ -115,10 +124,13 @@ runs:
         $developmentEnvironmentDomainNameBase = $configurations.environment.developmentEnvironment.domainNameBase
         $developmentEnvironmentSkuName = $configurations.environment.developmentEnvironment.skuName
         $developersAzureAdGroupName = $configurations.environment.developmentEnvironment.developersAzureAdGroupName
+        $developmentEnvironmentDescriptionBase = $configurations.environment.developmentEnvironment.descriptionBase
 
         $buildEnvironmentDisplayNameBase = $configurations.environment.buildEnvironment.displayNameBase
         $buildEnvironmentDomainNameBase = $configurations.environment.buildEnvironment.domainNameBase
         $buildEnvironmentSkuName = $configurations.environment.buildEnvironment.skuName
+        $buildEnvironmentAzureAdGroupName = $configurations.environment.buildEnvironment.azureAdGroupName
+        $buildEnvironmentDescriptionBase = $configurations.environment.buildEnvironment.descriptionBase
 
         $developmentBranchNameBase = $configurations.developmentBranchNameBase
         $pacCliVersion = $configurations.pacCliVersion
@@ -143,10 +155,13 @@ runs:
         echo "::set-output name=development-environment-domain-name-base::$developmentEnvironmentDomainNameBase"
         echo "::set-output name=development-environment-sku-name::$developmentEnvironmentSkuName"
         echo "::set-output name=developers-azure-ad-group-name::$developersAzureAdGroupName"
+        echo "::set-output name=development-environment-description-base::$developmentEnvironmentDescriptionBase"
 
         echo "::set-output name=build-environment-display-name-base::$buildEnvironmentDisplayNameBase"
         echo "::set-output name=build-environment-domain-name-base::$buildEnvironmentDomainNameBase"
         echo "::set-output name=build-environment-sku-name::$buildEnvironmentSkuName"
+        echo "::set-output name=build-environment-azure-ad-group-name::$buildEnvironmentAzureAdGroupName"
+        echo "::set-output name=build-environment-description-base::$buildEnvironmentDescriptionBase"
         
         echo "::set-output name=development-branch-name-base::$developmentBranchNameBase"
         echo "::set-output name=pac-cli-version::$pacCliVersion"
