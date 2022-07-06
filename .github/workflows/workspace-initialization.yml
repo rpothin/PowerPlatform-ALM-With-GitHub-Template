@@ -29,7 +29,7 @@ jobs:
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
       development-environment-sku-name: ${{ steps.get-configurations.outputs.development-environment-sku-name }}
       developers-azure-ad-group-name: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
-      development-environment-description: '${{ steps.get-configurations.outputs.development-environment-description-base }}#${{ github.event.issue.number }} ( ${{ github.server.url }}/${{ github.repository }}/issues/${{ github.event.issue.number }} )'
+      development-environment-description: '${{ steps.get-configurations.outputs.development-environment-description-base }}#${{ github.event.issue.number }} ( ${{ github.server_url }}/${{ github.repository }}/issues/${{ github.event.issue.number }} )'
       powerapps-maker-portal-base-url: ${{ steps.get-configurations.outputs.powerapps-maker-portal-base-url }}
     env:
       RUNNER_DEBUG: 1
@@ -245,7 +245,7 @@ jobs:
         body: |
           # 🎆 Workspace initialized!
 
-          - Branch: [**${{ needs.pre-job.outputs.development-branch-name }}**](${{ github.server.url }}/${{ github.repository }}/tree/${{ needs.pre-job.outputs.development-branch-name }})
+          - Branch: [**${{ needs.pre-job.outputs.development-branch-name }}**](${{ github.server_url }}/${{ github.repository }}/tree/${{ needs.pre-job.outputs.development-branch-name }})
           - Dataverse Dev environment created:
              - [**Power Apps Maker Portal - ${{ needs.pre-job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.power-apps-maker-environment-url }})
              - [**${{ needs.pre-job.outputs.development-environment-display-name }}**](${{ needs.create-dataverse-dev-environment.outputs.environment-url }})
