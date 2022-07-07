@@ -53,7 +53,7 @@ jobs:
         $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.development-environment-description-base }}"
 
         if ($dataverseEnvironmentDescription -ne '') {
-          $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.development-environment-description-base }}#${{ github.event.issue.number }} ( ${{ github.server_url }}/${{ github.repository }}/issues/${{ github.event.issue.number }} )"
+          $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.development-environment-description-base }}#${{ github.event.issue.number }} (${{ github.server_url }}/${{ github.repository }}/issues/${{ github.event.issue.number }})"
         }
           
         echo "Dataverse environment description: $dataverseEnvironmentDescription"
