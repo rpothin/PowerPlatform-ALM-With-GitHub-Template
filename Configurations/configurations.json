@@ -16,12 +16,12 @@
             "domainNameBase": "xxx-",
             "skuName": "Sandbox",
             "azureAdGroupName": "sg-xxx",
-            "descriptionBase": "Development for the following build of solution: "
+            "descriptionBase": "Environment for the following solution build: "
         }
     },
     "developmentBranchNameBase": "work/",
     "pacCliVersion": "1.16.6",
-    "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/",
+    "powerAppsMakerPortalBaseUrl": "https://make.preview.powerapps.com/environments/",
     "deploymentSettingsFileNameBase": "DeploymentSettings",
     "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings",
     "maximumTriesForCloudFlowsActivation": 3,
