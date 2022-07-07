@@ -92,9 +92,12 @@ jobs:
     uses: ./.github/workflows/create-dataverse-environment.yml
     with:
       environment-display-name: ${{ needs.pre-job.outputs.development-environment-display-name }}
-      environment-sku-name: ${{ needs.pre-job.outputs.development-environment-sku-name }}
       environment-domain-name: ${{ needs.pre-job.outputs.development-environment-domain-name }}
+      environment-sku-name: ${{ needs.pre-job.outputs.development-environment-sku-name }}
       environment-security-group-name: '${{ needs.pre-job.outputs.developers-azure-ad-group-name }}'
+      environment-region: ${{ needs.pre-job.outputs.environment-region }}
+      environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
+      environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
       environment-description: '${{ needs.pre-job.outputs.dataverse-environment-description }}'
       power-apps-maker-base-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}
       issue-number: ${{ github.event.issue.number }}
