@@ -29,7 +29,7 @@ jobs:
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
       development-environment-sku-name: ${{ steps.get-configurations.outputs.development-environment-sku-name }}
       developers-azure-ad-group-name: ${{ steps.get-configurations.outputs.developers-azure-ad-group-name }}
-      development-environment-description: '${{ steps.get-configurations.outputs.development-environment-description-base }}#${{ github.event.issue.number }} ( ${{ github.server_url }}/${{ github.repository }}/issues/${{ github.event.issue.number }} )'
+      dataverse-environment-description: '${{ steps.job-outputs-definition.outputs.dataverse-environment-description }}'
       powerapps-maker-portal-base-url: ${{ steps.get-configurations.outputs.powerapps-maker-portal-base-url }}
     env:
       RUNNER_DEBUG: 1
@@ -44,6 +44,21 @@ jobs:
     - name: Get configurations
       uses: ./.github/actions/get-configurations
       id: get-configurations
+
+    # Set dataverse-environment-description job output
+    - name: Set dataverse-environment-description job output
+        id: job-outputs-definition
+        run: |
+          echo "==========  Set dataverse-environment-description job output =========="
+          $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.development-environment-description-base }}"
+
+          if ($dataverseEnvironmentDescription -ne '') {
+            $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.development-environment-description-base }}#${{ github.event.issue.number }} ( ${{ github.server_url }}/${{ github.repository }}/issues/${{ github.event.issue.number }} )"
+          }
+          
+          echo "Dataverse environment description: $dataverseEnvironmentDescription"
+          echo "::set-output name=dataverse-environment-description::$dataverseEnvironmentDescription"
+        shell: pwsh
 
   # Job for the creation of the new dev branch
   create-issue-development-branch:
@@ -80,7 +95,7 @@ jobs:
       environment-sku-name: ${{ needs.pre-job.outputs.development-environment-sku-name }}
       environment-domain-name: ${{ needs.pre-job.outputs.development-environment-domain-name }}
       environment-security-group-name: '${{ needs.pre-job.outputs.developers-azure-ad-group-name }}'
-      environment-description: '${{ needs.pre-job.outputs.development-environment-description }}'
+      environment-description: '${{ needs.pre-job.outputs.dataverse-environment-description }}'
       power-apps-maker-base-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}
       issue-number: ${{ github.event.issue.number }}
     secrets: inherit
