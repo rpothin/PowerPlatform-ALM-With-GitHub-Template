@@ -17,7 +17,7 @@
    - Trigger: issue assigned or labeled (*we only consider the `in progress` label - or the one you decided to use*)
    - Summary of actions:
       - create a branch
-      - create a Dataverse Dev environment
+      - create a Dataverse Dev environment (*using the **create-dataverse-environment** reusable workflow*)
       - add developers to the new Dataverse Dev environment as System Administrators
       - import the solution to the new Dataverse Dev environment, if there is one in the repository
       - add comments to the issue to give visibility on the progress of the initialization of the workspace
@@ -30,7 +30,7 @@
    - Trigger: pull request tarteging the `main` branch and with changes on specific folders
    - Summary of actions:
       - get and set variables
-      - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
+      - create a just-in-time Dataverse Build environment (*using the **create-dataverse-environment** reusable workflow*)
       - pack the considered solution
       - execute the solution checker on the considered solution and generate an execute condition if thresholds are not met
       - test the solution type conversion (unmanaged to managed) using the just-in-time Dataverse Build environment
@@ -39,7 +39,7 @@
    - Trigger: push to the `main` branch with changes on specific folders
    - Summary of actions:
       - get and set variables
-      - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
+      - create a just-in-time Dataverse Build environment (*using the **create-dataverse-environment** reusable workflow*)
       - build a managed version of the solution using the just-in-time Build environment (*using the **build-managed-solution** reusable workflow*)
       - import the managed version of the considered solution to the Dataverse Validation environment (*using the **import-solution** reusable workflow*)
       - delete the just-in-time Dataverse Build environment
@@ -48,7 +48,7 @@
    - Summary of actions:
       - get and set variables
       - create a branch for the considered release
-      - create a just-in-time Dataverse Build environment (*using the **create-just-in-time-build-environment** reusable workflow*)
+      - create a just-in-time Dataverse Build environment (*using the **create-dataverse-environment** reusable workflow*)
       - build a managed version of the solution using the just-in-time Build environment (*using the **build-managed-solution** reusable workflow*)
       - delete the just-in-time Dataverse Build environment
       - delete the release branch if deployment of the considered solution to the just-in-time Dataverse Build environment fails
@@ -68,7 +68,7 @@
    - Triggers: called by another workflow (*reusable workflow*)
    - Summary of actions:
       - set some variables for dynamic display and domain name (*based on a condition on the value of an input*)
-      - create the just-in-time Build environment
+      - create the Dataverse environment (*2 methods considered and the choice is made based on the value of an input*)
       - update considered issue (*based on a condition on the value of an input*)
 - [**build-managed-solution**](../.github/workflows/build-managed-solution.yml):
    - Triggers: called by another workflow (*reusable workflow*)
