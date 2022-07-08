@@ -36,6 +36,8 @@ jobs:
       build-environment-sku-name: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+      build-environment-azure-ad-group-name: ${{ steps.get-configurations.outputs.build-environment-azure-ad-group-name }}
+      dataverse-environment-description: '${{ steps.job-outputs-definition.outputs.dataverse-environment-description }}'
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
       deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.deployment-settings-file-name-base }}
       custom-deployment-settings-file-name-base: ${{ steps.get-configurations.outputs.custom-deployment-settings-file-name-base }}
@@ -59,6 +61,21 @@ jobs:
     - name: Get configurations
       uses: ./.github/actions/get-configurations
       id: get-configurations
+
+    # Set dataverse-environment-description job output
+    - name: Set dataverse-environment-description job output
+      id: job-outputs-definition
+      run: |
+        echo "==========  Set dataverse-environment-description job output =========="
+        $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.build-environment-description-base }}"
+
+        if ($dataverseEnvironmentDescription -ne '') {
+          $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.build-environment-description-base }}${{ env.solution_name }} / release"
+        }
+          
+        echo "Dataverse environment description: $dataverseEnvironmentDescription"
+        echo "::set-output name=dataverse-environment-description::$dataverseEnvironmentDescription"
+      shell: pwsh
 
   # Job for the creation of the release branch
   create-release-branch:
@@ -94,10 +111,12 @@ jobs:
     with:
       environment-display-name-base: ${{ needs.pre-job.outputs.build-environment-display-name-base }}
       environment-domain-name-base: ${{ needs.pre-job.outputs.build-environment-domain-name-base }}
-      environment-region: ${{ needs.pre-job.outputs.environment-region }}
       environment-sku-name: ${{ needs.pre-job.outputs.build-environment-sku-name }}
+      environment-security-group-name: '${{ needs.pre-job.outputs.build-environment-azure-ad-group-name }}'
+      environment-region: ${{ needs.pre-job.outputs.environment-region }}
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
       environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+      environment-description: '${{ needs.pre-job.outputs.dataverse-environment-description }}'
       environment-name-unique-identifier: ${{ needs.pre-job.outputs.current-date }}
     secrets: inherit
       # APPLICATION_ID: Application ID that will be used to create the just-in-time Build environment
