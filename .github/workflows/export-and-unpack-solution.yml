@@ -9,12 +9,15 @@ on:
   workflow_dispatch:
     inputs:
       issue_number:
+        type: string
         description: 'Number of the issue you are working on'
         required: true
       solution_name:
+        type: choice
         description: 'Name of the Power Apps solution you are working on'
         required: true
-        default: 'PowerPlatformALMWithGitHub'
+        options: 
+          - PowerPlatformALMWithGitHub
 
 # Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group and the considered issue number (input)
 concurrency:
