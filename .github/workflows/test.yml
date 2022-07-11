@@ -1,0 +1,35 @@
+# Copyright (c) 2020-2022 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: test
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Action used to checkout the main branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v3.0.2
+
+    # Get files changed in the context of the pull request
+    #   Action: https://github.com/marketplace/actions/changed-files
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v23.1
+
+    # Tes display list of files changed in the context of the pull request
+    - name: List all changed files
+      run: |
+        $filesChanged = ${{ steps.changed-files.outputs.all_changed_files }}
+
+        Write-Host "========== Files updated ========== "
+        foreach ($fileChanged in $filesChanged) {
+          Write-Host "$fileChanged"
+        }
+      shell: pwsh
