@@ -29,9 +29,10 @@ jobs:
     - name: List all changed files
       run: |
         $filesChanged = ${{ steps.changed-files.outputs.all_changed_files }}
+        $filesChangedArray = $filesChanged.Split(" ")
 
         Write-Host "========== Files updated ========== "
-        foreach ($fileChanged in $filesChanged) {
+        foreach ($fileChanged in $filesChangedArray) {
           Write-Host "$fileChanged"
         }
       shell: pwsh
