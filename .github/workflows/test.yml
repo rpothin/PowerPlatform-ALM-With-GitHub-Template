@@ -28,11 +28,11 @@ jobs:
     # Tes display list of files changed in the context of the pull request
     - name: List all changed files
       run: |
-        $filesChanged = ${{ steps.changed-files.outputs.all_changed_files }}
-        $filesChangedArray = $filesChanged.Split(" ")
+        $filesChanged = '${{ steps.changed-files.outputs.all_changed_files }}'
+        #$filesChangedArray = $filesChanged.Split(" ")
 
         Write-Host "========== Files updated ========== "
-        foreach ($fileChanged in $filesChangedArray) {
+        foreach ($fileChanged in $filesChanged) {
           Write-Host "$fileChanged"
         }
       shell: pwsh
