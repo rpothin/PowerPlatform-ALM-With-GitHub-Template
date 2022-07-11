@@ -98,7 +98,7 @@ jobs:
         foreach ($fileChanged in $filesChanged) {
           Write-Host "$fileChanged"
 
-          if (($fileChanged -contains "Solutions/") -and (-not($changedSolutionFound))) {
+          if ($fileChanged.Contains("Solutions/") -and (-not($changedSolutionFound))) {
             $fileChangedArray = $fileChanged.Split("/")
 
             $solutionName = $fileChangedArray[1]
