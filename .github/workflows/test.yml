@@ -16,6 +16,8 @@ jobs:
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
       uses: actions/checkout@v3.0.2
+      with:
+        fetch-depth: 0
 
     # Get files changed in the context of the pull request
     #   Action: https://github.com/marketplace/actions/changed-files
