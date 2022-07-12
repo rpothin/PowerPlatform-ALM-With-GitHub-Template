@@ -46,9 +46,4 @@ jobs:
         $changedSolutionFound = false
         $filesChangedTemp = '${{ steps.changed-files.outputs.all_changed_files }}'
         $filesChanged = $filesChangedTemp.Split(" ")
-
-        Write-Host "========== Files updated ========== "
-        foreach ($fileChanged in $filesChanged) {
-          Write-Host "$fileChanged"
-        }
       shell: pwsh
