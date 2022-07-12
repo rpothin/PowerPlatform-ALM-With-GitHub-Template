@@ -200,6 +200,11 @@ jobs:
         echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
       shell: pwsh
 
+    # ---------- PowerShell step to list solutions in repository and for each one call the  new workflow below ----------
+    # Get-ChildItem -Path Solutions/ -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
+
+    # ========== New workflow for pack solution as unmanaged and import to environment ==========
+    # ---------- Job for pack solution as unmanaged ----------
     # Set the solution version in the Solution.xml file
     - name: Set solution version
       if: ${{ env.SolutionsExist == 'true' }}
@@ -220,6 +225,7 @@ jobs:
         solution-type: Unmanaged
         process-canvas-apps: true
 
+    # ---------- Job for solution import ----------
     # Import the solution as unmanaged to the new Dataverse Dev environment
     #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
     - name: Import solution as unmanaged to Dev
@@ -238,6 +244,7 @@ jobs:
         max-async-wait-time: 10
         use-deployment-settings-file: false
 
+    # ---------- Job for comment to issue ----------
     # Add "Solution imported" comment to the issue
     - name: Solution imported comment on issue
       if: ${{ env.SolutionsExist == 'true' }}
