@@ -10,25 +10,30 @@ name: 6-create-deploy-release
 on:
   workflow_dispatch:
     inputs:
+      solution_name:
+        type: choice
+        description: 'Name of the solution to deploy'
+        required: true
+        options: 
+          - PowerPlatformALMWithGitHub
       solution-major-version:
+        type: string
         description: 'Majors version of the solution to deploy (ex: 1)'
         required: true
       github_release_body:
+        type: string
         description: 'Text for the body of the GitHub release'
         required: true
 
 # Concurrency configuration for the current workflow - Put new workflows in queue in pending state
 concurrency: create-deploy-release
-
-env:
-  solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
   
 jobs:
   # Job to initialize a variable for other jobs in the workflow
   pre-job:
     runs-on: ubuntu-latest
     outputs:
-      solution-name: ${{ env.solution_name }}
+      solution-name: ${{ github.event.inputs.solution_name }}
       current-date: ${{ steps.current_date.outputs.NOW }}
       build-environment-display-name-base: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
       build-environment-domain-name-base: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
