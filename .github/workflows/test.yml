@@ -36,9 +36,6 @@ jobs:
         foreach ($fileChanged in $filesChangedArray) {
           Write-Host "$fileChanged"
         }
-
-        $solutionName = "test"
-        echo "::set-output name=solution_name::$solutionName"
       shell: pwsh
 
     # Get changed solution from changed files
@@ -60,6 +57,4 @@ jobs:
             $solutionName = $fileChangedArray[1]
           }
         }
-
-        echo "Solution name: $solutionName"
       shell: pwsh
