@@ -63,5 +63,5 @@ jobs:
 
         echo "Solution name: $solutionName"
         $solutionName = "test"
-        echo "::set-output name=solution_name::$solutionName"
+        #echo "::set-output name=solution_name::$solutionName"
       shell: pwsh
