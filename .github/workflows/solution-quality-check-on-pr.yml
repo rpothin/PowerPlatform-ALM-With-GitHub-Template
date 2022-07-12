@@ -27,15 +27,12 @@ concurrency:
   group: solution-quality-check-on-pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
-#env:
-  #solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
-
 jobs:
   # Job to initialize a variable for other jobs in the workflow
   pre-job:
     runs-on: ubuntu-latest
     outputs:
-      solution-name: '${{ steps.changed-solution.outputs.solution_name }}' # ${{ env.solution_name }}
+      solution-name: '${{ steps.changed-solution.outputs.solution_name }}'
       current-date: ${{ steps.current_date.outputs.NOW }}
       build-environment-display-name-base: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
       build-environment-domain-name-base: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
