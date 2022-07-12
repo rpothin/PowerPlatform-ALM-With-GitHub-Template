@@ -88,10 +88,10 @@ jobs:
       id: changed-solution
       run: |
         # Variables
-        $changedSolutionFound = false
+        $changedSolutionFound = $false
         $filesChanged = gh pr view ${{github.event.number }} --json files --jq '.files.[].path'
 
-        Write-Host "========== Files updated ========== "
+        Write-Host "========== Files updated =========="
         foreach ($fileChanged in $filesChanged) {
           Write-Host "$fileChanged"
 
