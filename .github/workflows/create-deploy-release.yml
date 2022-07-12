@@ -75,7 +75,7 @@ jobs:
         $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.build-environment-description-base }}"
 
         if ($dataverseEnvironmentDescription -ne '') {
-          $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.build-environment-description-base }}${{ env.solution_name }} / release"
+          $dataverseEnvironmentDescription = "${{ steps.get-configurations.outputs.build-environment-description-base }}${{ github.event.inputs.solution_name }} / release"
         }
           
         echo "Dataverse environment description: $dataverseEnvironmentDescription"
@@ -107,7 +107,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: release/${{ env.solution_name }}/${{ env.RELEASE_VERSION }}
+        branch: release/${{ github.event.inputs.solution_name }}/${{ env.RELEASE_VERSION }}
 
   # Job for the creation of a just in time Dataverse Build environment
   create-build-environment:
@@ -177,10 +177,10 @@ jobs:
     steps:
     # Action used to checkout the considered release branch in the current repository
     #   Community action: https://github.com/actions/checkout
-    - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+    - name: Checkout branch release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
       uses: actions/checkout@v3.0.2
       with:
-        ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+        ref: release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
     # Delete the Release branch if exists
     - name: Delete Release branch if exists
@@ -188,13 +188,13 @@ jobs:
         git config --global user.name 'action@github.com'
         git config --global user.email 'GitHub Action'
 
-        if (git ls-remote origin release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}) {
-          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+        if (git ls-remote origin release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}) {
+          git -c http.extraheader="AUTHORIZATION: Bearer ${{ secrets.GITHUB_TOKEN }}" push origin --delete release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
-          Write-Host "release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }} branch deleted."
+          Write-Host "release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }} branch deleted."
         }
         else {
-          Write-Host "release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }} branch not found."
+          Write-Host "release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }} branch not found."
         }
       shell: pwsh
 
@@ -207,10 +207,10 @@ jobs:
     steps:
       # Action used to checkout the repository the release branch
       #   Community action: https://github.com/actions/checkout
-      - name: Checkout branch release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+      - name: Checkout branch release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
         uses: actions/checkout@v3.0.2
         with:
-          ref: release/${{ env.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
+          ref: release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
       # Get the unmanaged solutions from the GitHub artifact store
       #   Action: https://docs.github.com/en/free-pro-team@latest/actions/guides/storing-workflow-data-as-artifacts
@@ -236,8 +236,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.solution_name }}_${{ needs.create-release-branch.outputs.release_version }}
-          release_name: ${{ env.solution_name }} - ${{ needs.create-release-branch.outputs.release_version }}
+          tag_name: ${{ github.event.inputs.solution_name }}_${{ needs.create-release-branch.outputs.release_version }}
+          release_name: ${{ github.event.inputs.solution_name }} - ${{ needs.create-release-branch.outputs.release_version }}
           body: |
             ${{ github.event.inputs.github_release_body }}
           draft: true
@@ -252,8 +252,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: out/unmanagedSolutions/${{ env.solution_name }}.zip
-          asset_name: ${{ env.solution_name }}.zip
+          asset_path: out/unmanagedSolutions/${{ github.event.inputs.solution_name }}.zip
+          asset_name: ${{ github.event.inputs.solution_name }}.zip
           asset_content_type: application/zip
 
       # Upload the managed solution as asset to the GitHub release created in the previous step
@@ -265,8 +265,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: out/managedSolutions/${{ env.solution_name }}_managed.zip
-          asset_name: ${{ env.solution_name }}_managed.zip
+          asset_path: out/managedSolutions/${{ github.event.inputs.solution_name }}_managed.zip
+          asset_name: ${{ github.event.inputs.solution_name }}_managed.zip
           asset_content_type: application/zip
 
       # Upload the README.md file as asset to the GitHub release created in a previous step
