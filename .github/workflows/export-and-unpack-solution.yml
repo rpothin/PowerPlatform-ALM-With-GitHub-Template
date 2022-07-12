@@ -14,7 +14,7 @@ on:
         required: true
       solution_name:
         type: choice
-        description: 'Name of the Power Apps solution you are working on'
+        description: 'Name of the solution you are working on'
         required: true
         options: 
           - PowerPlatformALMWithGitHub
