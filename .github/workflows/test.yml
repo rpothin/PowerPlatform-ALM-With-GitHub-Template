@@ -45,4 +45,19 @@ jobs:
         # Variables
         $changedSolutionFound = $false
         $filesChangedTemp = "${{ steps.changed-files.outputs.all_changed_files }}"
+        $filesChanged = $filesChangedTemp.Split(" ")
+
+        Write-Host "========== Files updated =========="
+        foreach ($fileChanged in $filesChanged) {
+          Write-Host "$fileChanged"
+
+          if ($fileChanged.Contains("Solutions/") -and (-not($changedSolutionFound))) {
+            $fileChangedArray = $fileChanged.Split("/")
+
+            $solutionName = $fileChangedArray[1]
+          }
+        }
+
+        echo "Solution name: $solutionName"
+        echo "::set-output name=solution_name::$solutionName"
       shell: pwsh
