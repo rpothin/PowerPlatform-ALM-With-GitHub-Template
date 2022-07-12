@@ -25,15 +25,12 @@ on:
 # Concurrency configuration for the current workflow - Put new workflows in queue in pending state
 concurrency: import-solution-to-validation
 
-env:
-  solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
-
 jobs:
   # Job to initialize a variable for other jobs in the workflow
   pre-job:
     runs-on: ubuntu-latest
     outputs:
-      solution-name: ${{ env.solution_name }}
+      solution-name: '${{ steps.changed-solution.outputs.solution_name }}'
       current-date: ${{ steps.current_date.outputs.NOW }}
       build-environment-display-name-base: ${{ steps.get-configurations.outputs.build-environment-display-name-base }}
       build-environment-domain-name-base: ${{ steps.get-configurations.outputs.build-environment-domain-name-base }}
@@ -61,6 +58,8 @@ jobs:
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
       uses: actions/checkout@v3.0.2
+      with:
+        fetch-depth: 0
     
     # Get configurations from a JSON file in the repository
     - name: Get configurations
@@ -80,6 +79,36 @@ jobs:
           
         echo "Dataverse environment description: $dataverseEnvironmentDescription"
         echo "::set-output name=dataverse-environment-description::$dataverseEnvironmentDescription"
+      shell: pwsh
+
+    # Get files changed in the context of the pull request
+    #   Action: https://github.com/marketplace/actions/changed-files
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v23
+
+    # Get changed solution from changed files
+    - name: Get changed solution
+      id: changed-solution
+      run: |
+        # Variables
+        $changedSolutionFound = false
+        $filesChangedTemp = '${{ steps.changed-files.outputs.all_changed_files }}'
+        $filesChanged = $filesChangedTemp.Split(" ")
+
+        Write-Host "========== Files updated ========== "
+        foreach ($fileChanged in $filesChanged) {
+          Write-Host "$fileChanged"
+
+          if ($fileChanged.Contains("Solutions/") -and (-not($changedSolutionFound))) {
+            $fileChangedArray = $fileChanged.Split("/")
+
+            $solutionName = $fileChangedArray[1]
+          }
+        }
+
+        echo "Solution name: $solutionName"
+        echo "::set-output name=solution_name::$solutionName"
       shell: pwsh
 
   # Job for the creation of a just in time Dataverse Build environment
