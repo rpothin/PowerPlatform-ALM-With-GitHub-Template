@@ -43,7 +43,5 @@ jobs:
       id: changed-solution
       run: |
         # Variables
-        $changedSolutionFound = false
         $filesChangedTemp = '${{ steps.changed-files.outputs.all_changed_files }}'
-        $filesChanged = $filesChangedTemp.Split(" ")
       shell: pwsh
