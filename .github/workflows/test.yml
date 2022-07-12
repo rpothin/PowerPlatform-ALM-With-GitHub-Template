@@ -27,6 +27,7 @@ jobs:
 
     # Tes display list of files changed in the context of the pull request
     - name: List all changed files
+      id: test
       run: |
         $filesChanged = '${{ steps.changed-files.outputs.all_changed_files }}'
         $filesChangedArray = $filesChanged.Split(" ")
@@ -35,6 +36,9 @@ jobs:
         foreach ($fileChanged in $filesChangedArray) {
           Write-Host "$fileChanged"
         }
+
+        $solutionName = "test"
+        echo "::set-output name=solution_name::$solutionName"
       shell: pwsh
 
     # Get changed solution from changed files
