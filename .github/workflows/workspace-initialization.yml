@@ -196,7 +196,7 @@ jobs:
     - name: Set solution version variable
       if: ${{ env.SolutionsExist == 'true' }}
       run: |
-        $solutionVersion = '${{ env.NOW }}.${{ github.run_number }}'
+        $solutionVersion = '1.${{ env.NOW }}.${{ github.run_number }}'
         echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
       shell: pwsh
 
@@ -221,6 +221,7 @@ jobs:
           $solution | Add-Member -MemberType NoteProperty -Name "name" -Value $solutionName
 
           # https://cli.github.com/manual/gh_workflow_run
+          echo '{"issue_number":"${{ github.event.issue.number }}", "solution_name":"$solutionName", "solution_version":"${{ env.SOLUTION_VERSION }}", "dataverse_dev_environment_url":"${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"}' | gh workflow run import-solution-to-dev.yml --ref ${{ needs.pre-job.outputs.development-branch-name }} --json
           $solution | Add-Member -MemberType NoteProperty -Name "runId" -Value ""
 
           # https://cli.github.com/manual/gh_run_watch
