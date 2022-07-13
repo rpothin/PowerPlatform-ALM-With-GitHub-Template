@@ -211,6 +211,7 @@ jobs:
         $workflowFailedOrCanceled = 'false'
 
         Write-Host "========== List solutions folders =========="
+        cd 'Solutions/'
         $solutionFolders = Get-ChildItem -Path 'Solutions/' -Directory | Select-Object FullName
 
         Write-Host "========== Do the job 😁 =========="
@@ -238,6 +239,7 @@ jobs:
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
         if ($workflowFailedOrCanceled -eq 'true') {
+          Write-Host "========== Solutions import not successful =========="
           echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
           echo "SolutionsImportDetails=$solutions" >> $Env:GITHUB_ENV
         }
