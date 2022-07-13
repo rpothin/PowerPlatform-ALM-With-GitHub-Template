@@ -4,7 +4,7 @@
 name: 2-export-and-unpack-solution
 # Export solution from a Dataverse Dev environment and unpack it in the associated Dev branch
 
-# Workflow triggered manually providing the 2 mandatory information described below
+# Workflow triggered manually providing the following inputs
 on:
   workflow_dispatch:
     inputs:
