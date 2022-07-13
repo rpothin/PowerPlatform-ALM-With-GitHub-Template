@@ -212,15 +212,11 @@ jobs:
 
         Write-Host "========== List solutions folders =========="
         cd '${{ github.workspace }}'
-        $solutionFolders = Get-ChildItem -Path 'Solutions/' -Directory | Select-Object FullName
+        $solutionFolders = Get-ChildItem -Path 'Solutions/' -Directory | Select-Object Name
 
         Write-Host "========== Do the job 😁 =========="
         foreach ($solutionFolder in $solutionFolders) {
-          $solutionFolderFullName = $solutionFolder.FullName
-          Write-Host "Solution folder is: $solutionFolderFullName"
-
-          $solutionFolderArray = $solutionFolderFullName.Split("/")
-          $solutionName = $solutionFolderArray[1]
+          $solutionName = $solutionFolder.Name
           Write-Host "Solution name is: $solutionName"
 
           $solution = [PSCustomObject]@{}
