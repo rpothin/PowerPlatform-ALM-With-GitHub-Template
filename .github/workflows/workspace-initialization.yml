@@ -200,8 +200,6 @@ jobs:
         echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
       shell: pwsh
 
-    # ---------- PowerShell step to list solutions in repository and for each one call the  new workflow below ----------
-    # Get-ChildItem -Path Solutions/ -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
     # Pack and import solutions
     - name: Pack and import solutions
       if: ${{ env.SolutionsExist == 'true' }}
@@ -252,58 +250,7 @@ jobs:
 
           ```json
           ${{ env.SolutionsImportDetails }}
-          ```  
-
-    # ========== New workflow for pack solution as unmanaged and import to environment ==========
-    # ---------- Job for pack solution as unmanaged ----------
-    # Set the solution version in the Solution.xml file
-    - name: Set solution version
-      if: ${{ env.SolutionsExist == 'true' }}
-      run: |
-        $file = 'Solutions\${{ env.solution_name }}\Other\Solution.xml'
-        $regex = '<Version>[\s\S]*?<\/Version>'
-        (Get-Content $file) -replace $regex, '<Version>1.${{ env.SOLUTION_VERSION }}</Version>' | Set-Content $file
-      shell: pwsh
-
-    # Pack the solution as unmanaged
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
-    - name: Pack solution
-      if: ${{ env.SolutionsExist == 'true' }}
-      uses: microsoft/powerplatform-actions/pack-solution@main
-      with:
-        solution-folder: Solutions/${{ env.solution_name }}
-        solution-file: out/Solutions/${{ env.solution_name }}.zip
-        solution-type: Unmanaged
-        process-canvas-apps: true
-
-    # ---------- Job for solution import ----------
-    # Import the solution as unmanaged to the new Dataverse Dev environment
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
-    - name: Import solution as unmanaged to Dev
-      if: ${{ env.SolutionsExist == 'true' }}
-      uses: microsoft/powerplatform-actions/import-solution@main
-      with:
-        app-id: ${{ secrets.APPLICATION_ID }}
-        client-secret: ${{ secrets.CLIENT_SECRET }}
-        tenant-id: ${{ secrets.TENANT_ID }}
-        environment-url: ${{ needs.create-dataverse-dev-environment.outputs.environment-url }}
-        solution-file: out/Solutions/${{ env.solution_name }}.zip
-        force-overwrite: true
-        publish-changes: true
-        skip-dependency-check: false
-        run-asynchronously: true
-        max-async-wait-time: 10
-        use-deployment-settings-file: false
-
-    # ---------- Job for comment to issue ----------
-    # Add "Solution imported" comment to the issue
-    - name: Solution imported comment on issue
-      if: ${{ env.SolutionsExist == 'true' }}
-      uses: peter-evans/create-or-update-comment@v2
-      with:
-        issue-number: ${{ github.event.issue.number }}
-        body: |
-          🎊 Solution imported!
+          ```
 
   # Job to add a comment on the issue with the dev branch name and the Dataverse Dev environment information
   add-comment-on-issue:
