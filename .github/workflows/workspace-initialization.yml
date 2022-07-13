@@ -202,6 +202,59 @@ jobs:
 
     # ---------- PowerShell step to list solutions in repository and for each one call the  new workflow below ----------
     # Get-ChildItem -Path Solutions/ -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
+    # Pack and import solutions
+    - name: Pack and import solutions
+      if: ${{ env.SolutionsExist == 'true' }}
+      run: |
+        Write-Host "========== Initialize variables =========="
+        $solutions = @()
+        $workflowFailedOrCanceled = $false
+
+        Write-Host "========== List solutions folders =========="
+        $solutionFolders = Get-ChildItem -Path Solutions/ -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
+        $solutionFolders
+
+        Write-Host "========== Do the job 😁 =========="
+        foreach ($solutionFolder in $solutionFolders) {
+          Write-Host "Solution folder is: $solutionFolder"
+
+          $solutionFolderArray = $solutionFolder.Split("/")
+          $solutionName = $solutionFolderArray[1]
+          Write-Host "Solution name is: $solutionName"
+
+          $solution = [PSCustomObject]@{}
+          $solution | Add-Member -MemberType NoteProperty -Name "name" -Value $solutionName
+
+          # https://cli.github.com/manual/gh_workflow_run
+          $solution | Add-Member -MemberType NoteProperty -Name "runId" -Value ""
+
+          # https://cli.github.com/manual/gh_run_watch
+          $solution | Add-Member -MemberType NoteProperty -Name "runStatus" -Value ""
+
+          # If workflow run failed or canceled update $workflowFailedOrCanceled variable
+
+          $solutions += $solution
+        }
+
+        # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
+        if ($workflowFailedOrCanceled) {
+          echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
+          echo "SolutionsImportDetails=$solutions" >> $Env:GITHUB_ENV
+        }
+      shell: pwsh
+
+    # Add comment to the issue regarding solutions import not successful
+    - name: Solutions import not successful
+      if: ${{ env.SolutionsImportNotSuccessful == 'true' }}
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          # ⚠ Solutions import not successful (details below)
+
+          ```json
+          ${{ env.SolutionsImportDetails }}
+          ```  
 
     # ========== New workflow for pack solution as unmanaged and import to environment ==========
     # ---------- Job for pack solution as unmanaged ----------
