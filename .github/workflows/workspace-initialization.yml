@@ -151,7 +151,7 @@ jobs:
     environment:
       name: development
       url: ${{ needs.create-dataverse-dev-environment.outputs.power-apps-maker-environment-url }}
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       solution_name: PowerPlatformALMWithGitHub # Name of the considered solution
       RUNNER_DEBUG: 1
@@ -211,7 +211,7 @@ jobs:
         $workflowFailedOrCanceled = 'false'
 
         Write-Host "========== List solutions folders =========="
-        cd 'Solutions/'
+        cd '${{ github.workspace }}'
         $solutionFolders = Get-ChildItem -Path 'Solutions/' -Directory | Select-Object FullName
 
         Write-Host "========== Do the job 😁 =========="
