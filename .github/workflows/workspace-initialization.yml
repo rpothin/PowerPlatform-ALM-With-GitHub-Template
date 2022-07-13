@@ -168,7 +168,7 @@ jobs:
     - name: Check if solutions exist
       run: |
         if (Test-Path 'Solutions/') {
-          $folderChildItems = Get-ChildItem 'Solutions/' | Measure-Object
+          $folderChildItems = Get-ChildItem 'Solutions/' -Directory | Measure-Object
           $folderChildItemsCount = $folderChildItems.count
 
           if ($folderChildItemsCount -gt 0) {
@@ -208,17 +208,17 @@ jobs:
       run: |
         Write-Host "========== Initialize variables =========="
         $solutions = @()
-        $workflowFailedOrCanceled = $false
+        $workflowFailedOrCanceled = 'false'
 
         Write-Host "========== List solutions folders =========="
-        $solutionFolders = Get-ChildItem -Path Solutions/ -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
-        $solutionFolders
+        $solutionFolders = Get-ChildItem -Path 'Solutions/' -Directory | Select-Object FullName
 
         Write-Host "========== Do the job 😁 =========="
         foreach ($solutionFolder in $solutionFolders) {
-          Write-Host "Solution folder is: $solutionFolder"
+          $solutionFolderFullName = $solutionFolder.FullName
+          Write-Host "Solution folder is: $solutionFolderFullName"
 
-          $solutionFolderArray = $solutionFolder.Split("/")
+          $solutionFolderArray = $solutionFolderFullName.Split("/")
           $solutionName = $solutionFolderArray[1]
           Write-Host "Solution name is: $solutionName"
 
@@ -237,7 +237,7 @@ jobs:
         }
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
-        if ($workflowFailedOrCanceled) {
+        if ($workflowFailedOrCanceled -eq 'true') {
           echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
           echo "SolutionsImportDetails=$solutions" >> $Env:GITHUB_ENV
         }
