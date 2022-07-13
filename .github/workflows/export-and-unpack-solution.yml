@@ -27,7 +27,7 @@ concurrency:
 jobs:
   # Job for the export of the considered solution from the dev environment associated to the issue
   export-from-dev:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
 
