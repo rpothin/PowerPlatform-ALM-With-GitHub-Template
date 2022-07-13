@@ -1,0 +1,84 @@
+# Copyright (c) 2020-2022 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: 2-import-solution-to-dev
+# Pack and import a solution to a Dataverse Dev environment
+
+# Workflow triggered manually providing the following inputs
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        type: string
+        description: 'Number of the issue you are working on'
+        required: true
+      solution_name:
+        type: choice
+        description: 'Name of the solution you are working on'
+        required: true
+        options: 
+          - PowerPlatformALMWithGitHub
+      solution_version:
+        type: string
+        description: 'Version considered for the solution to import'
+        required: false
+        default: '1.0.0'
+      dataverse_dev_environment_url:
+        type: string
+        description: 'URL of the considered Dataverse Dev environment'
+        required: true
+
+# Concurrency configuration for the current workflow - Keep only the latest workflow queued for the considered group and the considered issue number (input)
+concurrency:
+  group: import-solution-to-dev-${{ github.event.inputs.issue_number }}
+
+jobs:
+  # Job for the pack and import of the considered solution to a Dataverse Dev environment
+  export-from-dev:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    # Set the solution version in the Solution.xml file
+    - name: Set solution version
+      run: |
+        $file = 'Solutions\${{ github.event.inputs.solution_name }}\Other\Solution.xml'
+        $regex = '<Version>[\s\S]*?<\/Version>'
+        (Get-Content $file) -replace $regex, '<Version>${{ github.event.inputs.solution_version }}</Version>' | Set-Content $file
+      shell: pwsh
+
+    # Pack the solution as unmanaged
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/pack-solution/action.yml
+    - name: Pack solution
+      uses: microsoft/powerplatform-actions/pack-solution@main
+      with:
+        solution-folder: Solutions/${{ github.event.inputs.solution_name }}
+        solution-file: out/Solutions/${{ github.event.inputs.solution_name }}.zip
+        solution-type: Unmanaged
+        process-canvas-apps: true
+
+    # Import the solution as unmanaged to the new Dataverse Dev environment
+    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/import-solution/action.yml
+    - name: Import solution as unmanaged to Dev
+      uses: microsoft/powerplatform-actions/import-solution@main
+      with:
+        app-id: ${{ secrets.APPLICATION_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        tenant-id: ${{ secrets.TENANT_ID }}
+        environment-url: ${{ github.event.inputs.dataverse_dev_environment_url }}
+        solution-file: out/Solutions/${{ github.event.inputs.solution_name }}.zip
+        force-overwrite: true
+        publish-changes: true
+        skip-dependency-check: false
+        run-asynchronously: true
+        max-async-wait-time: 10
+        use-deployment-settings-file: false
+
+    # Add "Solution imported" comment to the issue
+    - name: Solution imported comment on issue
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        issue-number: ${{ github.event.inputs.issue_number }}
+        body: |
+          🎊 ${{ github.event.inputs.solution_name }} solution imported to Dataverse Dev environment!
