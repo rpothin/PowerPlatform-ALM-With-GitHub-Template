@@ -88,4 +88,4 @@ jobs:
       with:
         issue-number: ${{ github.event.inputs.issue_number }}
         body: |
-          🎊 ${{ github.event.inputs.solution_name }} solution imported to Dataverse Dev environment!
+          🎊 **${{ github.event.inputs.solution_name }}** solution imported to Dataverse Dev environment!
