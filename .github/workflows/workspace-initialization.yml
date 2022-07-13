@@ -228,19 +228,22 @@ jobs:
           Write-Host "Get informations regarding the workflow run triggered"
           $workflowRuns = gh run list -b work/190 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
           $workflowRunDetails = $workflowRuns[0]
+          $workflowRunId = $workflowRunDetails.databaseId
           $solution | Add-Member -MemberType NoteProperty -Name "runId" -Value $workflowRunDetails.databaseId
           $solution | Add-Member -MemberType NoteProperty -Name "runUrl" -Value $workflowRunDetails.url
 
           # Watch workflow run triggered
           #   https://cli.github.com/manual/gh_run_watch
-          Write-Host "Watch workflow run triggered"
-          gh run watch $workflowRunDetails.databaseId
+          Write-Host "Watch workflow run triggered: $workflowRunId"
+          gh run watch $workflowRunId
           $solution | Add-Member -MemberType NoteProperty -Name "runStatus" -Value ""
 
           # If workflow run failed or canceled update $workflowFailedOrCanceled variable
 
           $solutions += $solution
         }
+
+        $solutions
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
         if ($workflowFailedOrCanceled -eq 'true') {
