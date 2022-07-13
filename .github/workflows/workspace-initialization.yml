@@ -246,7 +246,7 @@ jobs:
         }
       shell: pwsh
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_PAT }}
 
     # Add comment to the issue regarding solutions import not successful
     - name: Solutions import not successful
