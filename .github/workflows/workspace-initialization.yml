@@ -227,7 +227,7 @@ jobs:
             solution_version = "${{ env.SOLUTION_VERSION }}"
             dataverse_dev_environment_url = "${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"
           }
-          gh workflow run import-solution-to-dev.yml --ref ${{ needs.pre-job.outputs.development-branch-name }} --field @inputs
+          gh workflow run import-solution-to-dev.yml --ref ${{ needs.pre-job.outputs.development-branch-name }} -f issue_number="${{ github.event.issue.number }}" -f solution_name=$solutionName -f solution_version="${{ env.SOLUTION_VERSION }}" -f dataverse_dev_environment_url="${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"
           $solution | Add-Member -MemberType NoteProperty -Name "runId" -Value ""
 
           # https://cli.github.com/manual/gh_run_watch
