@@ -13,6 +13,11 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
+    # Action used to checkout the main branch in the current repository
+    #   Community action: https://github.com/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v3.0.2
+      
     - name: Test
       run: |
         Write-Host "========== Without inputs =========="
