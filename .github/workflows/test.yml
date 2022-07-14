@@ -17,14 +17,22 @@ jobs:
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
       uses: actions/checkout@v3.0.2
-      
+
     - name: Test
       run: |
-        Write-Host "========== Without inputs =========="
-        gh run list
-
         Write-Host "========== Correct call =========="
         gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
+        
+        Write-Host "========== Store run id in variable =========="
+        $workflowRuns = gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
+        $workflowRunDetails = $workflowRuns[0]
+
+        Write-Host "---------- Workflow run details ----------"
+        $workflowRunDetails
+        $workflowRunId = $workflowRunDetails.databaseId
+
+        Write-Host "---------- Workflow run id ----------"
+        $workflowRunId
       shell: pwsh
       env:
         GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW_UPDATE }}
