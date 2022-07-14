@@ -262,7 +262,10 @@ jobs:
         if ($workflowFailedOrCanceled -eq 'true') {
           Write-Host "========== Solutions import not successful =========="
           echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
-          echo "SolutionsImportDetails=$solutions" >> $Env:GITHUB_ENV
+          
+          echo 'SolutionsImportDetails<<EOF' >> $GITHUB_ENV
+          $solutions >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
         }
       shell: pwsh
       env:
