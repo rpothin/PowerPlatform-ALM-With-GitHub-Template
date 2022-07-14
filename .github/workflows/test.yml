@@ -24,7 +24,7 @@ jobs:
         gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
         
         Write-Host "========== Store run id in variable =========="
-        $workflowRuns = gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
+        $workflowRuns = gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
         $workflowRunDetails = $workflowRuns[0]
 
         Write-Host "---------- Workflow run details ----------"
