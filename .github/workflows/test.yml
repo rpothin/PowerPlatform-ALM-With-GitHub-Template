@@ -21,10 +21,10 @@ jobs:
     - name: Test
       run: |
         Write-Host "========== Correct call =========="
-        gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
+        gh run list -b work/194 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
         
         Write-Host "========== Store run id in variable =========="
-        $workflowRuns = gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
+        $workflowRuns = gh run list -b work/194 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
         $workflowRunDetails = $workflowRuns[0]
 
         Write-Host "---------- Workflow run details ----------"
