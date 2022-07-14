@@ -1,0 +1,25 @@
+# Copyright (c) 2020-2022 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - name: Test
+      run: |
+        Write-Host "========== Without inputs =========="
+        gh run list
+
+        Write-Host "========== Correct call =========="
+        gh run list -b work/193 -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url
+      shell: pwsh
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW_UPDATE }}
