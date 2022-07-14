@@ -227,8 +227,9 @@ jobs:
 
           Start-Sleep -s 10
 
-          Write-Host "Get informations regarding the workflow run triggered"
-          gh run list -b ${{ needs.pre-job.outputs.development-branch-name }} -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
+          # Identify workflow run triggered
+          #   https://cli.github.com/manual/gh_run_list
+          Write-Host "Identify workflow run triggered"
           $workflowRuns = gh run list -b ${{ needs.pre-job.outputs.development-branch-name }} -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
 
           $workflowRunDetails = $workflowRuns[0]
@@ -240,9 +241,17 @@ jobs:
           #   https://cli.github.com/manual/gh_run_watch
           Write-Host "Watch workflow run triggered: $workflowRunId"
           gh run watch $workflowRunId
-          $solution | Add-Member -MemberType NoteProperty -Name "runStatus" -Value ""
+
+          # Get workflow run details after completion
+          #   https://cli.github.com/manual/gh_run_view
+          $workflowRunDetailsAfterCompletion = gh run view $workflowRunId --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
+          $workflowRunConclusion = $workflowRunDetailsAfterCompletion.conclusion
+          $solution | Add-Member -MemberType NoteProperty -Name "runConclusion" -Value $workflowRunConclusion
 
           # If workflow run failed or canceled update $workflowFailedOrCanceled variable
+          if ($workflowRunConclusion -ne 'success') {
+            $workflowFailedOrCanceled = 'true'
+          }
 
           $solutions += $solution
         }
