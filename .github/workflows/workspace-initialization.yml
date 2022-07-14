@@ -225,15 +225,11 @@ jobs:
           Write-Host "Trigger workflow run for pack and import of the solution"
           gh workflow run import-solution-to-dev.yml --ref ${{ needs.pre-job.outputs.development-branch-name }} -f issue_number="${{ github.event.issue.number }}" -f solution_name=$solutionName -f solution_version="${{ env.SOLUTION_VERSION }}" -f dataverse_dev_environment_url="${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"
 
+          Start-Sleep -s 10
+
           Write-Host "Get informations regarding the workflow run triggered"
-          $workflowRunsCount = 0
-          $maxRetries = 3
-          $retries = 0
-          Do {
-            $workflowRuns = gh run list -b ${{ needs.pre-job.outputs.development-branch-name }} -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
-            Start-Sleep -s 3
-          }
-          while (($workflowRunsCount -eq 0) -or ($retries -eq $maxRetries))
+          gh run list -b ${{ needs.pre-job.outputs.development-branch-name }} -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
+          $workflowRuns = gh run list -b ${{ needs.pre-job.outputs.development-branch-name }} -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
 
           $workflowRunDetails = $workflowRuns[0]
           $workflowRunId = $workflowRunDetails.databaseId
