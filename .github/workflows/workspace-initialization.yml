@@ -244,8 +244,11 @@ jobs:
 
           # Get workflow run details after completion
           #   https://cli.github.com/manual/gh_run_view
+          Write-Host "View workflow run triggered: $workflowRunId"
+          gh run view $workflowRunId --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
           $workflowRunDetailsAfterCompletion = gh run view $workflowRunId --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
           $workflowRunConclusion = $workflowRunDetailsAfterCompletion.conclusion
+          Write-Host "Workflow run conclusion: $workflowRunConclusion"
           $solution | Add-Member -MemberType NoteProperty -Name "runConclusion" -Value $workflowRunConclusion
 
           # If workflow run failed or canceled update $workflowFailedOrCanceled variable
@@ -256,7 +259,9 @@ jobs:
           $solutions += $solution
         }
 
-        $solutions
+        # Display solutions import details
+        Write-Host "========== Solutions import details =========="
+        $solutions | ConvertTo-Json
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
         if ($workflowFailedOrCanceled -eq 'true') {
@@ -264,7 +269,7 @@ jobs:
           echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
           
           echo 'SolutionsImportDetails<<EOF' >> $GITHUB_ENV
-          $solutions >> $GITHUB_ENV
+          $solutions | ConvertTo-Json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
         }
       shell: pwsh
