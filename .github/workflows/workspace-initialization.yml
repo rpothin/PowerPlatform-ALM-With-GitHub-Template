@@ -263,15 +263,21 @@ jobs:
         Write-Host "========== Solutions import details =========="
         $solutions
 
-        $solutionsImportDetails = $solutions -replace '%', '%25'
-        $solutionsImportDetails = $solutionsImportDetails -replace '\n', '%0A'
-        $solutionsImportDetails = $solutionsImportDetails -replace '\r', '%0D'
+        #$solutionsImportDetails = $solutions -replace '%', '%25'
+        #$solutionsImportDetails = $solutionsImportDetails -replace '\n', '%0A'
+        #$solutionsImportDetails = $solutionsImportDetails -replace '\r', '%0D'
+
+        $solutionsImportDetails = $solutions | ConvertTo-Json
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
         if ($workflowFailedOrCanceled -eq 'true') {
           Write-Host "========== Solutions import not successful =========="
           echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
-          echo "SolutionsImportDetails=$solutionsImportDetails" >> $Env:GITHUB_ENV
+          #echo "SolutionsImportDetails=$solutionsImportDetails" >> $Env:GITHUB_ENV
+          
+          echo "SolutionsImportDetails<<EOF" >> $GITHUB_ENV
+          echo "$solutionsImportDetails" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
         }
       shell: pwsh
       env:
