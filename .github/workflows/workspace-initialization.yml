@@ -261,16 +261,16 @@ jobs:
 
         # Display solutions import details
         Write-Host "========== Solutions import details =========="
-        $solutions | ConvertTo-Json
+        $solutions
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
         if ($workflowFailedOrCanceled -eq 'true') {
           Write-Host "========== Solutions import not successful =========="
           echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
           
-          echo 'SolutionsImportDetails<<EOF' >> $GITHUB_ENV
-          $solutions | ConvertTo-Json >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+          echo "SolutionsImportDetails<<EOF" >> $GITHUB_ENV
+          echo "$solutions" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
         }
       shell: pwsh
       env:
