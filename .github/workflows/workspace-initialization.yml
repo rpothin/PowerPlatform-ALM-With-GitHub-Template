@@ -225,7 +225,8 @@ jobs:
           Write-Host "Trigger workflow run for pack and import of the solution"
           gh workflow run import-solution-to-dev.yml --ref ${{ needs.pre-job.outputs.development-branch-name }} -f issue_number="${{ github.event.issue.number }}" -f solution_name=$solutionName -f solution_version="${{ env.SOLUTION_VERSION }}" -f dataverse_dev_environment_url="${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"
 
-          Start-Sleep -s 10
+          # Wait few seconds so that the workflow run triggered appears in the result of the execution of the "gh run list" command
+          Start-Sleep -s 5
 
           # Identify workflow run triggered
           #   https://cli.github.com/manual/gh_run_list
