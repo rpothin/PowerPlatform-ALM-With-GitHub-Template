@@ -16,7 +16,7 @@ on:
         type: choice
         description: 'Name of the solution you are working on'
         required: true
-        options: 
+        options:
           - PowerPlatformALMWithGitHub
       solution_version:
         type: string
