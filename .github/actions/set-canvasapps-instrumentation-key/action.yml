@@ -27,39 +27,46 @@ runs:
         Write-Host "Set variables"
         $ConfigurationFilePath = "${{ inputs.path-to-custom-deployment-settings-file }}"
 
-        # Test the path provided to the file with the canvas apps instrumentation key
-        Write-Host "Test the path provided to the file with the canvas apps instrumentation key: $ConfigurationFilePath"
-        $testPathResult = Test-Path $ConfigurationFilePath
-        if(!$testPathResult) {
-          Write-Error -Message "Following path to configuration file not valid: $ConfigurationFilePath" -ErrorAction Stop
+        # Check if there are canvas apps in the considered solution
+        $canvasAppsFolderExist = "Solutions/${{ inputs.solution-name }}/CanvasApps"
+        if (!$canvasAppsFolderExist) {
+          Write-Host "No canvas apps in the following solution: ${{ inputs.solution-name }}"
         }
+        else {
+          # Test the path provided to the file with the canvas apps instrumentation key
+          Write-Host "Test the path provided to the file with the canvas apps instrumentation key: $ConfigurationFilePath"
+          $testPathResult = Test-Path $ConfigurationFilePath
+          if (!$testPathResult) {
+            Write-Error -Message "Following path to configuration file not valid: $ConfigurationFilePath" -ErrorAction Stop
+          }
 
-        # Extract canvas apps instrumentation key from the configuration file
-        Write-Host "Get canvas apps instrumentation key from the configuration in the following location: $ConfigurationFilePath"
-        try {
-          Write-Host "Try to call the Get-Content command"
-          $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
+          # Extract canvas apps instrumentation key from the configuration file
+          Write-Host "Get canvas apps instrumentation key from the configuration in the following location: $ConfigurationFilePath"
+          try {
+            Write-Host "Try to call the Get-Content command"
+            $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
 
-          $canvasAppsInstrumentationKey = $configurations.canvasApps.instrumentationKey
-          Write-Host "Canvas apps instrumentation key: $canvasAppsInstrumentationKey"
-        }
-        catch {
-          Write-Error -Message "Error in the extraction of the canvas apps instrumentation key from the considered configuration file ($ConfigurationFilePath): $getConfigurationError" -ErrorAction Stop
-        }
+            $canvasAppsInstrumentationKey = $configurations.canvasApps.instrumentationKey
+            Write-Host "Canvas apps instrumentation key: $canvasAppsInstrumentationKey"
+          }
+          catch {
+            Write-Error -Message "Error in the extraction of the canvas apps instrumentation key from the considered configuration file ($ConfigurationFilePath): $getConfigurationError" -ErrorAction Stop
+          }
 
-        # For all relevant canvas apps (with an "AppInsightsKey.json" file) in the considered solution, set canvas apps instrumentation key
-        Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}/CanvasApps/src" -Recurse -Filter AppInsightsKey.json | 
-        ForEach-Object {
-          $appInsightsKeyFilePath = $_.FullName
-          Write-Host "Set canvas apps instrumentation key for the following canvas app: $appInsightsKeyFilePath"
+          # For all relevant canvas apps (with an "AppInsightsKey.json" file) in the considered solution, set canvas apps instrumentation key
+          Get-ChildItem -Path "Solutions/${{ inputs.solution-name }}/CanvasApps/src" -Recurse -Filter AppInsightsKey.json | 
+          ForEach-Object {
+            $appInsightsKeyFilePath = $_.FullName
+            Write-Host "Set canvas apps instrumentation key for the following canvas app: $appInsightsKeyFilePath"
 
-          $appInsightsKeyFileContent = Get-Content $appInsightsKeyFilePath | ConvertFrom-Json
-          Write-Host "Canvas apps instrumentation key configuration before update: $appInsightsKeyFileContent"
+            $appInsightsKeyFileContent = Get-Content $appInsightsKeyFilePath | ConvertFrom-Json
+            Write-Host "Canvas apps instrumentation key configuration before update: $appInsightsKeyFileContent"
 
-          $appInsightsKeyFileContent.InstrumentationKey = $canvasAppsInstrumentationKey
-          Write-Host "Canvas apps instrumentation key configuration after update: $appInsightsKeyFileContent"
+            $appInsightsKeyFileContent.InstrumentationKey = $canvasAppsInstrumentationKey
+            Write-Host "Canvas apps instrumentation key configuration after update: $appInsightsKeyFileContent"
 
-          $appInsightsKeyFileContent | ConvertTo-Json | set-content $appInsightsKeyFilePath
+            $appInsightsKeyFileContent | ConvertTo-Json | set-content $appInsightsKeyFilePath
+          }
         }
       shell: pwsh
 
