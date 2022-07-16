@@ -221,6 +221,7 @@ jobs:
       id: pack-import-solutions
       with:
         solutions: ${{ env.SolutionsToImport }}
+        pat-workflow-update: ${{ secrets.PAT_WORKFLOW_UPDATE }}
 
     # Add comment to the issue regarding solutions import not successful
     - name: Solutions import not successful

@@ -9,6 +9,9 @@ inputs:
   solutions:
     description: 'List of solutions to pack and import'
     required: true
+  pat-workflow-update:
+    description: 'Personal Access Token to be able to run a workflow (⚠ Secret)'
+    required: true
 
 outputs:
   solutions-import-details:
@@ -24,7 +27,7 @@ runs:
     # Pack and import solutions with workflow runs
     - name: Pack and import solutions
       id: pack-import-solutions
-      run:  |
+      run: |
         Write-Host "---------- Initialize variables ----------"
         $solutionsImportDetails = @()
         $workflowFailedOrCanceled = 'false'
@@ -95,4 +98,4 @@ runs:
         }
       shell: pwsh
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW_UPDATE }}
+        GITHUB_TOKEN: ${{ inputs.pat-workflow-update }}
