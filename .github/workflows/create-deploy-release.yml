@@ -14,7 +14,7 @@ on:
         type: choice
         description: 'Name of the solution to deploy'
         required: true
-        options: 
+        options:
           - PowerPlatformALMWithGitHub
       solution-major-version:
         type: string
