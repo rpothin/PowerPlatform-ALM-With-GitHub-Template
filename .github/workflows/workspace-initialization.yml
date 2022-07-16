@@ -200,87 +200,31 @@ jobs:
         echo "SOLUTION_VERSION=$solutionVersion" >> $Env:GITHUB_ENV
       shell: pwsh
 
-    # Pack and import solutions
-    - name: Pack and import solutions
+    # List solutions to pack and import
+    - name: List solutions
       if: ${{ env.SolutionsExist == 'true' }}
       run: |
-        Write-Host "---------- Initialize variables ----------"
-        $solutions = @()
-        $workflowFailedOrCanceled = 'false'
-
         Write-Host "---------- List solutions folders ----------"
         cd '${{ github.workspace }}'
         $solutionFolders = Get-ChildItem -Path 'Solutions/' -Directory | Select-Object Name
 
-        Write-Host "========== Pack and import solutions =========="
-        foreach ($solutionFolder in $solutionFolders) {
-          $solutionName = $solutionFolder.Name
-          Write-Host "---------- $solutionName ----------"
+        $solutionsToImport = $solutionFolders | ConvertTo-Json
+        $solutionsToImport = $solutionsToImport -replace '\n', ''
 
-          $solution = [PSCustomObject]@{}
-          $solution | Add-Member -MemberType NoteProperty -Name "name" -Value $solutionName
-
-          # Trigger workflow run for pack and import of the solution
-          #   https://cli.github.com/manual/gh_workflow_run
-          Write-Host "Trigger workflow run for pack and import of the solution"
-          gh workflow run import-solution-to-dev.yml --ref ${{ needs.pre-job.outputs.development-branch-name }} -f issue_number="${{ github.event.issue.number }}" -f solution_name=$solutionName -f solution_version="${{ env.SOLUTION_VERSION }}" -f dataverse_dev_environment_url="${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"
-
-          # Wait few seconds so that the workflow run triggered appears in the result of the execution of the "gh run list" command
-          Start-Sleep -s 5
-
-          # Identify workflow run triggered
-          #   https://cli.github.com/manual/gh_run_list
-          Write-Host "Identify workflow run triggered"
-          $workflowRuns = gh run list -b ${{ needs.pre-job.outputs.development-branch-name }} -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
-
-          $workflowRunDetails = $workflowRuns[0]
-          $workflowRunId = $workflowRunDetails.databaseId
-          $solution | Add-Member -MemberType NoteProperty -Name "runId" -Value $workflowRunId
-          $solution | Add-Member -MemberType NoteProperty -Name "runUrl" -Value $workflowRunDetails.url
-
-          # Watch workflow run triggered
-          #   https://cli.github.com/manual/gh_run_watch
-          Write-Host "Watch workflow run triggered: $workflowRunId"
-          gh run watch $workflowRunId
-
-          # Get workflow run details after completion
-          #   https://cli.github.com/manual/gh_run_view
-          Write-Host "View workflow run triggered: $workflowRunId"
-          gh run view $workflowRunId --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
-          $workflowRunDetailsAfterCompletion = gh run view $workflowRunId --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
-          $workflowRunConclusion = $workflowRunDetailsAfterCompletion.conclusion
-          Write-Host "Workflow run conclusion: $workflowRunConclusion"
-          $solution | Add-Member -MemberType NoteProperty -Name "runConclusion" -Value $workflowRunConclusion
-
-          # If workflow run failed or canceled update $workflowFailedOrCanceled variable
-          if ($workflowRunConclusion -ne 'success') {
-            $workflowFailedOrCanceled = 'true'
-          }
-
-          $solutions += $solution
-        }
-
-        # Display solutions import details
-        Write-Host "========== Solutions import details =========="
-        $solutions
-
-        # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
-        if ($workflowFailedOrCanceled -eq 'true') {
-          Write-Host "========== Solutions import not successful =========="
-          # Variable to be able to pass a multiline environment variable (JSON) to another step 
-          $solutionsImportDetails = $solutions | ConvertTo-Json
-          $solutionsImportDetails = $solutionsImportDetails -replace '\n', ''
-
-          echo "SolutionsImportNotSuccessful=$workflowFailedOrCanceled" >> $Env:GITHUB_ENV
-          echo "SolutionsImportDetails=$solutionsImportDetails" >> $Env:GITHUB_ENV
-        }
+        echo "SolutionsToImport=$solutionsToImport" >> $Env:GITHUB_ENV
       shell: pwsh
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW_UPDATE }}
+    
+    # Pack and import solutions with workflow runs
+    - name: Pack and import solutions
+      if: ${{ env.SolutionsExist == 'true' }}
+      uses: ./.github/actions/run-import-solutions
+      id: pack-import-solutions
+      with:
+        solutions: ${{ env.SolutionsToImport }}
 
     # Add comment to the issue regarding solutions import not successful
     - name: Solutions import not successful
-      if: ${{ env.SolutionsImportNotSuccessful == 'true' }}
+      if: ${{ steps.pack-import-solutions.outputs.solutions-import-not-successful == 'true' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.issue.number }}
@@ -288,7 +232,7 @@ jobs:
           # ⚠ Solutions import not successful (details below)
 
           ```json
-          ${{ env.SolutionsImportDetails }}
+          ${{ steps.pack-import-solutions.outputs.solutions-import-details }}
           ```
 
   # Job to add a comment on the issue with the dev branch name and the Dataverse Dev environment information
