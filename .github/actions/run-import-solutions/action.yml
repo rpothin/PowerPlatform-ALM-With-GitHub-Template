@@ -1,0 +1,98 @@
+# Copyright (c) 2020-2022 Raphael Pothin.
+# Licensed under the MIT License.
+
+name: 'Pack and import solutions'
+
+description: 'Pack and import solutions with workflow runs'
+
+inputs:
+  solutions:
+    description: 'List of solutions to pack and import'
+    required: true
+
+outputs:
+  solutions-import-details:
+    description: "Details of the import of the solutions"
+    value: ${{ steps.pack-import-solutions.outputs.solutions-import-details }}
+  solutions-import-not-successful:
+    description: "Flag to identify import of solutions with errors"
+    value: ${{ steps.pack-import-solutions.outputs.solutions-import-not-successful }}
+
+runs:
+  using: "composite"
+  steps:
+    # Pack and import solutions with workflow runs
+    - name: Pack and import solutions
+      id: pack-import-solutions
+      run:  |
+        Write-Host "---------- Initialize variables ----------"
+        $solutionsImportDetails = @()
+        $workflowFailedOrCanceled = 'false'
+        $solutionsToImport = "${{ inputs.path-to-configuration-file }}" | ConvertFrom-Json
+
+        Write-Host "========== Pack and import solutions =========="
+        foreach ($solutionToImport in $solutionsToImport) {
+          $solutionName = $solutionToImport.Name
+          Write-Host "---------- $solutionName ----------"
+
+          $solutionImportDetails = [PSCustomObject]@{}
+          $solutionImportDetails | Add-Member -MemberType NoteProperty -Name "name" -Value $solutionName
+
+          # Trigger workflow run for pack and import of the solution
+          #   https://cli.github.com/manual/gh_workflow_run
+          Write-Host "Trigger workflow run for pack and import of the solution"
+          gh workflow run import-solution-to-dev.yml --ref ${{ needs.pre-job.outputs.development-branch-name }} -f issue_number="${{ github.event.issue.number }}" -f solution_name=$solutionName -f solution_version="${{ env.SOLUTION_VERSION }}" -f dataverse_dev_environment_url="${{ needs.create-dataverse-dev-environment.outputs.environment-url }}"
+
+          # Wait few seconds so that the workflow run triggered appears in the result of the execution of the "gh run list" command
+          Start-Sleep -s 5
+
+          # Identify workflow run triggered
+          #   https://cli.github.com/manual/gh_run_list
+          Write-Host "Identify workflow run triggered"
+          $workflowRuns = gh run list -b ${{ needs.pre-job.outputs.development-branch-name }} -w import-solution-to-dev.yml --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
+
+          $workflowRunDetails = $workflowRuns[0]
+          $workflowRunId = $workflowRunDetails.databaseId
+          $solutionImportDetails | Add-Member -MemberType NoteProperty -Name "runId" -Value $workflowRunId
+          $solutionImportDetails | Add-Member -MemberType NoteProperty -Name "runUrl" -Value $workflowRunDetails.url
+
+          # Watch workflow run triggered
+          #   https://cli.github.com/manual/gh_run_watch
+          Write-Host "Watch workflow run triggered: $workflowRunId"
+          gh run watch $workflowRunId
+
+          # Get workflow run details after completion
+          #   https://cli.github.com/manual/gh_run_view
+          Write-Host "View workflow run triggered: $workflowRunId"
+          gh run view $workflowRunId --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
+          $workflowRunDetailsAfterCompletion = gh run view $workflowRunId --json name,headBranch,databaseId,status,conclusion,url | ConvertFrom-Json
+          $workflowRunConclusion = $workflowRunDetailsAfterCompletion.conclusion
+          Write-Host "Workflow run conclusion: $workflowRunConclusion"
+          $solutionImportDetails | Add-Member -MemberType NoteProperty -Name "runConclusion" -Value $workflowRunConclusion
+
+          # If workflow run failed or canceled update $workflowFailedOrCanceled variable
+          if ($workflowRunConclusion -ne 'success') {
+            $workflowFailedOrCanceled = 'true'
+          }
+
+          $solutionsImportDetails += $solutionImportDetails
+        }
+
+        # Display solutions import details
+        Write-Host "========== Solutions import details =========="
+        $solutionsImportDetails
+
+        # Variable to be able to pass a multiline string as output (JSON) to another step 
+        $solutionsImportDetails = $solutionsImportDetails | ConvertTo-Json
+        $solutionsImportDetails = $solutionsImportDetails -replace '\n', ''
+        
+        echo "::set-output name=solutions-import-details::$solutionsImportDetails"
+
+        # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
+        if ($workflowFailedOrCanceled -eq 'true') {
+          Write-Host "========== Solutions import not successful =========="'
+          echo "::set-output name=solutions-import-not-successful::$workflowFailedOrCanceled"
+        }
+      shell: pwsh
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW_UPDATE }}
