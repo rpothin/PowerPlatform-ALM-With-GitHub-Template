@@ -8,7 +8,7 @@ description: 'Get configurations from a JSON file in the repository'
 inputs:
   path-to-configuration-file:
     description: 'Absolute path to the configuration file'
-    required: true
+    required: false
     default: 'Configurations\configurations.json'
 
 outputs:
