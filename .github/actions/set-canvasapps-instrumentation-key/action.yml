@@ -28,7 +28,8 @@ runs:
         $ConfigurationFilePath = "${{ inputs.path-to-custom-deployment-settings-file }}"
 
         # Check if there are canvas apps in the considered solution
-        $canvasAppsFolderExist = "Solutions/${{ inputs.solution-name }}/CanvasApps"
+        $canvasAppsFolder = "Solutions/${{ inputs.solution-name }}/CanvasApps"
+        $canvasAppsFolderExist = Test-Path $canvasAppsFolder
         if (!$canvasAppsFolderExist) {
           Write-Host "No canvas apps in the following solution: ${{ inputs.solution-name }}"
         }
