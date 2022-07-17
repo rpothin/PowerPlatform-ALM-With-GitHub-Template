@@ -221,6 +221,8 @@ jobs:
       id: pack-import-solutions
       with:
         solutions: ${{ env.SolutionsToImport }}
+        branch-name: ${{ needs.pre-job.outputs.development-branch-name }}
+        environment-url: ${{ needs.create-dataverse-dev-environment.outputs.environment-url }}
         pat-workflow-update: ${{ secrets.PAT_WORKFLOW_UPDATE }}
 
     # Add comment to the issue regarding solutions import not successful
