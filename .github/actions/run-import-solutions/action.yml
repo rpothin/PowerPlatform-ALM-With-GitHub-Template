@@ -38,7 +38,7 @@ runs:
         Write-Host "---------- Initialize variables ----------"
         $solutionsImportDetails = @()
         $workflowFailedOrCanceled = 'false'
-        $solutionsToImport = "${{ inputs.path-to-configuration-file }}" | ConvertFrom-Json
+        $solutionsToImport = "${{ inputs.solutions }}" | ConvertFrom-Json
 
         Write-Host "========== Pack and import solutions =========="
         foreach ($solutionToImport in $solutionsToImport) {
