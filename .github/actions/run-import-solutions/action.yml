@@ -35,8 +35,6 @@ runs:
     - name: Pack and import solutions
       id: pack-import-solutions
       run: |
-        Write-Host "Security test: ${{ inputs.pat-workflow-update }}"
-        
         Write-Host "---------- Initialize variables ----------"
         $solutionsImportDetails = @()
         $workflowFailedOrCanceled = 'false'
@@ -102,7 +100,7 @@ runs:
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
         if ($workflowFailedOrCanceled -eq 'true') {
-          Write-Host "========== Solutions import not successful =========="'
+          Write-Host "========== Solutions import not successful =========="
           echo "::set-output name=solutions-import-not-successful::$workflowFailedOrCanceled"
         }
       shell: pwsh
