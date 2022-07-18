@@ -95,16 +95,26 @@ jobs:
         $changedSolutionFound = $false
         $filesChangedTemp = "${{ steps.changed-files.outputs.all_changed_files }}"
         $filesChanged = $filesChangedTemp.Split(" ")
+        $solutionName = ""
+        $solutionNameBackup = ""
 
-        Write-Host "========== Files updated =========="
+        Write-Host "========== Search updated solution in changed files =========="
         foreach ($fileChanged in $filesChanged) {
           Write-Host "$fileChanged"
+          $fileChangedArray = $fileChanged.Split("/")
 
           if ($fileChanged.Contains("Solutions/") -and (-not($changedSolutionFound))) {
-            $fileChangedArray = $fileChanged.Split("/")
-
             $solutionName = $fileChangedArray[1]
           }
+
+          if ($fileChanged.Contains("Configurations/") -and (-not($changedSolutionFound))) {
+            $solutionNameBackup = $fileChangedArray[1]
+          }
+        }
+
+        if ($solutionName -eq "") {
+          Write-Host "⚠ Only configurations udpated"
+          $solutionName = $solutionNameBackup
         }
 
         echo "Solution name: $solutionName"
