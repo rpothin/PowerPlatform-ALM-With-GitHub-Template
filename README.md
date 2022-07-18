@@ -63,6 +63,7 @@ It contains components (GitHub workflows, PowerShell scripts...) that will help 
 ### Others
 
 - [What are the principles of the ALM model proposed in this repository?](Documentation/ALM-Model.md)
+- [How to add a new solution to this repository?](Documentation/Add-Solution.md)
 - [What can be found in this repository?](Documentation/Repository-Content.md)
 
 ## 📅 Roadmap

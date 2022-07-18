@@ -9,6 +9,7 @@
 ### Actions
 
 - [**get-configurations**](../.github/actions/get-configurations/action.yml): action to extract configuration from a JSON file respecting the format described [here](./Repository-Setup.md#5---update-global-configurations)
+- [**run-import-solutions**](../.github/actions/run-import-solutions/action.yml): action to create runs of the [**import-solution-to-dev**](../.github/workflows/import-solution-to-dev.yml) for a list of solutions passed as an input
 - [**set-canvasapps-instrumentation-key**](../.github/actions/set-canvasapps-instrumentation-key/action.yml): action to set an Azure Application Insights Instrumentation Key we get from the considered custom deployment settings file (*format described [here](./Custom-Deployment-Settings-File-Management.md)*) in the source code of the canvas apps of the considered solution before packing for deployment
 
 ### Workflows
@@ -35,6 +36,13 @@
       - execute the solution checker on the considered solution and generate an execute condition if thresholds are not met
       - test the solution type conversion (unmanaged to managed) using the just-in-time Dataverse Build environment
       - delete the just-in-time Dataverse Build environment
+- [**import-solution-to-dev**](../.github/workflows/import-solution-to-dev.yml):
+   - Trigger: manual with inputs (*runs created from [**run-import-solutions**](../.github/actions/run-import-solutions/action.yml) action called from the [**workspace-initialization.yml**](../.github/workflows/workspace-initialization.yml) workflow*)
+   - Summary of actions:
+      - set solution version (*version passed in an input*)
+      - pack solution as unmanaged
+      - import solution to a Dataverse Dev environment (*environment url passed in an input*)
+      - add a comment to the considered issue (*issue number passed in an input*)
 - [**import-solution-to-validation**](../.github/workflows/import-solution-to-validation.yml):
    - Trigger: push to the `main` branch with changes on specific folders
    - Summary of actions:
