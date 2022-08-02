@@ -1,6 +1,6 @@
 <p align="center">
     <h1 align="center">
-        What are the principles of the ALM model proposed in this repository?
+        What are the principles of the ALM strategy proposed in this repository?
     </h1>
 </p>
 

@@ -17,6 +17,11 @@
 </p>
 
 <p align="center">
+    <a href="#contributors" alt="Contributors">
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+        <img src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square" />
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+    </a>
     <a href="#watchers" alt="Watchers">
         <img src="https://img.shields.io/github/watchers/rpothin/PowerPlatform-ALM-With-GitHub-Template?style=social" /></a>
     <a href="#forks" alt="Forks">
@@ -42,16 +47,16 @@ It contains components (GitHub workflows, PowerShell scripts...) that will help 
 ## 🚀 Goals
 
 1. Provide an easy way to setup a GitHub repository for Power Platform / Dynamics 365 development.
-2. Propose a starting point allowing a development team to customize the components included based on their own needs.
-3. Illustrate that we can automate many things related to the Power Platform to support a healthy ALM strategy.
+2. Propose a starting point allowing a development team to customize the included components based on their own needs.
+3. Illustrate that we can automate many things related to the Power Platform to support an healthy ALM strategy.
 4. Be a complement to the work done around ALM in other repositories like [coe-starter-kit](https://github.com/microsoft/coe-starter-kit) and [coe-alm-accelerator-templates](https://github.com/microsoft/coe-alm-accelerator-templates).
 5. Show that a [trunk-based development approach](https://trunkbaseddevelopment.com/) can be applied to Power Platform / Dynamics 365 development.
-6. Be an inspiration for the Power Platform & Dynamics 365 communities regarding using GitHub to support open-source projects that could benefit others. 
+6. Be an inspiration for the Power Platform & Dynamics 365 communities regarding using GitHub to support open-source projects that could benefit others.
 
 ### Non-goals
 
-1. Be the best "solution" for Power Platform / Dynamics 365 development using GitHub - *our expectations are high regarding the quality of the solution we will propose, but we will always support other similar projects or ideas*.
-2. Cover all the aspects of Power Platform / Dynamics 365 development - *it could be a really long-term goal but I ([@rpothin](https://github.com/rpothin)) will definitely not be able to do that alone*.
+1. Be the best "solution" for Power Platform / Dynamics 365 development using GitHub - *our expectations are high regarding the quality of the solution we will propose, but we will always support other similar projects, initiatives or ideas*.
+2. Cover all the aspects of Power Platform / Dynamics 365 development - *it is a really long-term goal and I ([@rpothin](https://github.com/rpothin)) don't think I will be able to achieve it alone*.
 
 ## 📖 Documentation
 
@@ -62,14 +67,14 @@ It contains components (GitHub workflows, PowerShell scripts...) that will help 
 
 ### Others
 
-- [What are the principles of the ALM model proposed in this repository?](Documentation/ALM-Model.md)
+- [What are the principles of the ALM strategy proposed in this repository?](Documentation/ALM-Strategy.md)
 - [How to add a new solution to this repository?](Documentation/Add-Solution.md)
 - [What can be found in this repository?](Documentation/Repository-Content.md)
 
 ## 📅 Roadmap
 
 Keep an eye 👀 on:
-- the [⚒ Backlog](https://github.com/users/rpothin/projects/1/views/1) to know what's coming next
+- the [⚒ Backlog](https://github.com/users/rpothin/projects/1/views/1) to know what's in progress and what's coming next
 - the [Changelog](CHANGELOG.md) to know what has already been done
 
 ## ❗ Code of Conduct
@@ -86,6 +91,7 @@ For more information, see [CONTRIBUTING.md](CONTRIBUTING.md)
 ### Not Sure Where to Start?
 
 If you want to participate to this project, but you are not sure how you can do it, do not hesitate to contact [@rpothin](https://github.com/rpothin):
+
 - By email at **raphael.pothin@gmail.com**
 - On [Twitter](https://twitter.com/RaphaelPothin)
 

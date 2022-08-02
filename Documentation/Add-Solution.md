@@ -16,7 +16,7 @@
 - [create-deploy-release](../.github/workflows/create-deploy-release.yml)
 
 5. Run the **export-and-unpack-solution** by selecting your development branch, entering your issue number and selecting your new solution
-6. In your developmment branch (*work/xxx*), under **Configurations/<NewSolutionName>**, duplicate the **DeploymentSettingsTemplate.json** file twice to have the files below (*one file per Dataverse environments you will want to deploy to - by default, validation and production*):
+6. In your developmment branch (*work/xxx*), under **Configurations/<NewSolutionName>**, duplicate the **DeploymentSettingsTemplate.json** file to have one file per environment like below (*one file per Dataverse environments you will want to deploy to - by default, validation and production*):
 
 - DeploymentSettings_validation.json
 - DeploymentSettings_production.json
