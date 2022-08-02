@@ -5,7 +5,17 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-actions" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  # Enable version updates for GitHub actions
+  #   List of available package ecosystems: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#package-ecosystem
+  - package-ecosystem: "github-actions"
+    # Look for GitHub actions in the `root` directory
+    directory: "/"
+    # Check the GitHub actions for updates every day (weekdays)
     schedule:
       interval: "daily"
+    # Assignees for the pull requests
+    assignees:
+      - "rpothin"
+    commit-message:
+      # Prefix all commit messages with "github-action-version-update"
+      prefix: "github-action-version-update"
