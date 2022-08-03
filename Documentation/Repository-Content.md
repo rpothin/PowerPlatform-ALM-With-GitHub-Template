@@ -102,7 +102,15 @@
       - import solution to considered environment
       - execute post solution import steps (*turn on cloud flows and share canvas apps*)
 
-#### Other workflows / automations
+### PowerShell scripts
+
+- [**Add-AADSecurityGroupTeamToDataverseEnvironment**](../Scripts/Add-AADSecurityGroupTeamToDataverseEnvironment.ps1): Add an Azure AD Security Group Team to a Dataverse environment
+- [**Add-UserToDataverseEnvironment**](../Scripts/Add-UserToDataverseEnvironment.ps1): Add a user to a Dataverse environment (*not used anymore - replaced by **Add-AADSecurityGroupTeamToDataverseEnvironment***)
+- [**Enable-CloudFlows**](../Scripts/Enable-CloudFlows.ps1): Turn on the Cloud Flows in a specific solution in a targeted Dataverse environment
+- [**Grant-GroupsAccessToCanvasApps**](../Scripts/Grant-GroupsAccessToCanvasApps.ps1): Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file
+- [**New-DataverseEnvironment**](../Scripts/New-DataverseEnvironment.ps1): Creation of a Dataverse environment using the [New-AdminPowerAppEnvironment](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/new-adminpowerappenvironment?view=pa-ps-latest) PowerShell command to be able to set an Azure AD Security group to secure the access to an environment but also a description
+
+### Other workflows / automations
 
 - [**PSScriptAnalyzer**](../.github/workflows/powershell-analysis.yml):
    - Triggers:
@@ -112,14 +120,6 @@
       - run PSScriptAnalyzer on the PowerShell code in the repository
       - upload the generated sarif file for analysis
 - [**dependabot**](../.github/dependabot.yml): Dependabot configuration for security or version updates on GitHub Actions (*run daily on all the repository*)
-
-### PowerShell scripts
-
-- [**Add-AADSecurityGroupTeamToDataverseEnvironment**](../Scripts/Add-AADSecurityGroupTeamToDataverseEnvironment.ps1): Add an Azure AD Security Group Team to a Dataverse environment
-- [**Add-UserToDataverseEnvironment**](../Scripts/Add-UserToDataverseEnvironment.ps1): Add a user to a Dataverse environment (*not used anymore - replaced by **Add-AADSecurityGroupTeamToDataverseEnvironment***)
-- [**Enable-CloudFlows**](../Scripts/Enable-CloudFlows.ps1): Turn on the Cloud Flows in a specific solution in a targeted Dataverse environment
-- [**Grant-GroupsAccessToCanvasApps**](../Scripts/Grant-GroupsAccessToCanvasApps.ps1): Grant access to canvas apps to Azure AD groups based on a mapping in a configuration file
-- [**New-DataverseEnvironment**](../Scripts/New-DataverseEnvironment.ps1): Creation of a Dataverse environment using the [New-AdminPowerAppEnvironment](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/new-adminpowerappenvironment?view=pa-ps-latest) PowerShell command to be able to set an Azure AD Security group to secure the access to an environment but also a description
 
 ## 🧾 Configurations
 
