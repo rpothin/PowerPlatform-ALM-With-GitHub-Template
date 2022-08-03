@@ -40,7 +40,7 @@ jobs:
       environment-region: ${{ steps.get-configurations.outputs.environment-region }}
       build-environment-sku-name: ${{ steps.get-configurations.outputs.build-environment-sku-name }}
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
-      environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+      environment-language-code: ${{ steps.get-configurations.outputs.environment-language-code }}
       build-environment-azure-ad-group-name: ${{ steps.get-configurations.outputs.build-environment-azure-ad-group-name }}
       dataverse-environment-description: '${{ steps.job-outputs-definition.outputs.dataverse-environment-description }}'
       pac-cli-version: ${{ steps.get-configurations.outputs.pac-cli-version }}
@@ -120,7 +120,7 @@ jobs:
       environment-security-group-name: '${{ needs.pre-job.outputs.build-environment-azure-ad-group-name }}'
       environment-region: ${{ needs.pre-job.outputs.environment-region }}
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
-      environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+      environment-language-code: ${{ needs.pre-job.outputs.environment-language-code }}
       environment-description: '${{ needs.pre-job.outputs.dataverse-environment-description }}'
       environment-name-unique-identifier: ${{ needs.pre-job.outputs.current-date }}
     secrets: inherit

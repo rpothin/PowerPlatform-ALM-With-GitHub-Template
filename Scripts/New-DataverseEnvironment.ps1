@@ -198,7 +198,7 @@ Function New-DataverseEnvironment {
             $dataverseEnvironmentConfigurations = $configurations.environment
             $dataverseEnvironmentRegion = $dataverseEnvironmentConfigurations.region
             $dataverseEnvironmentCurrencyName = $dataverseEnvironmentConfigurations.currencyName
-            $dataverseEnvironmentLanguageDisplayName = $dataverseEnvironmentConfigurations.languageDisplayName
+            $dataverseEnvironmentLanguageCode = $dataverseEnvironmentConfigurations.languageCode
         }
         catch {
             Throw "Error in the extraction of the configuration from the considered file ($ConfigurationFilePath): $getConfigurationError"
@@ -232,17 +232,6 @@ Function New-DataverseEnvironment {
         Write-Verbose "Connect to Power Apps with service principal."
         Add-PowerAppsAccount -TenantID $TenantId -ApplicationId $ClientId -ClientSecret $ClientSecret
 
-        # Get language code from language display name for the considered region
-        Write-Verbose "Get language code for following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-        $languages = Get-AdminPowerAppCdsDatabaseLanguages -LocationName $dataverseEnvironmentRegion -Filter $dataverseEnvironmentLanguageDisplayName
-
-        try {
-            $languageCode = $languages[0].LanguageName
-        }
-        catch {
-            Throw "Error trying to get the code of the language for the following configuration: $dataverseEnvironmentRegion / $dataverseEnvironmentLanguageDisplayName"
-        }
-
         # Search for an existing Dataverse environment with the display name provided
         Write-Verbose "Search Dataverse environments with the following display name: $DisplayName"
         Write-Debug "Before the call to the Get-AdminPowerAppEnvironment command..."
@@ -271,7 +260,7 @@ Function New-DataverseEnvironment {
                 DomainName = $DomainName
                 EnvironmentSku = $Sku
                 SecurityGroupId = $azureAdSecurityGroupId
-                LanguageName = $languageCode
+                LanguageName = $dataverseEnvironmentLanguageCode
                 CurrencyName = $dataverseEnvironmentCurrencyName
                 # Templates = $templates - Not used for now
             }

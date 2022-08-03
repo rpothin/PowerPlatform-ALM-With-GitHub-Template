@@ -13,6 +13,7 @@
 - [ ] 2 Dataverse environments already created in your tenant: **Validation** and **Production**
 - [ ] An **app registration** registered in Azure Active Directory with a client secret generated and stored somewhere safe
   <!-- Waiting for a confirmation on the requirement of the points below:
+
   - the following permission (delegated type): `Dynamics CRM.user_impersonation`
   - the following supported account type option selected: **Accounts in this organizational directory only**
   - a client secret generated and stored somewhere safe -->
@@ -82,7 +83,7 @@
 
 | **Secret Name**                        | **Description**                                      | **Example**                          |
 | -------------------------------------- | ---------------------------------------------------- | ------------------------------------ |
-| **DATAVERSE_ENVIRONMENT_URL**          | URL of the considered Dataverse environment          | https://validation.crm3.dynamics.com |
+| **DATAVERSE_ENVIRONMENT_URL**          | URL of the considered Dataverse environment          | <https://validation.crm3.dynamics.com> |
 | **DATAVERSE_ENVIRONMENT_DISPLAY_NAME** | Display name of the considered Dataverse environment | Validation                           |
 
 ### 4 - Add labels to repository
@@ -149,7 +150,7 @@ You will find below details regarding each configuration:
 | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | environment </br> region                                                  | Region considered for the Dataverse environments                                                                                                                                                                                   | canada                                                 |
 | environment </br> urlRegionCode                                           | Code of the region considered for the URL of the Dataverse environments                                                                                                                                                            | crm3                                                   |
-| environment </br> languageDisplayName                                     | Display name of the default language for the Dataverse environments                                                                                                                                                                | English                                                |
+| environment </br> languageCode                                            | Code of the default language for the Dataverse environments                                                                                                                                                                        | 1033                                                   |
 | environment </br> currencyName                                            | Name of the default currency for the Dataverse environments                                                                                                                                                                        | CAD                                                    |
 | environment </br> developmentEnvironment </br> displayNameBase            | Left part of the display name of the Dataverse Dev environment that will be created during workspace initialization phase                                                                                                          | "BAFC - Demo Application - Dev - "                     |
 | environment </br> developmentEnvironment </br> domainNameBase             | Left part of the URL of the Dataverse Dev environment that will be created during workspace initialization phase                                                                                                                   | "bafc-demo-app-dev-"                                   |
@@ -173,11 +174,12 @@ You will find below details regarding each configuration:
 | solutionChecker </br> maximumNumberMediumSeverityPoints                   | Maximum number of medium severity points identified during the execution of the solution checker allowed to continue                                                                                                               | 5                                                      |
 
 > *Notes:*
+>
 > - *You can find the code for the URL for a Dataverse environment for a considered region in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
 > - *You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the configurations of Dataverse environments:*
->    - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command (**LocationName** column value in results) can be used to get all the supported locations for Dataverse environments*
->    - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command (**CurrencyName** column value in results) can be used to get all the supported currencies for a specific location for Dataverse environments*
->    - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command (**LanguageDisplayName** column value in results) can be used to get all the supported languages for a specific location for Dataverse environments*
+>   - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command (**LocationName** column value in results) can be used to get all the supported locations for Dataverse environments*
+>   - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command (**CurrencyName** column value in results) can be used to get all the supported currencies for a specific location for Dataverse environments*
+>   - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command (**LanguageName** column value in results) can be used to get all the supported languages for a specific location for Dataverse environments*
 > - *Valid options for **environment.xxx.skuName** configurations are: Trial, **Sandbox, Production, SubscriptionBasedTrial** (source [microsoft/powerplatform-actions/create-environment](https://github.com/microsoft/powerplatform-actions/blob/30b7cbe414cf675d173d8af70e06c1ed7eef10f3/create-environment/action.yml#L36))*
 > - *Valid options for **solutionChecker.geography** configuration can be found in the [Invoke-PowerAppsChecker](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell/invoke-powerappschecker?view=pa-ps-latest#parameters) Micrsoft documentation page*
 

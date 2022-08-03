@@ -32,7 +32,7 @@ on:
         required: false
         type: string
         default: ''
-      environment-language-display-name:
+      environment-language-code:
         description: 'Display name of the default language of the Dataverse environment to create'
         required: false
         type: string
@@ -167,7 +167,7 @@ jobs:
           region: ${{ inputs.environment-region }}
           type: ${{ inputs.environment-sku-name }}
           currency: ${{ inputs.environment-currency-name }}
-          language: ${{ inputs.environment-language-display-name }}
+          language: ${{ inputs.environment-language-code }}
           domain: ${{ env.dataverse_environment_domain_name }}
 
       # Custom creation of a new Dataverse environment using PowerShell script
