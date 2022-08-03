@@ -23,7 +23,7 @@ jobs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
       development-branch-name: ${{ steps.get-configurations.outputs.development-branch-name-base }}${{ github.event.issue.number }}
       environment-region: ${{ steps.get-configurations.outputs.environment-region }}
-      environment-language-display-name: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+      environment-language-code: ${{ steps.get-configurations.outputs.environment-language-code }}
       environment-currency-name: ${{ steps.get-configurations.outputs.environment-currency-name }}
       development-environment-display-name: ${{ steps.get-configurations.outputs.development-environment-display-name-base }}${{ github.event.issue.number }}
       development-environment-domain-name: ${{ steps.get-configurations.outputs.development-environment-domain-name-base }}${{ github.event.issue.number }}
@@ -97,7 +97,7 @@ jobs:
       environment-security-group-name: '${{ needs.pre-job.outputs.developers-azure-ad-group-name }}'
       environment-region: ${{ needs.pre-job.outputs.environment-region }}
       environment-currency-name: ${{ needs.pre-job.outputs.environment-currency-name }}
-      environment-language-display-name: ${{ needs.pre-job.outputs.environment-language-display-name }}
+      environment-language-code: ${{ needs.pre-job.outputs.environment-language-code }}
       environment-description: '${{ needs.pre-job.outputs.dataverse-environment-description }}'
       power-apps-maker-base-url: ${{ needs.pre-job.outputs.powerapps-maker-portal-base-url }}
       issue-number: ${{ github.event.issue.number }}

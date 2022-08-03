@@ -18,9 +18,9 @@ outputs:
   environment-url-region-code:
     description: "Code of the region in the URL of the environment"
     value: ${{ steps.get-configurations.outputs.environment-url-region-code }}
-  environment-language-display-name:
+  environment-language-code:
     description: "Environment language"
-    value: ${{ steps.get-configurations.outputs.environment-language-display-name }}
+    value: ${{ steps.get-configurations.outputs.environment-language-code }}
   environment-currency-name:
     description: "Environment currency"
     value: ${{ steps.get-configurations.outputs.environment-currency-name }}
@@ -117,7 +117,7 @@ runs:
         Write-Host "Convert configurations from the file to variables"
         $environmentRegion = $configurations.environment.region
         $environmentUrlRegionCode = $configurations.environment.urlRegionCode
-        $environmentLanguageDisplayName = $configurations.environment.languageName
+        $environmentLanguageCode = $configurations.environment.languageCode
         $environmentCurrencyName = $configurations.environment.currencyName
 
         $developmentEnvironmentDisplayNameBase = $configurations.environment.developmentEnvironment.displayNameBase
@@ -148,7 +148,7 @@ runs:
         Write-Host "Generate outputs for the different configurations in the file"
         echo "::set-output name=environment-region::$environmentRegion"
         echo "::set-output name=environment-url-region-code::$environmentUrlRegionCode"
-        echo "::set-output name=environment-language-display-name::$environmentLanguageDisplayName"
+        echo "::set-output name=environment-language-code::$environmentLanguageCode"
         echo "::set-output name=environment-currency-name::$environmentCurrencyName"
         
         echo "::set-output name=development-environment-display-name-base::$developmentEnvironmentDisplayNameBase"
