@@ -194,7 +194,7 @@ Function New-DataverseEnvironment {
             $configurations = Get-Content $ConfigurationFilePath -ErrorVariable getConfigurationError -ErrorAction Stop | ConvertFrom-Json
 
             # Get Dataverse environment configuration
-            Write-Verbose "Extract region and currency name from configuration."
+            Write-Verbose "Extract environment details from configuration file."
             $dataverseEnvironmentConfigurations = $configurations.environment
             $dataverseEnvironmentRegion = $dataverseEnvironmentConfigurations.region
             $dataverseEnvironmentCurrencyName = $dataverseEnvironmentConfigurations.currencyName
