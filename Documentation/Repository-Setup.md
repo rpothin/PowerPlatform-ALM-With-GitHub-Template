@@ -112,7 +112,7 @@ This file follows the format below:
     "environment": {
         "region": "canada",
         "urlRegionCode": "crm3",
-        "languageDisplayName": "English",
+        "languageCode": "1033",
         "currencyName": "CAD",
         "developmentEnvironment": {
             "displayNameBase": "xxx - ",
