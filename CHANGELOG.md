@@ -22,6 +22,31 @@ All notable changes to this repository will be documented in this file.
 
 - ... -->
 
+## [0.4.0] - 2022-08-04
+
+> Improvements on code resuability, automations resiliency and template flexibility 🔥
+
+### 🔨 Fixed
+
+- Update of the solution versioning strategy proposed in this template (*details [here](./Documentation/ALM-Strategy.md#solution-versioning)*) because with a concatenation of the date and the workflow run id for the patch part of the version we quickly reach some limitations on Power Platform solution versioning
+- Checkout the `main` branch in the [**clean-dev-workspace-when-issue-closed-or-deleted**](./.github/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml) before trying to delete the development branch if it exists
+- Management of the activation of cloud flows with child flows: introduction of a notion of retry in the [**Enable-CloudFlows**](./Scripts/Enable-CloudFlows.ps1) PowerShell script to cover a kind of multi-layered architecture (*cloud flows calling cloud flows calling cloud flows...*) based on a configuration at the repository level
+- Removal of custom steps for cloud flows custom JSON formatting because the out-of-the-box Power Platform GitHub actions handle this part natively now
+- Replacement of custom steps for the unpack and pack of canvas apps using PAC CLI with the new inputs in the out-of-the-box Power Platform GitHub actions - ⚠ *To correctly handle this process we have workarounds in place ([#226](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues/226)) that will be removed as soon as possible*
+- Correction of issues due to an update on Azure CLI commands output schema (*`objectId` --> `id`*) in some PowerShell scripts
+- Specification of the source branch for the build of the managed solution in the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) workflow
+- Update of the version of some GitHub actions used in our workflows:
+   - [**checkout**](https://github.com/actions/checkout) from 2 to 3.0.2
+   - **github/codeql-action/upload-sarif** from 1 to 2 (*in [**powershell-analysis**](./.github/workflows/powershell-analysis.yml)*)
+   - **actions/download-artifact** from 2 to 3
+   - **actions/upload-artifact** from 2 to 3
+   - **peter-evans/create-or-update-comment** from 1 to 2
+   - **peterjgrainger/action-create-branch** from 2.0.1 to 2.2.0
+
+### 🚀 Added
+
+- ...
+
 ## [0.3.0] - 2022-03-25
 
 > "Industrialize" our development flow for this repository template 🤖
@@ -168,7 +193,8 @@ All notable changes to this repository will be documented in this file.
 - GitHub workflow for the deployment of a Power Platform solution to a QA environment after a build with a JIT environment on a push to the main branch
 - GitHub workflow for the creation of a GitHub release for a Power Platform managed solution (*build with a JIT environment*)
 
-[⚒ Work in progress]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.3.0...HEAD
+[⚒ Work in progress]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/releases/tag/v0.1.0
