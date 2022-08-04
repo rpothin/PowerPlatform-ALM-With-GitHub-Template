@@ -8,16 +8,15 @@
 
 ```mermaid
 sequenceDiagram
-    participant Alice
-    participant Bob
-    Alice->>John: Hello John, how are you?
-    loop Healthcheck
-        John->>John: Fight against hypochondria
-    end
-    Note right of John: Rational thoughts <br/>prevail!
-    John-->>Alice: Great!
-    John->>Bob: How about you?
-    Bob-->>John: Jolly good!
+    actor Developer
+    participant GitHub
+    participant PowerPlatform
+    Developer->>GitHub: Create issue
+    Developer->>GitHub: Assign issue and add 'in progress' label to it
+    activate GitHub
+    GitHub->>PowerPlatform: Create and configure Dev environment
+    activate PowerPlatform
+    Developer->>GitHub: Update solution
 ```
 
 ## Solution versioning
