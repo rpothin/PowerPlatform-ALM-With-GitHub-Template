@@ -85,15 +85,33 @@ jobs:
 
     # ⚠ WOARKAROUND regarding a potential issue in the unpack of canvas apps with the current version of the action
     # Unpack the unmanaged solution exported in the previous step
-    #   Microsoft action: https://github.com/microsoft/powerplatform-actions/blob/main/unpack-solution/action.yml
-    - name: Unpack unmanaged solution
-      uses: microsoft/powerplatform-actions/unpack-solution@main
-      with:
-        solution-file: out/exported/${{ github.event.inputs.solution_name }}.zip
-        solution-folder: Solutions/${{ github.event.inputs.solution_name }}
-        solution-type: 'Unmanaged'
-        overwrite-files: true
-        process-canvas-apps: true
+    # "Microsoft.PowerApps.CLI" setup
+    - name: PowerApps CLI setup
+      run: |
+        # "Microsoft.PowerApps.CLI" setup
+        $nugetPackage = "Microsoft.PowerApps.CLI"
+        $nugetPackageVersion = "${{ inputs.pac-cli-version }}"
+        $outFolder = "pac"
+
+        nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+        
+        $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
+
+        $pacPath = $pacNugetFolder.FullName + "/tools"
+
+        echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
+      shell: pwsh
+
+    - name: Unpack solution
+      run:  |
+        $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
+
+        # Go to the solution folder
+        cd Solutions/${{ inputs.solution-name }}
+
+        # Execute pac solution pack to generate the latest version of the the msapp files
+        pac solution unpack --zipfile out/exported/${{ github.event.inputs.solution_name }}.zip --processCanvasApps
+      shell: pwsh
 
     # Reset the solution version in the Solution.xml file
     - name: Set solution version
