@@ -47,7 +47,7 @@ All notable changes to this repository will be documented in this file.
 ### 🚀 Added
 
 - [Reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) below for actions sequences previously duplicated in different workflows:
-  - [**create-dataverse-environment**](../.github/workflows/create-dataverse-environment.yml): for the creation of development and build environments
+  - [**create-dataverse-environment**](../.github/workflows/create-dataverse-environment.yml): for the creation of just-in-time (*development and build*) environments
   - [**build-managed-solution**](../.github/workflows/build-managed-solution.yml): for the build of a managed solution using a just-in-time build environment
   - [**import-solution**](../.github/workflows/import-solution.yml) for the import of a solution, the activation of cloud flows and the sharing of canvas apps
 - [**New-DataverseEnvironment**](./Scripts/New-DataverseEnvironment.ps1) PowerShell script for the creation of Dataverse environments with configuration of an Azure AD Security Group to secure the access to the environment and a description
