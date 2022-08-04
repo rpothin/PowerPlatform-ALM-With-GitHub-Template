@@ -8,18 +8,45 @@
 
 ```mermaid
 sequenceDiagram
+    autonumber
+
     actor Developer
+    
     participant GitHub
-    participant PowerPlatform
+    participant PowerPlatformDev
+    participant PowerPlatformBuild
+    participant PowerPlatformValidation
+    participant PowerPlatformProduction
+    
     Developer->>GitHub: Create issue
     Developer->>GitHub: Assign issue and add 'in progress' label to it
-    activate GitHub
-    GitHub->>PowerPlatform: Create and configure Dev environment
-    activate PowerPlatform
-    Note right of PowerPlatform: Dev environment
-    Developer->>PowerPlatform: Update solution
-    deactivate PowerPlatform
-    deactivate GitHub
+    par GitHub to PowerPlatformDev
+        GitHub->>GitHub: Create development branch
+    and GitHub to PowerPlatformDev
+        GitHub->>PowerPlatformDev: Create development environment
+    end
+    GitHub->>PowerPlatformDev: Give access to development environment to developers
+    loop For each solution
+        GitHub->>PowerPlatformDev: Import solution
+    end
+    Developer->>PowerPlatformDev: Update solution
+    Developer->>GitHub: Trigger solution export
+    GitHub->>PowerPlatformDev: Export solution to development branch
+    Developer->>GitHub: Create pull request
+    GitHub->>PowerPlatformBuild: Create just-in-time Build environment
+    Note left of GitHub: Solution packed from development branch
+    GitHub->>PowerPlatformBuild: Build managed solution (import unmanaged and export managed)
+    par GitHub to PowerPlatformBuild
+        Note over GitHub, PowerPlatformBuild: Execute solution checker on managed solution
+    and GitHub to PowerPlatformBuild
+        GitHub->>PowerPlatformBuild: Delete just-in-time Build environment
+    end
+    Developer->>GitHub: Review and then approve pull request
+    Note over Developer, GitHub: Changes pushed to 'main' branch
+    GitHub->>PowerPlatformBuild: Create just-in-time Build environment
+    Note left of GitHub: Solution packed from 'main' branch
+    GitHub->>PowerPlatformBuild: Build managed solution (import unmanaged and export managed)
+    GitHub->>PowerPlatformValidation: Import solution, activate cloud flows and share canvas apps
 ```
 
 ## Solution versioning
