@@ -82,7 +82,7 @@ All notable changes to this repository will be documented in this file.
 - [**Custom-Deployment-Settings-File-Management**](./Documentation/Custom-Deployment-Settings-File-Management.md) documentation page updated regarding a change of format to be able to manage Azure Application Insights instrumentation key update in canvas apps during solution pack phase
 - [**Grant-GroupsAccessToCanvasApps**](./Scripts/Grant-GroupsAccessToCanvasApps.ps1) updated regarding the path to consider to find the required information in the [custom deployment settings](./Documentation/Custom-Deployment-Settings-File-Management.md) file for the sharing of canvas apps
 - [**Repository-Content**](./Documentation/Repository-Content.md) documentation page updated regarding all the changes in this version
-- [**Repository-Setup**](./Documentation/Repository-Setup.md) documentation page update mainly to document:
+- [**Repository-Setup**](./Documentation/Repository-Setup.md) documentation page updated:
   - 2 environment secrets in place of action secrets
   - Updates in the [**Configurations/configurations.json**](./Configurations/configurations.json) global configuration file
 
