@@ -26,12 +26,14 @@ sequenceDiagram
         GitHub->>PowerPlatformDev: Create development environment
     end
     GitHub->>PowerPlatformDev: Give access to development environment to developers
-    loop For each solution
+    loop For each solution in the repository
         GitHub->>PowerPlatformDev: Import solution
     end
-    Developer->>PowerPlatformDev: Update solution
-    Developer->>GitHub: Trigger solution export
-    GitHub->>PowerPlatformDev: Export solution to development branch and update deployment settings template file
+    loop While development not completed
+        Developer->>PowerPlatformDev: Update solution
+        Developer->>GitHub: Trigger solution export
+        GitHub->>PowerPlatformDev: Export solution to development branch and update deployment settings template file
+    end
     Developer->>GitHub: Create pull request and link issue to it
     GitHub->>PowerPlatformBuild: Create just-in-time Build environment
     Note left of GitHub: Solution packed from development branch
