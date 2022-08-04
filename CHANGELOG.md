@@ -60,7 +60,7 @@ All notable changes to this repository will be documented in this file.
 
 ### 🤖 Changed
 
-- Integration of the reusable workflows added to the repository in the different existing workflows
+- Integration of the reusable workflows added to the repository in the existing workflows
 - To be able to manage multiple solutions,
   - Steps added to get the solutions in the repository and call the [run-import-solutions](./.github/actions/run-import-solutions/action.yml) composite action in the [**workspace-initialization**](./.github/workflows/workspace-initialization.yml) workflow
   - Step added in the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) and [**import-solution-to-validation**](./.github/workflows/import-solution-to-validation.yml) workflows to idenfity the changed solution - ⚠ *For now, only one solution can be updated in each development cycle*
