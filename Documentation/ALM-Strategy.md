@@ -80,7 +80,7 @@ sequenceDiagram
 
 ## Solution versioning
 
-> **Note:** Proposition based on the fact that a concatenation of the date (*yyyymmdd*) and the workflow run id for the patch part of the version we quickly reach some limitations on Power Platform solution versioning.
+> **Note:** Proposition based on the fact that with a concatenation of the date (*yyyymmdd*) and the workflow run id for the patch part of the version we quickly reach some limitations on Power Platform solution versioning.
 
 | Phase                                                                                     | Format             | Notes                                                                                                                                                        |
 | ----------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
