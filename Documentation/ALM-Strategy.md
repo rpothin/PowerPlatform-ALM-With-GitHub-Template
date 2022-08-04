@@ -16,7 +16,9 @@ sequenceDiagram
     activate GitHub
     GitHub->>PowerPlatform: Create and configure Dev environment
     activate PowerPlatform
-    Developer->>GitHub: Update solution
+    Developer->>PowerPlatform: Update solution
+    deactivate PowerPlatform
+    deactivate GitHub
 ```
 
 ## Solution versioning
