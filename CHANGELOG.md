@@ -53,6 +53,7 @@ All notable changes to this repository will be documented in this file.
 - Composite action [**run-import-solutions**](./.github/actions/run-import-solutions/action.yml) to execute the [import-solution-to-dev](./.github/workflows/import-solution-to-dev.yml) workflow on a list of solutions using the [GitHub CLI](https://cli.github.com/manual/gh_run)
 - Manually triggered workflow [**import-solution-to-dev**](./.github/workflows/import-solution-to-dev.yml) for the import of an unmanaged solution to a development environment
 - Composite action [**set-canvasapps-instrumentation-key**](./.github/actions/set-canvasapps-instrumentation-key/action.yml) to be able to set an Azure Application Insights instrumentation using a value stored in the considered [custom deployment settings file](./Documentation/Custom-Deployment-Settings-File-Management.md) in canvas apps by updating the `AppInsightsKey.json` file in the  before the solution pack step
+- [Dependabot](./.github/dependabot.yml) configuration to automate GitHub actions version update (*monitoring and pull requests creation*)
 - [Add-Solution](./Documentation/Add-Solution.md) documentation page about adding a new solution to the repository
 
 ### 🤖 Changed
