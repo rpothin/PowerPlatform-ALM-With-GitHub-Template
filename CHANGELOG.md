@@ -28,7 +28,7 @@ All notable changes to this repository will be documented in this file.
 
 ### 🔨 Fixed
 
-- Update of the solution versioning strategy proposed in this template (*details [here](./Documentation/ALM-Strategy.md#solution-versioning)*) because with a concatenation of the date and the workflow run id for the patch part of the version we quickly reach some limitations on Power Platform solution versioning
+- Update of the solution versioning strategy proposed in this template (*details [here](./Documentation/ALM-Strategy.md#solution-versioning)*) because with a concatenation of the date (*yyyymmdd*) and the workflow run id for the patch part of the version we quickly reach some limitations on Power Platform solution versioning
 - Checkout the `main` branch in the [**clean-dev-workspace-when-issue-closed-or-deleted**](./.github/workflows/clean-dev-workspace-when-issue-closed-or-deleted.yml) before trying to delete the development branch if it exists
 - Management of the activation of cloud flows with child flows: introduction of a notion of retry in the [**Enable-CloudFlows**](./Scripts/Enable-CloudFlows.ps1) PowerShell script to cover a kind of multi-layered architecture (*cloud flows calling cloud flows calling cloud flows...*) based on a configuration at the repository level
 - Removal of custom steps for cloud flows custom JSON formatting because the out-of-the-box Power Platform GitHub actions handle this part natively now
@@ -45,7 +45,10 @@ All notable changes to this repository will be documented in this file.
 
 ### 🚀 Added
 
-- ...
+- Creation of the [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) below for actions sequences previously duplicated in different workflows:
+   -  [**create-dataverse-environment**](../.github/workflows/create-dataverse-environment.yml): for the creation of development and build environments
+   - [**build-managed-solution**](../.github/workflows/build-managed-solution.yml): for the build of a managed solution using a just-in-time build environment
+   - [**import-solution**](../.github/workflows/import-solution.yml) for the import of a solution, the activation of cloud flows and the sharing of canvas apps
 
 ## [0.3.0] - 2022-03-25
 
