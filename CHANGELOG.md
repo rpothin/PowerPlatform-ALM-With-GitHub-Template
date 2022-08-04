@@ -52,22 +52,38 @@ All notable changes to this repository will be documented in this file.
 - [**New-DataverseEnvironment**](./Scripts/New-DataverseEnvironment.ps1) PowerShell script for the creation of Dataverse environments with configuration of an Azure AD Security Group to secure the access to the environment and a description
 - Composite action [**run-import-solutions**](./.github/actions/run-import-solutions/action.yml) to execute the [import-solution-to-dev](./.github/workflows/import-solution-to-dev.yml) workflow on a list of solutions using the [GitHub CLI](https://cli.github.com/manual/gh_run)
 - Manually triggered workflow [**import-solution-to-dev**](./.github/workflows/import-solution-to-dev.yml) for the import of an unmanaged solution to a development environment (*pack solution as unmanaged then import it*)
-- Composite action [**set-canvasapps-instrumentation-key**](./.github/actions/set-canvasapps-instrumentation-key/action.yml) to be able to set an Azure Application Insights instrumentation using a value stored in the considered [custom deployment settings file](./Documentation/Custom-Deployment-Settings-File-Management.md) in canvas apps by updating the `AppInsightsKey.json` file in the  before the solution pack step
-- [Dependabot](./.github/dependabot.yml) configuration to automate GitHub actions version update (*monitoring and pull requests creation*)
-- [Add-Solution](./Documentation/Add-Solution.md) documentation page about adding a new solution to the repository
+- Composite action [**set-canvasapps-instrumentation-key**](./.github/actions/set-canvasapps-instrumentation-key/action.yml) to be able to set an Azure Application Insights instrumentation key using a value stored in the considered [custom deployment settings](./Documentation/Custom-Deployment-Settings-File-Management.md) file in canvas apps by updating the `AppInsightsKey.json` file in the  before the solution pack step
+- [**Dependabot**](./.github/dependabot.yml) configuration to automate GitHub actions version update (*monitoring and pull requests creation*)
+- [**Add-Solution**](./Documentation/Add-Solution.md) documentation page about adding a new solution to the repository
+- [**ALM-Strategy**](./Documentation/ALM-Strategy.md) documentation page about the ALM strategy proposed in this repository
 
 ### 🤖 Changed
 
 - Integration of the reusable workflows added to the repository in the different existing workflows
 - To be able to manage multiple solutions,
-  - Step added to get solutions in the repository and call the [run-import-solutions](./.github/actions/run-import-solutions/action.yml) composite action in the [**workspace-initialization**](./.github/workflows/workspace-initialization.yml) workflow
+  - Steps added to get the solutions in the repository and call the [run-import-solutions](./.github/actions/run-import-solutions/action.yml) composite action in the [**workspace-initialization**](./.github/workflows/workspace-initialization.yml) workflow
   - Step added in the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) and [**import-solution-to-validation**](./.github/workflows/import-solution-to-validation.yml) workflows to idenfity the changed solution - ⚠ *For now, only one solution can be updated in each development cycle*
   - Input added in the [**create-deploy-release**](./.github/workflows/create-deploy-release.yml) workflow to triggere a release on a particular solution
-- Get global configurations and configuration of dynamic job outputs in `pre-job` of the [**create-deploy-release**](./.github/workflows/create-deploy-release.yml) workflow
-- New global configurations added to [**Configurations/configurations.json**](./Configurations/configurations.json) and [**get-configurations**](./.github/actions/get-configurations/action.yml)
+- Get global configurations and configuration of a description for the just-in-time Dataverse Build environment in `pre-job` of the [**create-deploy-release**](./.github/workflows/create-deploy-release.yml) workflow
+- Get the updated solution and configuration of a description for the just-in-time Dataverse Build environment in `pre-job` of the [**import-solution-to-validation**](./.github/workflows/import-solution-to-validation.yml) workflow
+- Get the updated solution and configuration of a description for the just-in-time Dataverse Build environment in `pre-job` of the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) workflow
+- Configuration of a description for the just-in-time Dataverse Development environment in `pre-job` of the [**workspace-initialization**](./.github/workflows/workspace-initialization.yml) workflow
+- Update of global configurations in [**Configurations/configurations.json**](./Configurations/configurations.json) and [**get-configurations**](./.github/actions/get-configurations/action.yml):
+  - `environment.developmentEnvironment.descriptionBase` (*added*)
+  - `environment.buildEnvironment.azureAdGroupName` (*added*)
+  - `environment.buildEnvironment.descriptionBase` (*added*)
+  - `pacCliVersion` (*default value updated*)
+  - `powerAppsMakerPortalBaseUrl` (*default value updated*)
+  - `maximumTriesForCloudFlowsActivation` (*added*)
 - Reorganization of the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) to be able to take advantage of some of the new reusable workflows ([**create-dataverse-environment**](../.github/workflows/create-dataverse-environment.yml) and [**build-managed-solution**](../.github/workflows/build-managed-solution.yml))
 - Configuration of [concurrency](https://docs.github.com/en/actions/using-jobs/using-concurrency) in all the workflows to take advantage of the out-of-the-box GitHub capability
 - Update the years range considered in the Copyright in the header of the different code files in the repository
+- [**Custom-Deployment-Settings-File-Management**](./Documentation/Custom-Deployment-Settings-File-Management.md) documentation page updated regarding a change of format to be able to manage Azure Application Insights instrumentation key update in canvas apps during solution pack phase
+- [**Grant-GroupsAccessToCanvasApps**](./Scripts/Grant-GroupsAccessToCanvasApps.ps1) updated regarding the path to consider to find the required information in the [custom deployment settings](./Documentation/Custom-Deployment-Settings-File-Management.md) file for the sharing of canvas apps
+- [**Repository-Content**](./Documentation/Repository-Content.md) documentation page updated regarding all the changes in this version
+- [**Repository-Setup**](./Documentation/Repository-Setup.md) documentation page update mainly to document:
+  - 2 environment secrets in place of action secrets
+  - Updates in the [**Configurations/configurations.json**](./Configurations/configurations.json) global configuration file
 
 ## [0.3.0] - 2022-03-25
 
