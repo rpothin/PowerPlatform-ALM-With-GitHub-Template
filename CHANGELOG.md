@@ -52,7 +52,7 @@ All notable changes to this repository will be documented in this file.
 - [**New-DataverseEnvironment**](./Scripts/New-DataverseEnvironment.ps1) PowerShell script for the creation of Dataverse environments with configuration of an Azure AD Security Group to secure the access to the environment and a description
 - Composite action [**run-import-solutions**](./.github/actions/run-import-solutions/action.yml) to execute the [import-solution-to-dev](./.github/workflows/import-solution-to-dev.yml) workflow on a list of solutions using the [GitHub CLI](https://cli.github.com/manual/gh_run)
 - Manually triggered workflow [**import-solution-to-dev**](./.github/workflows/import-solution-to-dev.yml) for the import of an unmanaged solution to a development environment
-- Composite action [**set-canvasapps-instrumentation-key**](./.github/actions/set-canvasapps-instrumentation-key/action.yml) to be able to set an Azure Application Insights instrumentation key based on a configuration in canvas apps before the solution pack step
+- Composite action [**set-canvasapps-instrumentation-key**](./.github/actions/set-canvasapps-instrumentation-key/action.yml) to be able to set an Azure Application Insights instrumentation using a value stored in the considered [custom deployment settings file](./Documentation/Custom-Deployment-Settings-File-Management.md) in canvas apps by updating the `AppInsightsKey.json` file in the  before the solution pack step
 - [Add-Solution](./Documentation/Add-Solution.md) documentation page about adding a new solution to the repository
 
 ### 🤖 Changed
