@@ -31,22 +31,51 @@ sequenceDiagram
     end
     Developer->>PowerPlatformDev: Update solution
     Developer->>GitHub: Trigger solution export
-    GitHub->>PowerPlatformDev: Export solution to development branch
-    Developer->>GitHub: Create pull request
+    GitHub->>PowerPlatformDev: Export solution to development branch and update deployment settings template file
+    Developer->>GitHub: Create pull request and link issue to it
     GitHub->>PowerPlatformBuild: Create just-in-time Build environment
     Note left of GitHub: Solution packed from development branch
     GitHub->>PowerPlatformBuild: Build managed solution (import unmanaged and export managed)
-    par GitHub to PowerPlatformBuild
+    par GitHub to GitHub
         Note over GitHub, PowerPlatformBuild: Execute solution checker on managed solution
     and GitHub to PowerPlatformBuild
         GitHub->>PowerPlatformBuild: Delete just-in-time Build environment
     end
     Developer->>GitHub: Review and then approve pull request
     Note over Developer, GitHub: Changes pushed to 'main' branch
-    GitHub->>PowerPlatformBuild: Create just-in-time Build environment
-    Note left of GitHub: Solution packed from 'main' branch
+    GitHub->>GitHub: Issue closed
+    par GitHub to PowerPlatformDev
+        par GitHub to GitHub
+            GitHub->>GitHub: Delete development branch
+        and GitHub to PowerPlatformDev
+            GitHub->>PowerPlatformDev: Delete development environment
+        end
+    and GitHub to PowerPlatformValidation
+        GitHub->>PowerPlatformBuild: Create just-in-time Build environment
+        Note left of GitHub: Solution packed from 'main' branch
+        GitHub->>PowerPlatformBuild: Build managed solution (import unmanaged and export managed)
+        par GitHub to PowerPlatformValidation
+            GitHub->>PowerPlatformValidation: Import solution, activate cloud flows and share canvas apps
+        and GitHub to PowerPlatformBuild
+            GitHub->>PowerPlatformBuild: Delete just-in-time Build environment
+        end
+    end
+    Developer->>GitHub: Trigger solution release
+    par GitHub to GitHub
+        GitHub->>GitHub: Create release branch
+    and GitHub to PowerPlatformBuild
+        GitHub->>PowerPlatformBuild: Create just-in-time Build environment
+    end
+    Note left of GitHub: Solution packed from release branch
     GitHub->>PowerPlatformBuild: Build managed solution (import unmanaged and export managed)
-    GitHub->>PowerPlatformValidation: Import solution, activate cloud flows and share canvas apps
+    par GitHub to GitHub
+        GitHub->>GitHub: Initialize GitHub release as draft
+    and GitHub to PowerPlatformProduction
+        GitHub->>PowerPlatformProduction: Import solution, activate cloud flows and share canvas apps
+    and GitHub to PowerPlatformBuild
+        GitHub->>PowerPlatformBuild: Delete just-in-time Build environment
+    end
+    GitHub->>GitHub: Publish GitHub release
 ```
 
 ## Solution versioning
