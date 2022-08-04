@@ -24,7 +24,7 @@ All notable changes to this repository will be documented in this file.
 
 ## [0.4.0] - 2022-08-04
 
-> Improvements on code resuability, automations resiliency and template flexibility 🔥
+> Improvements on code resuability, resiliency and flexibility 🔥
 
 ### 🔨 Fixed
 
@@ -45,10 +45,25 @@ All notable changes to this repository will be documented in this file.
 
 ### 🚀 Added
 
-- Creation of the [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) below for actions sequences previously duplicated in different workflows:
+- [Reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) below for actions sequences previously duplicated in different workflows:
    -  [**create-dataverse-environment**](../.github/workflows/create-dataverse-environment.yml): for the creation of development and build environments
    - [**build-managed-solution**](../.github/workflows/build-managed-solution.yml): for the build of a managed solution using a just-in-time build environment
    - [**import-solution**](../.github/workflows/import-solution.yml) for the import of a solution, the activation of cloud flows and the sharing of canvas apps
+- [**New-DataverseEnvironment**](./Scripts/New-DataverseEnvironment.ps1) PowerShell script for the creation of Dataverse environments with configuration of an Azure AD Security Group to secure the access to the environment and a description
+- Composite action [**run-import-solutions**](./.github/actions/run-import-solutions/action.yml) to execute the [import-solution-to-dev](./.github/workflows/import-solution-to-dev.yml) workflow on a list of solutions
+- Manually triggered workflow [**import-solution-to-dev**](./.github/workflows/import-solution-to-dev.yml) for the import of an unmanaged solution to a development environment
+- Composite action [**set-canvasapps-instrumentation-key**](./.github/actions/set-canvasapps-instrumentation-key/action.yml) to be able to set an Azure Application Insights instrumentation key based on a configuration in canvas apps before the solution pack step
+- [Add-Solution](./Documentation/Add-Solution.md) documentation page about adding a new solution to the repository
+
+### 🤖 Changed
+
+- Reorganization of the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) to be able to take advantage of some of the new reusable workflows ([**create-dataverse-environment**](../.github/workflows/create-dataverse-environment.yml) and [**build-managed-solution**](../.github/workflows/build-managed-solution.yml))
+- Configuration of [concurrency](https://docs.github.com/en/actions/using-jobs/using-concurrency) in all the workflows to take advantage of the out-of-the-box GitHub capability
+- Update the years range considered in the Copyright in the header of the different code files in the repository
+- To be able to manage multiple solutions,
+   - Step added to get solutions in the repository and call the [run-import-solutions](./.github/actions/run-import-solutions/action.yml) composite action in the [**workspace-initialization**](./.github/workflows/workspace-initialization.yml) workflow
+   - Step added in the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) and [**import-solution-to-validation**](./.github/workflows/import-solution-to-validation.yml) workflows to idenfity the changed solution - ⚠ *For now, only one solution can be updated in each development cycle*
+   - Input added in the [**create-deploy-release**](./.github/workflows/create-deploy-release.yml) workflow to triggere a release on a particular solution
 
 ## [0.3.0] - 2022-03-25
 
