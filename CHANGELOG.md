@@ -42,6 +42,7 @@ All notable changes to this repository will be documented in this file.
   - **actions/upload-artifact** from 2 to 3
   - **peter-evans/create-or-update-comment** from 1 to 2
   - **peterjgrainger/action-create-branch** from 2.0.1 to 2.2.0
+- Ignore the [Documentation](./Documentation/) folder in the trigger configuration of the following workflows: [import-solution-to-validation](./.github/workflows/import-solution-to-validation.yml), [powershell-analysis](./.github/workflows/powershell-analysis.yml) and [solution-quality-check-on-pr](./.github/workflows/solution-quality-check-on-pr.yml)
 
 ### 🚀 Added
 
@@ -69,6 +70,7 @@ All notable changes to this repository will be documented in this file.
 - Get the updated solution and configuration of a description for the just-in-time Dataverse Build environment in `pre-job` of the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) workflow
 - Configuration of a description for the just-in-time Dataverse Development environment in `pre-job` of the [**workspace-initialization**](./.github/workflows/workspace-initialization.yml) workflow
 - Update of global configurations in [**Configurations/configurations.json**](./Configurations/configurations.json) and [**get-configurations**](./.github/actions/get-configurations/action.yml):
+  - `environment.languageCode` (*configuration updated - previously 'environment.languageDisplayName'*)
   - `environment.developmentEnvironment.descriptionBase` (*added*)
   - `environment.buildEnvironment.azureAdGroupName` (*added*)
   - `environment.buildEnvironment.descriptionBase` (*added*)
