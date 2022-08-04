@@ -34,7 +34,7 @@ All notable changes to this repository will be documented in this file.
 - Removal of custom steps for cloud flows custom JSON formatting because the out-of-the-box Power Platform GitHub actions handle this part natively now
 - Replacement of custom steps for the unpack and pack of canvas apps using PAC CLI with the new inputs in the out-of-the-box Power Platform GitHub actions - ⚠ *To correctly handle this process we currently have workarounds in place ([#226](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template/issues/226)) that will be removed as soon as possible*
 - Correction of issues due to an update on Azure CLI commands output schema (*`objectId` --> `id`*) in some PowerShell scripts
-- Specification of the source branch for the build of the managed solution in the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) workflow
+- Specification of the correct source branch for the build of the managed solution in the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) workflow
 - Update of the version of some GitHub actions used in our workflows:
   - [**checkout**](https://github.com/actions/checkout) from 2 to 3.0.2
   - **github/codeql-action/upload-sarif** from 1 to 2 (*in [**powershell-analysis**](./.github/workflows/powershell-analysis.yml)*)
