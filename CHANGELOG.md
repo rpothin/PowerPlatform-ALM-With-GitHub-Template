@@ -64,7 +64,7 @@ All notable changes to this repository will be documented in this file.
 - To be able to manage multiple solutions,
   - Steps added to get the solutions in the repository and call the [run-import-solutions](./.github/actions/run-import-solutions/action.yml) composite action in the [**workspace-initialization**](./.github/workflows/workspace-initialization.yml) workflow
   - Step added in the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) and [**import-solution-to-validation**](./.github/workflows/import-solution-to-validation.yml) workflows to idenfity the changed solution - ⚠ *For now, only one solution can be updated in each development cycle*
-  - Input added in the [**create-deploy-release**](./.github/workflows/create-deploy-release.yml) workflow to triggere a release on a particular solution
+  - Input added in the [**create-deploy-release**](./.github/workflows/create-deploy-release.yml) workflow to trigger a release for a unique identified solution
 - Get global configurations and configuration of a description for the just-in-time Dataverse Build environment in `pre-job` of the [**create-deploy-release**](./.github/workflows/create-deploy-release.yml) workflow
 - Get the updated solution and configuration of a description for the just-in-time Dataverse Build environment in `pre-job` of the [**import-solution-to-validation**](./.github/workflows/import-solution-to-validation.yml) workflow
 - Get the updated solution and configuration of a description for the just-in-time Dataverse Build environment in `pre-job` of the [**solution-quality-check-on-pr**](./.github/workflows/solution-quality-check-on-pr.yml) workflow
