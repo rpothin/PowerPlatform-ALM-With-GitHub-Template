@@ -183,7 +183,7 @@ You should now be ready to start your Power Platform / Dynamics 365 developments
 ### 6 - Update code for your own needs (optional)
 
 1. In the new repository, go to the **Code** tab
-2. Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) interface by pressing "."
+2. Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) (*exemple of the rpothin/PowerPlatform-ALM-With-GitHub-Template repository*) interface by pressing "."
 3. In the **VS Code for the web** experience you will be able to make some updates, if necessary, in the GitHub workflows:
    - environment variables:
       - **solution_name** (*default value: PowerPlatformALMWithGitHub*)
