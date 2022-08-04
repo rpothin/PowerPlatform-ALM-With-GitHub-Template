@@ -20,7 +20,6 @@ jobs:
     if: github.event.issue.assignees[0] != null && contains(github.event.issue.labels.*.name, 'in progress') && !contains(github.event.issue.labels.*.name, 'dev env created')
     runs-on: ubuntu-latest
     outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
       development-branch-name: ${{ steps.get-configurations.outputs.development-branch-name-base }}${{ github.event.issue.number }}
       environment-region: ${{ steps.get-configurations.outputs.environment-region }}
       environment-language-code: ${{ steps.get-configurations.outputs.environment-language-code }}
@@ -63,7 +62,6 @@ jobs:
   # Job for the creation of the new dev branch
   create-issue-development-branch:
     needs: pre-job
-    if: ${{ needs.pre-job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     env:
       RUNNER_DEBUG: 1
@@ -88,7 +86,6 @@ jobs:
   # Job for the creation of the new Dataverse Dev environment
   create-dataverse-dev-environment:
     needs: pre-job
-    if: ${{ needs.pre-job.outputs.should_skip != 'true' }}
     uses: ./.github/workflows/create-dataverse-environment.yml
     with:
       environment-display-name: ${{ needs.pre-job.outputs.development-environment-display-name }}
