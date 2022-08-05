@@ -102,15 +102,12 @@ jobs:
         echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
       shell: pwsh
 
-    - name: Unpack solution
+    - name: Unpack solution (workaround)
       run:  |
         $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
 
-        # Go to the solution folder
-        cd Solutions/${{ inputs.solution-name }}
-
-        # Execute pac solution pack to generate the latest version of the the msapp files
-        pac solution unpack --zipfile out/exported/${{ github.event.inputs.solution_name }}.zip --processCanvasApps
+        # Execute unpakc solution
+        pac solution unpack --zipfile out/exported/${{ github.event.inputs.solution_name }}.zip --folder Solutions/${{ inputs.solution-name }} --processCanvasApps
       shell: pwsh
 
     # Reset the solution version in the Solution.xml file
