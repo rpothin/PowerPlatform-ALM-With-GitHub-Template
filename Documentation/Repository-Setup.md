@@ -78,7 +78,7 @@
 
 | **Secret Name**                        | **Description**                                      | **Example**                          |
 | -------------------------------------- | ---------------------------------------------------- | ------------------------------------ |
-| **DATAVERSE_ENVIRONMENT_URL**          | URL of the considered Dataverse environment          | <https://validation.crm3.dynamics.com> |
+| **DATAVERSE_ENVIRONMENT_URL**          | URL of the considered Dataverse environment          | https://validation.crm3.dynamics.com |
 | **DATAVERSE_ENVIRONMENT_DISPLAY_NAME** | Display name of the considered Dataverse environment | Validation                           |
 
 ### 4 - Add labels to repository
