@@ -107,7 +107,7 @@ jobs:
         $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
 
         # Execute unpakc solution
-        pac solution unpack --zipfile out/exported/${{ github.event.inputs.solution_name }}.zip --folder Solutions/${{ inputs.solution-name }} --processCanvasApps
+        pac solution unpack --zipfile out/exported/${{ github.event.inputs.solution_name }}.zip --folder Solutions/ --processCanvasApps
       shell: pwsh
 
     # Reset the solution version in the Solution.xml file
