@@ -48,6 +48,14 @@
 
 > *Note: The GIF above is not up to date. We will update it in a future version.*
 
+### 3 - Update workflow permissions
+
+1. In the new repository, go to the **Settings** tab
+2. Open the **Actions > General** section
+3. Go at the bottom of the page
+4. For **Workflow permissions** select the **Read and write permissions** option
+5. Click on the **Save** button
+
 ### 3 - Add secrets to repository
 
 #### Action secrets
