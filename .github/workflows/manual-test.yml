@@ -1,0 +1,18 @@
+# A GitHub workflow triggered manually to run commands in PowerShell - pwsh
+
+name: Manual Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run command
+        run: |
+          echo "==========  Set environment variables for job outputs definition =========="
+          $dataverseEnvironmentUrl = "https://bafc-raph-dev-7.crm3.dynamics.com/"
+          $dataverseEnvironmentUrl
+          echo "dataverse_environment_url=$dataverseEnvironmentUrl" >> $Env:GITHUB_ENV
+        shell: pwsh
