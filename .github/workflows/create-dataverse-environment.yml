@@ -193,7 +193,10 @@ jobs:
           echo "==========  New-DataverseEnvironment =========="
           Import-Module ./Scripts/New-DataverseEnvironment.ps1 -Force
 
-          #$dataverseEnvironmentDetails = New-DataverseEnvironment @Params -verbose
+          $dataverseEnvironmentDetails = New-DataverseEnvironment @Params -verbose
+
+          echo "==========  New-DataverseEnvironment - Result of script execution =========="
+          echo $?
 
           #$dataverseEnvironmentDetails
 
