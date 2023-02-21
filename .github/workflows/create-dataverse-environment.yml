@@ -193,9 +193,9 @@ jobs:
           echo "==========  New-DataverseEnvironment =========="
           Import-Module ./Scripts/New-DataverseEnvironment.ps1 -Force
 
-          $dataverseEnvironmentDetails = New-DataverseEnvironment @Params -verbose
+          #$dataverseEnvironmentDetails = New-DataverseEnvironment @Params -verbose
 
-          $dataverseEnvironmentDetails
+          #$dataverseEnvironmentDetails
 
           echo "==========  Set environment variables for job outputs definition =========="
           #$dataverseEnvironmentUrl = $dataverseEnvironmentDetails.Internal.properties.linkedEnvironmentMetadata.instanceUrl
