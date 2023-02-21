@@ -216,6 +216,11 @@ Function New-DataverseEnvironment {
             Write-Verbose "Search the considered Azure AD security group based on the provided name: $AzureADSecurityGroupName"
             $azureAdGroups = az ad group list --filter "displayname eq '$AzureADSecurityGroupName'" | ConvertFrom-Json
 
+            # Throw an error if it was not possible to search the considered Azure AD group
+            if ( -not $? ) {
+                Throw "Error in the search of the considered Azure AD security group based on the provided name: $AzureADSecurityGroupName"
+            }
+
             # Number of groups found
             $azureAdGroupsMeasure = $azureAdGroups | Measure-Object
             $azureAdGroupsCount = $azureAdGroupsMeasure.Count
