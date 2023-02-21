@@ -12,6 +12,10 @@
 - [ ] A GitHub account - *if you don't have one it is really easy and fun to create it: [GitHub signup](https://github.com/signup)*
 - [ ] 2 Dataverse environments already created in your tenant: **Validation** and **Production**
 - [ ] An **app registration** registered in Azure Active Directory with a client secret generated and stored somewhere safe
+
+> **Note**
+> If you want to configure a security group to restrict the access to your just-in-time development environments, you will need to add the`Microsoft Graph > Group.Read.All` API permission to your app registration with the type set to **Application** and the admin consent granted.
+
 - [ ] Run the [**New-PowerAppManagementApp**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/new-powerappmanagementapp) PowerShell command of the [**Microsoft.PowerApps.Administration.PowerShell**](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell) PowerShell module specifying the **Application (client) ID** of the app registration mentioned in the previous point:
 
 ```shell
