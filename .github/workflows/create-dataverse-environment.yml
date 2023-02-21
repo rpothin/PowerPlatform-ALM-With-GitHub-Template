@@ -210,7 +210,6 @@ jobs:
 
       # Set environment-url and power-apps-maker-environment-url job outputs
       - name: Set environment-url and power-apps-maker-environment-url job outputs
-        if: ${{ 'no pass' != 'no pass' }}
         id: job-outputs-definition
         run: |
           echo "==========  Set environment-url job output =========="
