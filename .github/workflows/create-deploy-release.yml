@@ -54,7 +54,7 @@ jobs:
     # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
       id: current_date
-      run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      run: echo "NOW=$(date +'%Y%m%d')" >> $env:GITHUB_OUTPUT
       shell: pwsh
     
     # Action used to checkout the main branch in the current repository
@@ -79,7 +79,7 @@ jobs:
         }
           
         echo "Dataverse environment description: $dataverseEnvironmentDescription"
-        echo "dataverse-environment-description=$dataverseEnvironmentDescription" >> $GITHUB_OUTPUT
+        echo "dataverse-environment-description=$dataverseEnvironmentDescription" >> $env:GITHUB_OUTPUT
       shell: pwsh
 
   # Job for the creation of the release branch
@@ -98,7 +98,7 @@ jobs:
       run: |
         $releaseVersion = '${{ github.event.inputs.solution-major-version }}_${{ needs.pre-job.outputs.current-date }}_${{ github.run_number }}'
         echo "RELEASE_VERSION=$releaseVersion" >> $Env:GITHUB_ENV
-        echo "release_version=$releaseVersion" >> $GITHUB_OUTPUT
+        echo "release_version=$releaseVersion" >> $env:GITHUB_OUTPUT
       shell: pwsh
     
     # Create the new release branch

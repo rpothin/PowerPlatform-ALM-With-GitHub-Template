@@ -220,7 +220,7 @@ jobs:
           }
           
           echo "Dataverse environment URL: $dataverseEnvironmentUrl"
-          echo "environment-url=$dataverseEnvironmentUrl" >> $GITHUB_OUTPUT
+          echo "environment-url=$dataverseEnvironmentUrl" >> $env:GITHUB_OUTPUT
 
           echo "==========  Set power-apps-maker-environment-url job output =========="
           $powerAppsMakerEnvironmentUrl = "${{ env.power-apps-maker-environment-url }}"
@@ -230,7 +230,7 @@ jobs:
           }
 
           echo "Power Apps Maker Environment URL: $powerAppsMakerEnvironmentUrl"
-          echo "power-apps-maker-environment-url=$powerAppsMakerEnvironmentUrl" >> $GITHUB_OUTPUT
+          echo "power-apps-maker-environment-url=$powerAppsMakerEnvironmentUrl" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
       # Add the 'dev env created' label to the current issue

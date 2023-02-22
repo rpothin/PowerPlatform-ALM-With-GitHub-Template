@@ -96,12 +96,12 @@ runs:
         $solutionsImportDetails = $solutionsImportDetails | ConvertTo-Json
         $solutionsImportDetails = $solutionsImportDetails -replace '\n', ''
         
-        echo "solutions-import-details=$solutionsImportDetails" >> $GITHUB_OUTPUT
+        echo "solutions-import-details=$solutionsImportDetails" >> $env:GITHUB_OUTPUT
 
         # If workflow run failed or canceled, set an environment variable to add a comment on the issue in a subsequent step
         if ($workflowFailedOrCanceled -eq 'true') {
           Write-Host "========== Solutions import not successful =========="
-          echo "solutions-import-not-successful=$workflowFailedOrCanceled" >> $GITHUB_OUTPUT
+          echo "solutions-import-not-successful=$workflowFailedOrCanceled" >> $env:GITHUB_OUTPUT
         }
       shell: pwsh
       env:

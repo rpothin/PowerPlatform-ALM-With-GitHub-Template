@@ -56,7 +56,7 @@ jobs:
         }
           
         echo "Dataverse environment description: $dataverseEnvironmentDescription"
-        echo "dataverse-environment-description=$dataverseEnvironmentDescription" >> $GITHUB_OUTPUT
+        echo "dataverse-environment-description=$dataverseEnvironmentDescription" >> $env:GITHUB_OUTPUT
       shell: pwsh
 
   # Job for the creation of the new dev branch
