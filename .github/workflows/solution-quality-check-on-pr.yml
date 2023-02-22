@@ -56,7 +56,7 @@ jobs:
     # Set a current date environment variable in the following format: YYYYMMDD
     - name: Set current date as env variable
       id: current_date
-      run: echo "::set-output name=NOW::$(date +'%Y%m%d')"
+      run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
       shell: pwsh
     
     # Action used to checkout the main branch in the current repository
@@ -81,7 +81,7 @@ jobs:
         }
           
         echo "Dataverse environment description: $dataverseEnvironmentDescription"
-        echo "::set-output name=dataverse-environment-description::$dataverseEnvironmentDescription"
+        echo "dataverse-environment-description=$dataverseEnvironmentDescription" >> $GITHUB_OUTPUT
       shell: pwsh
 
     # Get changed solution from changed files
@@ -114,7 +114,7 @@ jobs:
         }
 
         echo "Solution name: $solutionName"
-        echo "::set-output name=solution_name::$solutionName"
+        echo "solution_name=$solutionName" >> $GITHUB_OUTPUT
       shell: pwsh
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

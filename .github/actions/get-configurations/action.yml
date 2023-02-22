@@ -146,32 +146,32 @@ runs:
 
         # Generate outputs
         Write-Host "Generate outputs for the different configurations in the file"
-        echo "::set-output name=environment-region::$environmentRegion"
-        echo "::set-output name=environment-url-region-code::$environmentUrlRegionCode"
-        echo "::set-output name=environment-language-code::$environmentLanguageCode"
-        echo "::set-output name=environment-currency-name::$environmentCurrencyName"
+        echo "environment-region=$environmentRegion" >> $GITHUB_OUTPUT
+        echo "environment-url-region-code=$environmentUrlRegionCode" >> $GITHUB_OUTPUT
+        echo "environment-language-code=$environmentLanguageCode" >> $GITHUB_OUTPUT
+        echo "environment-currency-name=$environmentCurrencyName" >> $GITHUB_OUTPUT
         
-        echo "::set-output name=development-environment-display-name-base::$developmentEnvironmentDisplayNameBase"
-        echo "::set-output name=development-environment-domain-name-base::$developmentEnvironmentDomainNameBase"
-        echo "::set-output name=development-environment-sku-name::$developmentEnvironmentSkuName"
-        echo "::set-output name=developers-azure-ad-group-name::$developersAzureAdGroupName"
-        echo "::set-output name=development-environment-description-base::$developmentEnvironmentDescriptionBase"
+        echo "development-environment-display-name-base=$developmentEnvironmentDisplayNameBase" >> $GITHUB_OUTPUT
+        echo "development-environment-domain-name-base=$developmentEnvironmentDomainNameBase" >> $GITHUB_OUTPUT
+        echo "development-environment-sku-name=$developmentEnvironmentSkuName" >> $GITHUB_OUTPUT
+        echo "developers-azure-ad-group-name=$developersAzureAdGroupName" >> $GITHUB_OUTPUT
+        echo "development-environment-description-base=$developmentEnvironmentDescriptionBase" >> $GITHUB_OUTPUT
 
-        echo "::set-output name=build-environment-display-name-base::$buildEnvironmentDisplayNameBase"
-        echo "::set-output name=build-environment-domain-name-base::$buildEnvironmentDomainNameBase"
-        echo "::set-output name=build-environment-sku-name::$buildEnvironmentSkuName"
-        echo "::set-output name=build-environment-azure-ad-group-name::$buildEnvironmentAzureAdGroupName"
-        echo "::set-output name=build-environment-description-base::$buildEnvironmentDescriptionBase"
+        echo "build-environment-display-name-base=$buildEnvironmentDisplayNameBase" >> $GITHUB_OUTPUT
+        echo "build-environment-domain-name-base=$buildEnvironmentDomainNameBase" >> $GITHUB_OUTPUT
+        echo "build-environment-sku-name=$buildEnvironmentSkuName" >> $GITHUB_OUTPUT
+        echo "build-environment-azure-ad-group-name=$buildEnvironmentAzureAdGroupName" >> $GITHUB_OUTPUT
+        echo "build-environment-description-base=$buildEnvironmentDescriptionBase" >> $GITHUB_OUTPUT
         
-        echo "::set-output name=development-branch-name-base::$developmentBranchNameBase"
-        echo "::set-output name=pac-cli-version::$pacCliVersion"
-        echo "::set-output name=powerapps-maker-portal-base-url::$powerAppsMakerPortalBaseUrl"
-        echo "::set-output name=deployment-settings-file-name-base::$deploymentSettingsFileNameBase"
-        echo "::set-output name=custom-deployment-settings-file-name-base::$customDeploymentSettingsFileNameBase"
-        echo "::set-output name=maximum-tries-for-cloud-flows-activation::$maximumTriesForCloudFlowsActivation"
+        echo "development-branch-name-base=$developmentBranchNameBase" >> $GITHUB_OUTPUT
+        echo "pac-cli-version=$pacCliVersion" >> $GITHUB_OUTPUT
+        echo "powerapps-maker-portal-base-url=$powerAppsMakerPortalBaseUrl" >> $GITHUB_OUTPUT
+        echo "deployment-settings-file-name-base=$deploymentSettingsFileNameBase" >> $GITHUB_OUTPUT
+        echo "custom-deployment-settings-file-name-base=$customDeploymentSettingsFileNameBase" >> $GITHUB_OUTPUT
+        echo "maximum-tries-for-cloud-flows-activation=$maximumTriesForCloudFlowsActivation" >> $GITHUB_OUTPUT
         
-        echo "::set-output name=solution-checker-output-directory::$solutionCheckerOutputDirectory"
-        echo "::set-output name=solution-checker-geography::$solutionCheckerGeography"
-        echo "::set-output name=solution-checker-maximum-number-high-severity-points::$solutionCheckerMaximumNumberHighSeverityPoints"
-        echo "::set-output name=solution-checker-maximum-number-medium-severity-points::$solutionCheckerMaximumNumberMediumSeverityPoints"
+        echo "solution-checker-output-directory=$solutionCheckerOutputDirectory" >> $GITHUB_OUTPUT
+        echo "solution-checker-geography=$solutionCheckerGeography" >> $GITHUB_OUTPUT
+        echo "solution-checker-maximum-number-high-severity-points=$solutionCheckerMaximumNumberHighSeverityPoints" >> $GITHUB_OUTPUT
+        echo "solution-checker-maximum-number-medium-severity-points=$solutionCheckerMaximumNumberMediumSeverityPoints" >> $GITHUB_OUTPUT
       shell: pwsh
