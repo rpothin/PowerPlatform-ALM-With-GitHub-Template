@@ -1,0 +1,23 @@
+{
+    "name": "Power Platform Development",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "VARIANT": "6.0-bullseye"
+        }
+    },
+    "features": {
+        "github-cli": "latest",
+        "azure-cli": "latest"
+    },
+    "extensions": [
+		"ms-azuretools.vscode-docker",
+		"ms-dotnettools.csharp",
+		"ms-dotnettools.vscode-dotnet-runtime",
+		"microsoft-IsvExpTools.powerplatform-vscode",
+		"GitHub.copilot"
+	],
+    "forwardPorts": [],
+    "postCreateCommand": "az extension add --name account --upgrade --yes",
+    "remoteUser": "vscode"
+}
