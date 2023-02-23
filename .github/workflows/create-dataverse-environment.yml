@@ -94,6 +94,8 @@ jobs:
   create-dataverse-environment:
     name: Create Dataverse environment
     runs-on: windows-latest
+    permissions:
+      issues: write # To be able to add a label to the considered issue
     outputs:
       environment-url: ${{ steps.job-outputs-definition.outputs.environment-url }}
       power-apps-maker-environment-url: ${{ steps.job-outputs-definition.outputs.power-apps-maker-environment-url }}
@@ -234,12 +236,18 @@ jobs:
         shell: pwsh
 
       # Add the 'dev env created' label to the current issue
-      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/github-script
       - name: Add 'dev env created' label
         if: ${{ inputs.issue-number != '' }}
-        uses: andymckay/labeler@master
+        uses: actions/github-script@v6.4.0
         with:
-          add-labels: 'dev env created'
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ["dev env created"]
+            })
 
       # Add "Environment created" comment to the issue
       - name: Environment created comment on issue

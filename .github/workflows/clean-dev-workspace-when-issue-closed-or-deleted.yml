@@ -94,21 +94,27 @@ jobs:
       RUNNER_DEBUG: 1
 
     steps:
-    # Remove the 'dev env created' label on the current issue
-    #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/simple-issue-labeler
-    - name: Remove 'dev env created' label
-      uses: andymckay/labeler@master
-      with:
-        remove-labels: 'dev env created'
+      # Remove the 'dev env created' label on the current issue
+      #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/github-script
+      - name: Remove 'dev env created' label
+        uses: actions/github-script@v6.4.0
+        with:
+          script: |
+            github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              name: "dev env created"
+            })
 
-    # Add Environment deleted comment to the issue
-    - name: Environment deleted comment on issue
-      uses: peter-evans/create-or-update-comment@v2
-      with:
-        issue-number: ${{ github.event.issue.number }}
-        body: |
-          # 🛑 Workspace cleaned!
+      # Add Environment deleted comment to the issue
+      - name: Environment deleted comment on issue
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            # 🛑 Workspace cleaned!
 
-          > The Dev branch associated to the issue has been deleted if it was still existing.
+            > The Dev branch associated to the issue has been deleted if it was still existing.
 
-          [**${{ needs.pre-job.outputs.development-environment-display-name }}**](https://${{ needs.pre-job.outputs.development-environment-domain-name }}.${{ needs.pre-job.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
+            [**${{ needs.pre-job.outputs.development-environment-display-name }}**](https://${{ needs.pre-job.outputs.development-environment-domain-name }}.${{ needs.pre-job.outputs.environment-url-region-code }}.dynamics.com) Dataverse Dev environment deleted!
