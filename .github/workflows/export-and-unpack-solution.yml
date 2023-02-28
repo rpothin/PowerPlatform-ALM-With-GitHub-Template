@@ -83,32 +83,32 @@ jobs:
         overwrite-files: true
         process-canvas-apps: true
 
-    # ⚠ WOARKAROUND regarding a potential issue in the unpack of canvas apps with the current version of the action
+    # ⚠ WORKAROUND regarding a potential issue in the unpack of canvas apps with the current version of the action
     # Unpack the unmanaged solution exported in the previous step
     # "Microsoft.PowerApps.CLI" setup
     # "Microsoft.PowerApps.CLI" setup
-    - name: PowerApps CLI setup
-      run: |
-        $nugetPackage = "Microsoft.PowerApps.CLI"
-        $nugetPackageVersion = "${{ steps.get-configurations.outputs.pac-cli-version }}"
-        $outFolder = "pac"
+    #- name: PowerApps CLI setup
+    #  run: |
+    #    $nugetPackage = "Microsoft.PowerApps.CLI"
+    #    $nugetPackageVersion = "${{ steps.get-configurations.outputs.pac-cli-version }}"
+    #    $outFolder = "pac"
 
-        nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+    #    nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
         
-        $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
+    #    $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
 
-        $pacPath = $pacNugetFolder.FullName + "/tools"
+    #    $pacPath = $pacNugetFolder.FullName + "/tools"
 
-        echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
-      shell: pwsh
+    #    echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
+    #  shell: pwsh
 
-    - name: Unpack solution (workaround)
-      run:  |
-        $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
+    #- name: Unpack solution (workaround)
+    #  run:  |
+    #    $env:PATH = $env:PATH + ";" + "${{ env.POWERAPPS_CLI_PATH }}"
 
         # Execute unpakc solution
-        pac solution unpack --zipfile out/exported/${{ github.event.inputs.solution_name }}.zip --folder Solutions/${{ github.event.inputs.solution_name }} --processCanvasApps
-      shell: pwsh
+    #    pac solution unpack --zipfile out/exported/${{ github.event.inputs.solution_name }}.zip --folder Solutions/${{ github.event.inputs.solution_name }} --processCanvasApps
+    #  shell: pwsh
 
     # Reset the solution version in the Solution.xml file
     - name: Set solution version
