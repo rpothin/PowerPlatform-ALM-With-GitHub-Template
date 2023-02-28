@@ -86,21 +86,20 @@ jobs:
     # ⚠ WORKAROUND regarding a potential issue in the unpack of canvas apps with the current version of the action
     # Unpack the unmanaged solution exported in the previous step
     # "Microsoft.PowerApps.CLI" setup
-    # "Microsoft.PowerApps.CLI" setup
-    #- name: PowerApps CLI setup
-    #  run: |
-    #    $nugetPackage = "Microsoft.PowerApps.CLI"
-    #    $nugetPackageVersion = "${{ steps.get-configurations.outputs.pac-cli-version }}"
-    #    $outFolder = "pac"
+    - name: PowerApps CLI setup
+      run: |
+        $nugetPackage = "Microsoft.PowerApps.CLI"
+        $nugetPackageVersion = "${{ steps.get-configurations.outputs.pac-cli-version }}"
+        $outFolder = "pac"
 
-    #    nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
+        nuget install $nugetPackage -Version $nugetPackageVersion -OutputDirectory $outFolder
         
-    #    $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
+        $pacNugetFolder = Get-ChildItem $outFolder | Where-Object {$_.Name -match $nugetPackage + "."}
 
-    #    $pacPath = $pacNugetFolder.FullName + "/tools"
+        $pacPath = $pacNugetFolder.FullName + "/tools"
 
-    #    echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
-    #  shell: pwsh
+        echo "POWERAPPS_CLI_PATH=$pacPath" >> $Env:GITHUB_ENV
+      shell: pwsh
 
     #- name: Unpack solution (workaround)
     #  run:  |
