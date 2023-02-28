@@ -9,7 +9,7 @@
 
 ## Prerequisites
 
-- [ ] A GitHub account - *if you don't have one it is really easy and fun to create it: [GitHub signup](https://github.com/signup)*
+- [ ] A GitHub account - _if you don't have one it is really easy and fun to create it: [GitHub signup](https://github.com/signup)_
 - [ ] 2 Dataverse environments already created in your tenant: **Validation** and **Production**
 - [ ] An **app registration** registered in Azure Active Directory with a client secret generated and stored somewhere safe
 
@@ -30,7 +30,7 @@
 1. Click on the **Use this template** button on the top of the main page of [this repository](https://github.com/rpothin/PowerPlatform-ALM-With-GitHub-Template)
 2. In the page that will open, enter the information for the creation of your new repository based on this template
 
-> *Note: Let the **Include all branches** option unchecked if you don't want to get potential branches with work in progress.*
+> _Note: Let the **Include all branches** option unchecked if you don't want to get potential branches with work in progress._
 
 3. Click on the **Create repository from template** button to finalize the creation of the repository
 
@@ -46,11 +46,11 @@
    - **validation**
    - **production**
 
-> *Note: We suggest to add a [protection rule](https://docs.github.com/en/actions/deployment/environments#environment-protection-rules) (at least one reviewer for solution deployments) for the **validation** and **production** environments.*
+> _Note: We suggest to add a [protection rule](https://docs.github.com/en/actions/deployment/environments#environment-protection-rules) (at least one reviewer for solution deployments) for the **validation** and **production** environments._
 
 ![Create_Environment_With_Reviewer](https://user-images.githubusercontent.com/23240245/136494086-bccc84a5-1a82-4bfb-8359-d9211e0ea234.gif)
 
-> *Note: The GIF above is not up to date. We will update it in a future version.*
+> _Note: The GIF above is not up to date. We will update it in a future version._
 
 ### 3 - Update workflow permissions
 
@@ -73,15 +73,16 @@
 | **APPLICATION_ID**                  | **Application (client) ID** of the considered app registration                                    | 00000000-0000-0000-0000-000000000000 |
 | **CLIENT_SECRET**                   | **Secret** of the considered app registration                                                     | *********************                |
 | **TENANT_ID**                       | **Directory (tenant) ID** of the considered app registration                                      | 00000000-0000-0000-0000-000000000000 |
-| **SOLUTION_COMPONENTS_OWNER_EMAIL** | Email of the user account considered for the ownership of solution components (*ex: cloud flows*) | appcomponentsowner@email.com         |
+| **SOLUTION_COMPONENTS_OWNER_EMAIL** | Email of the user account considered for the ownership of solution components (_ex: cloud flows_) | appcomponentsowner@email.com         |
+| **PAT_WORKFLOW_UPDATE**             | Personal access token to be able to trigger GitHub workflows from another GitHub workflow         |                                      |
 
 ![Create_Secret](https://user-images.githubusercontent.com/23240245/136882520-ba598d65-7760-4504-b2df-9dfae930570d.gif)
 
-> *Note: The GIF above is not up to date. We will update it in a future version.*
+> _Note: The GIF above is not up to date. We will update it in a future version._
 
 #### Environment secrets
 
-> *Note: The actions below need to be done for the **validation** and **production** environments.*
+> _Note: The actions below need to be done for the **validation** and **production** environments._
 
 1. In the new repository, go to the **Settings** tab
 2. Open the **Environments** section
@@ -101,10 +102,10 @@
 
 | **Label Name**      | **Description**                                | Usage                                                                                           |
 | ------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| **in progress**     | Work in progress                               | Involved in the trigger of the workspace initialization (*branch and dev environment creation*) |
+| **in progress**     | Work in progress                               | Involved in the trigger of the workspace initialization (_branch and dev environment creation_) |
 | **dev env created** | Development environment created for this issue | Indicate that a Dataverse Dev environment has been created for the considered issue             |
 
-> *Note: You can change the name of the labels, but in that case you will need to make some replacements in the GitHub workflows.*
+> _Note: You can change the name of the labels, but in that case you will need to make some replacements in the GitHub workflows._
 
 ![Create_Label](https://user-images.githubusercontent.com/23240245/137238762-f0cd25a7-dc2d-4647-b33b-de6d41ab86a5.gif)
 
@@ -116,38 +117,38 @@ This file follows the format below:
 
 ```json
 {
-    "environment": {
-        "region": "canada",
-        "urlRegionCode": "crm3",
-        "languageCode": "1033",
-        "currencyName": "CAD",
-        "developmentEnvironment": {
-            "displayNameBase": "xxx - ",
-            "domainNameBase": "xxx-",
-            "skuName": "Sandbox",
-            "developersAzureAdGroupName": "sg-xxx",
-            "descriptionBase": "Environment for development on the following issue: "
-        },
-        "buildEnvironment": {
-            "displayNameBase": "xxx - ",
-            "domainNameBase": "xxx-",
-            "skuName": "Sandbox",
-            "azureAdGroupName": "sg-xxx",
-            "descriptionBase": "Development for the following build of solution: "
-        }
+  "environment": {
+    "region": "canada",
+    "urlRegionCode": "crm3",
+    "languageCode": "1033",
+    "currencyName": "CAD",
+    "developmentEnvironment": {
+      "displayNameBase": "xxx - ",
+      "domainNameBase": "xxx-",
+      "skuName": "Sandbox",
+      "developersAzureAdGroupName": "sg-xxx",
+      "descriptionBase": "Environment for development on the following issue: "
     },
-    "developmentBranchNameBase": "work/",
-    "pacCliVersion": "1.16.6",
-    "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/",
-    "deploymentSettingsFileNameBase": "DeploymentSettings",
-    "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings",
-    "maximumTriesForCloudFlowsActivation": 3,
-    "solutionChecker": {
-        "outputDirectory": "solutionCheckerResults/",
-        "geography": "Canada",
-        "maximumNumberHighSeverityPoints": 0,
-        "maximumNumberMediumSeverityPoints": 5
+    "buildEnvironment": {
+      "displayNameBase": "xxx - ",
+      "domainNameBase": "xxx-",
+      "skuName": "Sandbox",
+      "azureAdGroupName": "sg-xxx",
+      "descriptionBase": "Development for the following build of solution: "
     }
+  },
+  "developmentBranchNameBase": "work/",
+  "pacCliVersion": "1.16.6",
+  "powerAppsMakerPortalBaseUrl": "https://make.powerapps.com/environments/",
+  "deploymentSettingsFileNameBase": "DeploymentSettings",
+  "customDeploymentSettingsFileNameBase": "CustomDeploymentSettings",
+  "maximumTriesForCloudFlowsActivation": 3,
+  "solutionChecker": {
+    "outputDirectory": "solutionCheckerResults/",
+    "geography": "Canada",
+    "maximumNumberHighSeverityPoints": 0,
+    "maximumNumberMediumSeverityPoints": 5
+  }
 }
 ```
 
@@ -173,35 +174,35 @@ You will find below details regarding each configuration:
 | pacCliVersion                                                             | Version of the Power Platform CLI you plan to use in the repository                                                                                                                                                                | "1.10.4"                                               |
 | powerAppsMakerPortalBaseUrl                                               | Left part of the Power Apps maker portal URL focusing the solutions page of the Dataverse Dev environment that will be created during workspace initialization phase                                                               | "https://make.powerapps.com/environments/"             |
 | deploymentSettingsFileNameBase                                            | Left part of the name of the deployment settings file that will be used for the configuration of solutions                                                                                                                         | "DeploymentSettings"                                   |
-| customDeploymentSettingsFileNameBase                                      | Left part of the name of the custom deployment settings file (*for points not covered by the out of the box deployment settings file*) that will be used for the configuration of solutions                                        | "CustomDeploymentSettings"                             |
+| customDeploymentSettingsFileNameBase                                      | Left part of the name of the custom deployment settings file (_for points not covered by the out of the box deployment settings file_) that will be used for the configuration of solutions                                        | "CustomDeploymentSettings"                             |
 | maximumTriesForCloudFlowsActivation                                       | Maximum tries allowed for the activation of the cloud flows post solution deployment                                                                                                                                               | "3"                                                    |
 | solutionChecker </br> outputDirectory                                     | Absolute path considered to store the sarif file generated by the solution checker                                                                                                                                                 | "solutionCheckerResults/"                              |
-| solutionChecker </br> geography                                           | "Region" considered for the execution of the solution checker </br> *- used to temporarily stores the data that you upload in Azure along with the reports that are generated*                                                     | Canada                                                 |
+| solutionChecker </br> geography                                           | "Region" considered for the execution of the solution checker </br> _- used to temporarily stores the data that you upload in Azure along with the reports that are generated_                                                     | Canada                                                 |
 | solutionChecker </br> maximumNumberHighSeverityPoints                     | Maximum number of high severity points identified during the execution of the solution checker allowed to continue                                                                                                                 | 0                                                      |
 | solutionChecker </br> maximumNumberMediumSeverityPoints                   | Maximum number of medium severity points identified during the execution of the solution checker allowed to continue                                                                                                               | 5                                                      |
 
-> *Notes:*
+> _Notes:_
 >
-> - *You can find the code for the URL for a Dataverse environment for a considered region in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page.*
-> - *You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the configurations of Dataverse environments:*
->   - *The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command (**LocationName** column value in results) can be used to get all the supported locations for Dataverse environments*
->   - *The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command (**CurrencyName** column value in results) can be used to get all the supported currencies for a specific location for Dataverse environments*
->   - *The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command (**LanguageName** column value in results) can be used to get all the supported languages for a specific location for Dataverse environments*
-> - *Valid options for **environment.xxx.skuName** configurations are: Trial, **Sandbox, Production, SubscriptionBasedTrial** (source [microsoft/powerplatform-actions/create-environment](https://github.com/microsoft/powerplatform-actions/blob/30b7cbe414cf675d173d8af70e06c1ed7eef10f3/create-environment/action.yml#L36))*
-> - *Valid options for **solutionChecker.geography** configuration can be found in the [Invoke-PowerAppsChecker](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell/invoke-powerappschecker?view=pa-ps-latest#parameters) Micrsoft documentation page*
+> - _You can find the code for the URL for a Dataverse environment for a considered region in the [Datacenter regions](https://docs.microsoft.com/en-us/power-platform/admin/new-datacenter-regions) documentation page._
+> - _You can use the commands below from the [Microsoft.PowerApps.Administration.PowerShell](https://www.powershellgallery.com/packages/Microsoft.PowerApps.Administration.PowerShell) PowerShell module to find the information for the configurations of Dataverse environments:_
+>   - _The [Get-AdminPowerAppEnvironmentLocations](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappenvironmentlocations) command (**LocationName** column value in results) can be used to get all the supported locations for Dataverse environments_
+>   - _The [Get-AdminPowerAppCdsDatabaseCurrencies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabasecurrencies) command (**CurrencyName** column value in results) can be used to get all the supported currencies for a specific location for Dataverse environments_
+>   - _The [Get-AdminPowerAppCdsDatabaseLanguages](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.administration.powershell/get-adminpowerappcdsdatabaselanguages) command (**LanguageName** column value in results) can be used to get all the supported languages for a specific location for Dataverse environments_
+> - _Valid options for **environment.xxx.skuName** configurations are: Trial, **Sandbox, Production, SubscriptionBasedTrial** (source [microsoft/powerplatform-actions/create-environment](https://github.com/microsoft/powerplatform-actions/blob/30b7cbe414cf675d173d8af70e06c1ed7eef10f3/create-environment/action.yml#L36))_
+> - _Valid options for **solutionChecker.geography** configuration can be found in the [Invoke-PowerAppsChecker](https://docs.microsoft.com/en-us/powershell/module/microsoft.powerapps.checker.powershell/invoke-powerappschecker?view=pa-ps-latest#parameters) Micrsoft documentation page_
 
 You should now be ready to start your Power Platform / Dynamics 365 developments using your new GitHub repository 🎉
 
 ### 6 - Update code for your own needs (optional)
 
 1. In the new repository, go to the **Code** tab
-2. Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) (*exemple of the rpothin/PowerPlatform-ALM-With-GitHub-Template repository*) interface by pressing "."
+2. Open the [**github.dev**](https://github.dev/rpothin/PowerPlatform-ALM-With-GitHub-Template) (_exemple of the rpothin/PowerPlatform-ALM-With-GitHub-Template repository_) interface by pressing "."
 3. In the **VS Code for the web** experience you will be able to make some updates, if necessary, in the GitHub workflows:
    - environment variables:
-      - **solution_name** (*default value: PowerPlatformALMWithGitHub*)
+     - **solution_name** (_default value: PowerPlatformALMWithGitHub_)
    - issue labels:
-      - **in progress**
-      - **dev env created**
+     - **in progress**
+     - **dev env created**
 
 ![Update_GitHub_Workflows](https://user-images.githubusercontent.com/23240245/137244781-6de497ea-a4ba-4143-a19a-0f561dfc50ba.gif)
 
