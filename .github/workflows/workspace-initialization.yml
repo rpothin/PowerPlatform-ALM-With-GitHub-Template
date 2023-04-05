@@ -77,7 +77,7 @@ jobs:
 
     # Add "Branch created" comment to the issue
     - name: Branch created comment on issue
-      uses: peter-evans/create-or-update-comment@v2
+      uses: peter-evans/create-or-update-comment@v3
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
@@ -225,7 +225,7 @@ jobs:
     # Add comment to the issue regarding solutions import not successful
     - name: Solutions import not successful
       if: ${{ steps.pack-import-solutions.outputs.solutions-import-not-successful == 'true' }}
-      uses: peter-evans/create-or-update-comment@v2
+      uses: peter-evans/create-or-update-comment@v3
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
@@ -245,7 +245,7 @@ jobs:
     steps:
     # Add "Workplace initialized" comment to the issue
     - name: Workplace initialized comment on issue
-      uses: peter-evans/create-or-update-comment@v2
+      uses: peter-evans/create-or-update-comment@v3
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |

@@ -84,7 +84,7 @@ jobs:
 
     # Add "Solution imported" comment to the issue
     - name: Solution imported comment on issue
-      uses: peter-evans/create-or-update-comment@v2
+      uses: peter-evans/create-or-update-comment@v3
       with:
         issue-number: ${{ github.event.inputs.issue_number }}
         body: |
