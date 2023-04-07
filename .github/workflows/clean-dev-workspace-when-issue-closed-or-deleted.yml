@@ -97,7 +97,7 @@ jobs:
       # Remove the 'dev env created' label on the current issue
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/github-script
       - name: Remove 'dev env created' label
-        uses: actions/github-script@v6.4.0
+        uses: actions/github-script@v6.4.1
         with:
           script: |
             github.rest.issues.removeLabel({
