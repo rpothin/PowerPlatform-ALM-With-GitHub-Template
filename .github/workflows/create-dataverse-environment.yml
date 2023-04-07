@@ -239,7 +239,7 @@ jobs:
       #   GitHub Action on the Marketplace: https://github.com/marketplace/actions/github-script
       - name: Add 'dev env created' label
         if: ${{ inputs.issue-number != '' }}
-        uses: actions/github-script@v6.4.0
+        uses: actions/github-script@v6.4.1
         with:
           script: |
             github.rest.issues.addLabels({
