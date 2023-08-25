@@ -107,7 +107,7 @@ jobs:
       #   Community action: https://github.com/actions/checkout
       - name: Checkout
         if: ${{ inputs.environment-security-group-name != '' }}
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v3.6.0
 
       # Set a dataverse_environment_dynamic_display_name environment variable for the display name of the Dataverse environment to create
       - name: Set dataverse_environment_dynamic_display_name as env variable

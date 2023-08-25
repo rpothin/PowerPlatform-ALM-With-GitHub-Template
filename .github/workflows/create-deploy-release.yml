@@ -60,7 +60,7 @@ jobs:
     # Action used to checkout the main branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
-      uses: actions/checkout@v3.5.3
+      uses: actions/checkout@v3.6.0
     
     # Get configurations from a JSON file in the repository
     - name: Get configurations
@@ -178,7 +178,7 @@ jobs:
     # Action used to checkout the considered release branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
-      uses: actions/checkout@v3.5.3
+      uses: actions/checkout@v3.6.0
       with:
         ref: release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
@@ -208,7 +208,7 @@ jobs:
       # Action used to checkout the repository the release branch
       #   Community action: https://github.com/actions/checkout
       - name: Checkout branch release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v3.6.0
         with:
           ref: release/${{ github.event.inputs.solution_name }}/${{ needs.create-release-branch.outputs.release_version }}
 
