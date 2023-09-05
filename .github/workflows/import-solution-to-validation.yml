@@ -58,7 +58,7 @@ jobs:
     # Action used to checkout the main branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
-      uses: actions/checkout@v3.6.0
+      uses: actions/checkout@v4.0.0
       with:
         fetch-depth: 0
     
