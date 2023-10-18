@@ -35,7 +35,7 @@ jobs:
     # Action used to checkout the main branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout
-      uses: actions/checkout@v4.1.0
+      uses: actions/checkout@v4.1.1
     
     # Get configurations from a JSON file in the repository
     - name: Get configurations
@@ -45,7 +45,7 @@ jobs:
     # Action used to checkout the considered development branch in the current repository
     #   Community action: https://github.com/actions/checkout
     - name: Checkout branch ${{ steps.get-configurations.outputs.development-branch-name-base }}${{ github.event.inputs.issue_number }}
-      uses: actions/checkout@v4.1.0
+      uses: actions/checkout@v4.1.1
       with:
         ref: ${{ steps.get-configurations.outputs.development-branch-name-base }}${{ github.event.inputs.issue_number }}
     
